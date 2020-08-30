@@ -767,9 +767,19 @@ public class TabContent extends JSplitPane implements TabContentActions{
     public TabContent(TimedArcPetriNetNetwork network, Collection<Template> templates, Iterable<TAPNQuery> tapnqueries, TAPNLens lens) {
         this(network, templates, lens);
 
-        setNetwork(network, templates);
-        setQueries(tapnqueries);
-        setConstants(network().constants());
+        //update network
+        sharedPTPanel.setNetwork(network);
+        templateExplorer.updateTemplateList();
+
+        constantsPanel.setNetwork(tapnNetwork);
+
+        if(network.paintNet()){
+            this.setRightComponent(drawingSurfaceScroller);
+        } else {
+            this.setRightComponent(drawingSurfaceDummy);
+        }
+        //update queries
+        this.queries.setQueries(tapnqueries);
     }
 
 	private TabContent(TimedArcPetriNetNetwork network, Collection<Template> templates, TAPNLens lens) {
@@ -1298,11 +1308,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		return queries.getQueries();
 	}
 
-	private void setQueries(Iterable<TAPNQuery> queries) {
-		this.queries.setQueries(queries);
-	}
-
-	public void removeQuery(TAPNQuery queryToRemove) {
+    public void removeQuery(TAPNQuery queryToRemove) {
 		queries.removeQuery(queryToRemove);
 	}
 
@@ -1310,26 +1316,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		queries.addQuery(query);
 	}
 
-	private void setConstants(Iterable<Constant> constants) {
-		tapnNetwork.setConstants(constants);
-	}
-
-	private void setNetwork(TimedArcPetriNetNetwork network, Collection<Template> templates) {
-
-
-		sharedPTPanel.setNetwork(network);
-		templateExplorer.updateTemplateList();
-
-		constantsPanel.setNetwork(tapnNetwork);
-		
-		if(network.paintNet()){
-			this.setRightComponent(drawingSurfaceScroller);
-		} else {
-			this.setRightComponent(drawingSurfaceDummy);
-		}
-	}
-
-	public void swapTemplates(int currentIndex, int newIndex) {
+    public void swapTemplates(int currentIndex, int newIndex) {
 		tapnNetwork.swapTemplates(currentIndex, newIndex);
 	}
 
