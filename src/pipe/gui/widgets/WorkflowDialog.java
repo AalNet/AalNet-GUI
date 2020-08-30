@@ -649,11 +649,6 @@ public class WorkflowDialog extends JDialog {
 		gbc.gridy = 6;
 		panel.add(numberOfExtraTokensInNet, gbc);
 
-		numberOfExtraTokensInNet.addChangeListener(e -> {
-			model.setDefaultBound((Integer) numberOfExtraTokensInNet.getValue());
-			CreateGui.getCurrentTab().network().setDefaultBound((Integer) numberOfExtraTokensInNet.getValue());
-			CreateGui.getCurrentTab().setNetChanged(true);
-		});
 
 		gbc.gridwidth = 1;
 

@@ -21,10 +21,8 @@ public class TimedArcPetriNetNetwork {
 	
 	private NetworkMarking currentMarking = new NetworkMarking();
 	private final ConstantStore constants;
-	
-	private int defaultBound = 3;
-	
-	private final List<ConstantsListener> constantsListeners = new ArrayList<ConstantsListener>();
+
+    private final List<ConstantsListener> constantsListeners = new ArrayList<ConstantsListener>();
 	
 	private boolean paintNet = true;
 	
@@ -581,17 +579,12 @@ public class TimedArcPetriNetNetwork {
 			}
 		}
 		
-		network.setDefaultBound(getDefaultBound());
-		
 		return network;
 	}
 
 	public int getDefaultBound() {
-		return defaultBound;
-	}
-	
-	public void setDefaultBound(int defaultBound) {
-		this.defaultBound = defaultBound;
+        int defaultBound = 3;
+        return defaultBound;
 	}
 
 	public boolean paintNet() {
