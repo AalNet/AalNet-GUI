@@ -3,7 +3,7 @@ package pipe.gui.handler;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import pipe.gui.action.SplitArcAction;
 import pipe.gui.graphicElements.Arc;
 
@@ -33,7 +33,7 @@ public class ArcHandler extends PetriNetObjectHandler {
         popup.insert(new JPopupMenu.Separator(), popupIndex);
 
 
-        if ("DEV".equals(TAPAAL.VERSION)){
+        if ("DEV".equals(AalNet.VERSION)){
             JTextArea pane = new JTextArea();
             pane.setEditable(false);
 

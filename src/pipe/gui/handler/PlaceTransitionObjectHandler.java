@@ -3,7 +3,7 @@ package pipe.gui.handler;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import pipe.gui.graphicElements.Arc;
 import pipe.gui.graphicElements.PlaceTransitionObject;
 
@@ -28,7 +28,7 @@ public class PlaceTransitionObjectHandler extends PetriNetObjectHandler {
     @Override
     public JPopupMenu getPopup(MouseEvent e) {
 	    JPopupMenu popup = super.getPopup(e);
-        if ("DEV".equals(TAPAAL.VERSION)){
+        if ("DEV".equals(AalNet.VERSION)){
             JTextArea pane = new JTextArea();
             pane.setEditable(false);
 

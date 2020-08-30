@@ -4,9 +4,9 @@ import java.awt.*;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import com.sun.jna.Platform;
+
 import dk.aau.cs.debug.Logger;
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import net.tapaal.resourcemanager.ResourceManager;
 import pipe.dataLayer.DataLayer;
 import pipe.gui.canvas.DrawingSurfaceImpl;
@@ -14,7 +14,7 @@ import dk.aau.cs.gui.TabContent;
 
 public class CreateGui {
 
-	private final static GuiFrame appGui = new GuiFrame(TAPAAL.getProgramName());
+	private final static GuiFrame appGui = new GuiFrame(AalNet.getProgramName());
     private final static GuiFrameController appGuiController = new GuiFrameController(appGui);
 
 	private static final ArrayList<TabContent> tabs = new ArrayList<TabContent>();

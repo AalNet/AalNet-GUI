@@ -10,13 +10,13 @@ import javax.swing.JOptionPane;
 
 import net.tapaal.Preferences;
 
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 
 import dk.aau.cs.debug.Logger;
 import net.tapaal.resourcemanager.ResourceManager;
 
 public class VersionChecker {
-	private static final String versionURL = "http://versioncheck.tapaal.net/version.txt";
+	private static final String versionURL = "http://aalnet.github.io/version/version.txt";
 	private static final int timeoutMs = 2500;
 	private URL url;
 	private String newestVersion;
@@ -32,7 +32,7 @@ public class VersionChecker {
 
 	public boolean checkForNewVersion(boolean forcecheck){
 		//Disable the version check for DEV versions
-		if (!TAPAAL.VERSION.equalsIgnoreCase("DEV") && url != null){
+		if (!AalNet.VERSION.equalsIgnoreCase("DEV") && url != null){
 				getNewestVersion();
 				boolean check;
 				String ignoreversion = Preferences.getInstance().getLatestVersion();	
@@ -40,20 +40,20 @@ public class VersionChecker {
 				else { check = compareVersions(ignoreversion);}
 				
 				if(newestVersion != null && !newestVersion.isEmpty() && check){
-					boolean result = compareVersions(TAPAAL.VERSION);
+					boolean result = compareVersions(AalNet.VERSION);
 					if (forcecheck && !result) {
-						JOptionPane.showMessageDialog(null, "There is no new version of TAPAAL available at the moment.", "No Update for " + TAPAAL.getProgramName(),
+						JOptionPane.showMessageDialog(null, "There is no new version of TAPAAL available at the moment.", "No Update for " + AalNet.getProgramName(),
 								JOptionPane.INFORMATION_MESSAGE, ResourceManager.appIcon());
 					}
 					return result;
 				}
 				else if (forcecheck){
-					JOptionPane.showMessageDialog(null, "It is impossible to establish a connection to the server. Try again later.", "No Update for " + TAPAAL.getProgramName(),
+					JOptionPane.showMessageDialog(null, "It is impossible to establish a connection to the server. Try again later.", "No Update for " + AalNet.getProgramName(),
 							JOptionPane.INFORMATION_MESSAGE, ResourceManager.appIcon());	
 				}
 			}
 		else if (forcecheck) {
-			JOptionPane.showMessageDialog(null, "The development version of TAPAAL does not support update notification.", "No Update for " + TAPAAL.getProgramName(),
+			JOptionPane.showMessageDialog(null, "The development version of TAPAAL does not support update notification.", "No Update for " + AalNet.getProgramName(),
 					JOptionPane.INFORMATION_MESSAGE, ResourceManager.appIcon());
 		}
 		return false;		

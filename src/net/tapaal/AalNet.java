@@ -36,13 +36,13 @@ import pipe.gui.Verifier;
  *
  * @author Kenneth Yrke Joergensen (kenneth@yrke.dk)
  */
-public class TAPAAL {
+public class AalNet {
 
-	public static final String TOOLNAME = "TAPAAL";
+	public static final String TOOLNAME = "AalNet";
 	public static final String VERSION = "DEV";
 
 	public static String getProgramName(){
-		return "" + TAPAAL.TOOLNAME + " " + TAPAAL.VERSION;
+		return "" + AalNet.TOOLNAME + " " + AalNet.VERSION;
 	}
 
 	
@@ -69,7 +69,7 @@ public class TAPAAL {
 			Logger.enableLogging(true);
 		}
 
-		if (TAPAAL.VERSION.equals("DEV")){
+		if (AalNet.VERSION.equals("DEV")){
 			Logger.enableLogging(true);
 			Logger.log("Debug logging is enabled by default in DEV branch");
 		}
@@ -181,7 +181,7 @@ public class TAPAAL {
 
 	public static File getInstallDir() {
 		
-		String str = ClassLoader.getSystemResource("TAPAAL.class").getPath();
+		String str = ClassLoader.getSystemResource("AalNet.class").getPath();
 		
 		int placeOfJarSeperator = str.lastIndexOf('!');
 		
@@ -194,9 +194,9 @@ public class TAPAAL {
 			
 		} else {
 			// Its a class file, stip the name
-			str = str.replace("TAPAAL.class", "");
+			str = str.replace("AalNet.class", "");
 		}
-		
+
 		try {
 			
 			//Fix as ubuntu (at least) does not set file:// from ClassLoader

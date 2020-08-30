@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.tapaal.Preferences;
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import pipe.dataLayer.TAPNQuery.TraceOption;
 import pipe.gui.FileFinder;
 import pipe.gui.MessengerImpl;
@@ -235,7 +235,7 @@ public class VerifyTAPN implements ModelChecker {
 			}
 
 			//Search the installdir for verifytapn
-			File installdir = TAPAAL.getInstallDir();
+			File installdir = AalNet.getInstallDir();
 
 			String[] paths = {"/bin/verifytapn", "/bin/verifytapn64", "/bin/verifytapn.exe", "/bin/verifytapn64.exe"};
 			for (String s : paths) {

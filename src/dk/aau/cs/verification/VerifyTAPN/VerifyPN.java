@@ -11,13 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dk.aau.cs.gui.TabContent;
+import net.tapaal.AalNet;
 import net.tapaal.Preferences;
-import net.tapaal.TAPAAL;
 import pipe.dataLayer.TAPNQuery.QueryCategory;
 import pipe.dataLayer.TAPNQuery.SearchOption;
 import pipe.dataLayer.TAPNQuery.TraceOption;
-import pipe.gui.CreateGui;
 import pipe.gui.FileFinder;
 import pipe.gui.MessengerImpl;
 import pipe.gui.Pipe;
@@ -246,7 +244,7 @@ public class VerifyPN implements ModelChecker{
 				}
 
 				//Search the installdir for verifytapn
-				File installdir = TAPAAL.getInstallDir();
+				File installdir = AalNet.getInstallDir();
 
 				String[] paths = {"/bin/verifypn", "/bin/verifypn64", "/bin/verifypn.exe", "/bin/verifypn64.exe"};
 				for (String s : paths) {

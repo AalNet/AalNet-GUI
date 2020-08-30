@@ -26,7 +26,7 @@ public class Preferences {
 		// Exists only to defeat instantiation.
 		pref = java.util.prefs.Preferences.userNodeForPackage(this.getClass());
 		// Set subtree to version specific node
-		pref = pref.node(pref.absolutePath() + TAPAAL.VERSION);
+		pref = pref.node(pref.absolutePath() + AalNet.VERSION);
 	}
 
 	public void clear(){

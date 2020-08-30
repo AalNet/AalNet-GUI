@@ -20,8 +20,8 @@ import com.sun.jna.Platform;
 import dk.aau.cs.gui.*;
 import dk.aau.cs.util.JavaUtil;
 import dk.aau.cs.verification.VerifyTAPN.VerifyPN;
+import net.tapaal.AalNet;
 import net.tapaal.Preferences;
-import net.tapaal.TAPAAL;
 import net.tapaal.helpers.Reference.MutableReference;
 import net.tapaal.helpers.Reference.Reference;
 import net.tapaal.swinghelpers.ExtendedJTabbedPane;
@@ -545,7 +545,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
             //Set specific settings
             System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", TAPAAL.TOOLNAME);
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", AalNet.TOOLNAME);
 
             // Use native file chooser
             System.setProperty("apple.awt.fileDialogForDirectories", "false");

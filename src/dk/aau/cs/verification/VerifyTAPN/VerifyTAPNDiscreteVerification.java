@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.tapaal.Preferences;
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import pipe.dataLayer.TAPNQuery.TraceOption;
 import pipe.dataLayer.TAPNQuery.WorkflowMode;
 import pipe.gui.CreateGui;
@@ -235,7 +235,7 @@ public class VerifyTAPNDiscreteVerification implements ModelChecker{
 		}
 
 		//Search the installdir for verifytapn
-		File installdir = TAPAAL.getInstallDir();
+		File installdir = AalNet.getInstallDir();
 
 		String[] paths = {"/bin/verifydtapn", "/bin/verifydtapn64", "/bin/verifydtapn.exe", "/bin/verifydtapn64.exe"};
 		for (String s : paths) {

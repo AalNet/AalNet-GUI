@@ -37,14 +37,14 @@ sourceSets {
     }
 }
 
-mainClassName = 'TAPAAL'
+mainClassName = 'AalNet'
 
 jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF'
 
     //Sets the main call for the Jar, you can double click to run the jar file
     manifest {
-        attributes 'Main-Class': 'TAPAAL'
+        attributes 'Main-Class': 'AalNet'
     }
     //The following lines makes libs a part of the build jar file (standalone jar)
     //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

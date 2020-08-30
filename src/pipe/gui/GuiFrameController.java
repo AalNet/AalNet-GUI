@@ -11,7 +11,7 @@ import dk.aau.cs.verification.UPPAAL.Verifyta;
 import dk.aau.cs.verification.VerifyTAPN.VerifyTAPN;
 import dk.aau.cs.verification.VerifyTAPN.VerifyTAPNDiscreteVerification;
 import net.tapaal.Preferences;
-import net.tapaal.TAPAAL;
+import net.tapaal.AalNet;
 import net.tapaal.helpers.Reference.MutableReference;
 import pipe.gui.widgets.EngineDialogPanel;
 import pipe.gui.widgets.EscapableDialog;
@@ -237,7 +237,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
     @Override
     public void     showAbout() {
-        StringBuilder buffer = new StringBuilder("About " + TAPAAL.getProgramName());
+        StringBuilder buffer = new StringBuilder("About " + AalNet.getProgramName());
         buffer.append("\n\n");
         buffer.append("TAPAAL is a tool for editing, simulation and verification of P/T and timed-arc Petri nets.\n");
         buffer.append("The GUI is based on PIPE2: http://pipe2.sourceforge.net/\n\n");
@@ -270,7 +270,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
 
         buffer.append("\n");
-        JOptionPane.showMessageDialog(null, buffer.toString(), "About " + TAPAAL.getProgramName(),
+        JOptionPane.showMessageDialog(null, buffer.toString(), "About " + AalNet.getProgramName(),
                 JOptionPane.INFORMATION_MESSAGE, ResourceManager.appIcon());
     }
 
@@ -395,7 +395,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         if (versionChecker.checkForNewVersion(forcecheck))  {
             StringBuilder message = new StringBuilder("There is a new version of TAPAAL available at www.tapaal.net.");
             message.append("\n\nCurrent version: ");
-            message.append(TAPAAL.VERSION);
+            message.append(AalNet.VERSION);
             message.append("\nNew version: ");
             message.append(versionChecker.getNewVersionNumber());
             String changelog = versionChecker.getChangelog();
