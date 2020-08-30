@@ -91,8 +91,6 @@ public abstract class TimedPlace {
         }
     }
 	
-	public abstract Tuple<PlaceType, Integer> extrapolate();
-	
 	public abstract TimedPlace copy();
 	
 	/**
