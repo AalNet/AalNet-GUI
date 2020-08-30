@@ -6,6 +6,7 @@ import dk.aau.cs.TCTL.TCTLEFNode;
 import dk.aau.cs.TCTL.TCTLEGNode;
 import dk.aau.cs.TCTL.TCTLPlaceNode;
 import dk.aau.cs.TCTL.TCTLTrueNode;
+import dk.aau.cs.gui.TabContent;
 import dk.aau.cs.model.tapn.Bound;
 import dk.aau.cs.model.tapn.NetworkMarking;
 import dk.aau.cs.model.tapn.SharedPlace;
@@ -61,7 +62,9 @@ import pipe.gui.*;
 
 public class WorkflowDialog extends JDialog {
 
-	private static String getHelpMessage(){ 
+    private final TabContent tab;
+
+    private static String getHelpMessage(){
 		// There is automatic word wrapping in the control that displays the text, so you don't need line breaks in paragraphs.
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("<html>");
@@ -155,10 +158,10 @@ public class WorkflowDialog extends JDialog {
 
 	private JPanel panel;
 
-	private JCheckBox soundness = null;
-	private JCheckBox strongSoundness = null;
-	private JCheckBox min = null;
-	private JCheckBox max = null;
+	public JCheckBox soundness = null;
+	public JCheckBox strongSoundness = null;
+	public JCheckBox min = null;
+	public JCheckBox max = null;
 
 	private JLabel soundnessResult;
 	private JLabel strongSoundnessResult;
@@ -206,7 +209,7 @@ public class WorkflowDialog extends JDialog {
 
 	private TimedArcPetriNetNetwork model;
 
-	private boolean isInTraceMode = false;
+    public boolean isInTraceMode = false;
 
 	private enum TAWFNTypes {
 		ETAWFN, MTAWFN, NOTTAWFN
@@ -214,23 +217,6 @@ public class WorkflowDialog extends JDialog {
 
 	TAWFNTypes netType;
 
-	public static void showDialog() {
-		if(CreateGui.getCurrentTab().getWorkflowDialog() == null){
-			CreateGui.getCurrentTab().setWorkflowDialog(new WorkflowDialog(CreateGui.getRootFrame(), "Workflow Analysis", true));
-		}else if(!CreateGui.getCurrentTab().getWorkflowDialog().isInTraceMode){
-			WorkflowDialog oldDialog = CreateGui.getCurrentTab().getWorkflowDialog();
-			CreateGui.getCurrentTab().setWorkflowDialog(new WorkflowDialog(CreateGui.getRootFrame(), "Workflow Analysis", true));
-			WorkflowDialog newDialog = CreateGui.getCurrentTab().getWorkflowDialog();
-			newDialog.soundness.setSelected(oldDialog.soundness.isSelected());
-			newDialog.min.setSelected(oldDialog.min.isSelected());
-			newDialog.strongSoundness.setSelected(oldDialog.strongSoundness.isSelected());
-			newDialog.max.setSelected(oldDialog.max.isSelected());
-			newDialog.max.setEnabled(oldDialog.max.isEnabled());
-		}
-
-		CreateGui.getCurrentTab().getWorkflowDialog().isInTraceMode = false;
-		CreateGui.getCurrentTab().getWorkflowDialog().setVisible(true);
-	}
 
 	public boolean restoreWindow(){
 		return isInTraceMode;
@@ -239,15 +225,16 @@ public class WorkflowDialog extends JDialog {
 	private void switchToTrace(TAPNNetworkTrace trace){
 		isInTraceMode = true;
 		setVisible(false);
-		CreateGui.getAnimator().setTrace(trace);
+		tab.getAnimator().setTrace(trace);
 	}
 
-	private WorkflowDialog(Frame frame, String title, boolean modal) {
+	public WorkflowDialog(Frame frame, String title, boolean modal, TabContent tab) {
 		super(frame, title, modal);
+		this.tab = tab;
 
 		/* Copy model */
 
-		model = CreateGui.getCurrentTab().network().copy();
+		model = tab.network().copy();
 		
 		// Fix - remove unused shared places
 		unusedSharedPlaces.clear();
@@ -395,7 +382,7 @@ public class WorkflowDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.NONE;
 		JButton help_button = new JButton("Help");
-		help_button.addActionListener(e -> JOptionPane.showMessageDialog(CreateGui.getAppGui(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE));
+		help_button.addActionListener(e -> JOptionPane.showMessageDialog(CreateGui.getRootFrame(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE));
 
 		panel.add(help_button, gbc);
 
@@ -1288,7 +1275,7 @@ public class WorkflowDialog extends JDialog {
 	}
 
 	private TAPNNetworkTrace mapTraceToRealModel(TAPNNetworkTrace tapnNetworkTrace){
-		TraceConverter converter = new TraceConverter(tapnNetworkTrace, CreateGui.getCurrentTab().network());
+		TraceConverter converter = new TraceConverter(tapnNetworkTrace, tab.network());
 		return converter.convert();
 	}
 }

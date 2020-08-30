@@ -1692,7 +1692,23 @@ public class TabContent extends JSplitPane implements TabContentActions{
 	@Override
 	public void workflowAnalyse() {
 		//XXX prop. should take this as argument, insted of using static accessors //kyrke 2019-11-05
-		WorkflowDialog.showDialog();
+        if(getWorkflowDialog() == null){
+            setWorkflowDialog(new WorkflowDialog(CreateGui.getRootFrame(), "Workflow Analysis", true, this));
+        }else if(!getWorkflowDialog().isInTraceMode){
+            WorkflowDialog oldDialog = getWorkflowDialog();
+
+            setWorkflowDialog(new WorkflowDialog(CreateGui.getRootFrame(), "Workflow Analysis", true, this));
+
+            WorkflowDialog newDialog = getWorkflowDialog();
+            newDialog.soundness.setSelected(oldDialog.soundness.isSelected());
+            newDialog.min.setSelected(oldDialog.min.isSelected());
+            newDialog.strongSoundness.setSelected(oldDialog.strongSoundness.isSelected());
+            newDialog.max.setSelected(oldDialog.max.isSelected());
+            newDialog.max.setEnabled(oldDialog.max.isEnabled());
+        }
+
+        getWorkflowDialog().isInTraceMode = false;
+        getWorkflowDialog().setVisible(true);
 	}
 
 	public boolean isInAnimationMode() {
