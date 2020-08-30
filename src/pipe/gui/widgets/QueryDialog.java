@@ -47,8 +47,6 @@ import pipe.dataLayer.TAPNQuery.SearchOption;
 import pipe.dataLayer.TAPNQuery.TraceOption;
 import pipe.gui.*;
 import dk.aau.cs.TCTL.Parsing.TAPAALQueryParser;
-import dk.aau.cs.approximation.OverApproximation;
-import dk.aau.cs.approximation.UnderApproximation;
 import dk.aau.cs.io.TimedArcPetriNetNetworkWriter;
 import dk.aau.cs.translations.ReductionOption;
 import dk.aau.cs.util.Tuple;
@@ -2671,10 +2669,12 @@ public class QueryDialog extends JPanel {
 		noApproximationEnable.setToolTipText(TOOL_TIP_APPROXIMATION_METHOD_NONE);
 
 		overApproximationEnable = new JRadioButton("Over-approximation");
+		overApproximationEnable.setEnabled(false);
 		overApproximationEnable.setVisible(true);
 		overApproximationEnable.setToolTipText(TOOL_TIP_APPROXIMATION_METHOD_OVER);
 
 		underApproximationEnable = new JRadioButton("Under-approximation");
+		overApproximationEnable.setEnabled(false);
 		underApproximationEnable.setVisible(true);
 		underApproximationEnable.setToolTipText(TOOL_TIP_APPROXIMATION_METHOD_UNDER);
 
@@ -2753,6 +2753,7 @@ public class QueryDialog extends JPanel {
         useGCD = new JCheckBox("Use GCD");
         usePTrie = new JCheckBox("Use PTrie");
         useOverApproximation = new JCheckBox("Use untimed state-equations check");
+        useOverApproximation.setEnabled(false);
 
         useReduction.setSelected(true);
         useSiphonTrap.setSelected(false);
@@ -2950,34 +2951,10 @@ public class QueryDialog extends JPanel {
 	}
 
 	private void refreshOverApproximationOption() {
-	    if (queryHasDeadlock() || newProperty.toString().contains("EG") || newProperty.toString().contains("AF")){
-			useOverApproximation.setSelected(false);
-			useOverApproximation.setEnabled(false);
-		} else {
-			if(!useOverApproximation.isEnabled()){
-				useOverApproximation.setSelected(true);
-			}
-			useOverApproximation.setEnabled(true);
-		}
-
-        if (lens.isGame()) {
-            noApproximationEnable.setEnabled(true);
-            overApproximationEnable.setEnabled(false);
-            underApproximationEnable.setEnabled(false);
-            overApproximationDenominator.setEnabled(false);
-        } else if(fastestTraceRadioButton.isSelected()){
-			noApproximationEnable.setEnabled(true);
-			noApproximationEnable.setSelected(true);
-			overApproximationEnable.setEnabled(false);
-			underApproximationEnable.setEnabled(false);
-			overApproximationDenominator.setEnabled(false);
-		}
-		else{
-			noApproximationEnable.setEnabled(true);
-			overApproximationEnable.setEnabled(true);
-			underApproximationEnable.setEnabled(true);
-			overApproximationDenominator.setEnabled(true);
-		}
+        noApproximationEnable.setEnabled(true);
+        overApproximationEnable.setEnabled(false);
+        underApproximationEnable.setEnabled(false);
+        overApproximationDenominator.setEnabled(false);
 	}
 
 	private void refreshDiscreteOptions(){
@@ -3127,17 +3104,6 @@ public class QueryDialog extends JPanel {
 						ITAPNComposer composer = new TAPNComposer(new MessengerImpl(), false);
 						Tuple<TimedArcPetriNet, NameMapping> transformedModel = composer.transformModel(QueryDialog.this.tapnNetwork);
 
-						if (overApproximationEnable.isSelected())
-						{
-							OverApproximation overaprx = new OverApproximation();
-							overaprx.modifyTAPN(transformedModel.value1(), getQuery().approximationDenominator());
-						}
-						else if (underApproximationEnable.isSelected())
-						{
-							UnderApproximation underaprx = new UnderApproximation();
-							underaprx.modifyTAPN(transformedModel.value1(), getQuery().approximationDenominator());
-						}
-
 						TAPNQuery tapnQuery = getQuery();
 						dk.aau.cs.model.tapn.TAPNQuery clonedQuery = new dk.aau.cs.model.tapn.TAPNQuery(tapnQuery.getProperty().copy(), tapnQuery.getCapacity());
 
@@ -3183,16 +3149,7 @@ public class QueryDialog extends JPanel {
 
 					ArrayList<Template> templates = new ArrayList<Template>(1);
 					querySaved = true;	//Setting this to true will make sure that new values will be used.
-					if (overApproximationEnable.isSelected())
-					{
-						OverApproximation overaprx = new OverApproximation();
-						overaprx.modifyTAPN(transformedModel.value1(), getQuery().approximationDenominator());
-					}
-					else if (underApproximationEnable.isSelected())
-					{
-						UnderApproximation underaprx = new UnderApproximation();
-						underaprx.modifyTAPN(transformedModel.value1(), getQuery().approximationDenominator(), composer.getGuiModel());
-					}
+
 					templates.add(new Template(transformedModel.value1(), composer.getGuiModel(), new Zoomer()));
 
 					// Create a constant store

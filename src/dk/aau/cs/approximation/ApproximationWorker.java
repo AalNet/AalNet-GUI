@@ -91,11 +91,11 @@ public class ApproximationWorker {
 								approxResult.isSolvedUsingStateEquation());
 						toReturn.setNameMapping(transformedModel.value2());
 						
-						OverApproximation overaprx = new OverApproximation();
+
 			
 						//Create trace TAPN from the trace
 						Tuple<TimedArcPetriNet, NameMapping> transformedOriginalModel = composer.transformModel(model);
-						overaprx.makeTraceTAPN(transformedOriginalModel, toReturn, clonedQuery);
+
 						
 						// Reset the inclusion places in order to avoid NullPointerExceptions
 						if (options instanceof VerifyTAPNOptions && oldInclusionPlaces != null)
@@ -233,13 +233,9 @@ public class ApproximationWorker {
 								approxResult.stats(),
 								result.isSolvedUsingStateEquation());
 						toReturn.setNameMapping(transformedModel.value2());
-						
-						OverApproximation overaprx = new OverApproximation();
-						
-			
+
 						//Create trace TAPN from the trace
 						Tuple<TimedArcPetriNet, NameMapping> transformedOriginalModel = composer.transformModel(model);
-						overaprx.makeTraceTAPN(transformedOriginalModel, toReturn, clonedQuery);
 						
 						// Reset the inclusion places in order to avoid NullPointerExceptions
 						if (options instanceof VerifyTAPNOptions && oldInclusionPlaces != null)
@@ -339,19 +335,6 @@ public class ApproximationWorker {
 		Tuple<TimedArcPetriNet, NameMapping> transformedOriginalModel = new Tuple<TimedArcPetriNet, NameMapping>(composedModel.value1().copy(), composedModel.value2());
 		
 		TraceOption oldTraceOption = options.traceOption();
-		if (query != null && query.isOverApproximationEnabled()) {
-			// Create a fresh model
-			composedModel = composeModel(model);
-			OverApproximation overaprx = new OverApproximation();
-			overaprx.modifyTAPN(composedModel.value1(), query.approximationDenominator());
-			options.setTraceOption(TraceOption.SOME);
-		} else if (query != null && query.isUnderApproximationEnabled()) {
-			// Create a fresh model
-			composedModel = composeModel(model);
-			UnderApproximation underaprx = new UnderApproximation();
-			underaprx.modifyTAPN(composedModel.value1(), query.approximationDenominator());
-			options.setTraceOption(TraceOption.SOME);
-		}
 		
 		VerificationResult<TimedArcPetriNetTrace> verificationResult = modelChecker.verify(options, composedModel, queryToVerify);
 		
@@ -392,12 +375,7 @@ public class ApproximationWorker {
 	                            approxResult.stats(),
 	        					verificationResult.isSolvedUsingStateEquation());
 	                valueNetwork.setNameMapping(composedModel.value2());
-	                
-	                OverApproximation overaprx = new OverApproximation();
-	                
-	                //Create trace TAPN from the network trace
-	                overaprx.makeTraceTAPN(transformedOriginalModel, valueNetwork, clonedQuery);
-	                
+
 	                // Reset the inclusion places in order to avoid NullPointerExceptions
 	                if (options instanceof VerifyTAPNOptions && oldInclusionPlaces != null){
 	                    ((VerifyTAPNOptions) options).setInclusionPlaces(oldInclusionPlaces);
@@ -522,12 +500,7 @@ public class ApproximationWorker {
 	                        approxResult.stats(),
 	                        approxResult.isSolvedUsingStateEquation());
 	                    valueNetwork.setNameMapping(composedModel.value2());
-	                    
-	                    OverApproximation overaprx = new OverApproximation();
-	        
-	                    //Create trace TAPN from the trace
-	                    overaprx.makeTraceTAPN(transformedOriginalModel, valueNetwork, clonedQuery);
-	                    
+
 	                    // Reset the inclusion places in order to avoid NullPointerExceptions
 	                    if (options instanceof VerifyTAPNOptions && oldInclusionPlaces != null)
 	                        ((VerifyTAPNOptions) options).setInclusionPlaces(oldInclusionPlaces);

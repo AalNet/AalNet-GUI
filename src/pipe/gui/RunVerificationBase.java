@@ -5,14 +5,11 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
-import dk.aau.cs.verification.VerifyTAPN.VerifyTAPNDiscreteVerification;
 import pipe.dataLayer.TAPNQuery.SearchOption;
 import dk.aau.cs.Messenger;
 import dk.aau.cs.TCTL.visitors.RenameAllPlacesVisitor;
 import dk.aau.cs.TCTL.visitors.RenameAllTransitionsVisitor;
 import dk.aau.cs.approximation.ApproximationWorker;
-import dk.aau.cs.approximation.OverApproximation;
-import dk.aau.cs.approximation.UnderApproximation;
 import dk.aau.cs.model.tapn.TAPNQuery;
 import dk.aau.cs.model.tapn.TimedArcPetriNet;
 import dk.aau.cs.model.tapn.TimedArcPetriNetNetwork;
@@ -63,17 +60,6 @@ public abstract class RunVerificationBase extends SwingWorker<VerificationResult
 	protected VerificationResult<TAPNNetworkTrace> doInBackground() throws Exception {
 		ITAPNComposer composer = new TAPNComposer(messenger, false);
 		Tuple<TimedArcPetriNet, NameMapping> transformedModel = composer.transformModel(model);
-		
-		if (options.enabledOverApproximation())
-		{
-			OverApproximation overaprx = new OverApproximation();
-			overaprx.modifyTAPN(transformedModel.value1(), options.approximationDenominator());
-		}
-		else if (options.enabledUnderApproximation())
-		{
-			UnderApproximation underaprx = new UnderApproximation();
-			underaprx.modifyTAPN(transformedModel.value1(), options.approximationDenominator());
-		}
 
 		TAPNQuery clonedQuery = new TAPNQuery(query.getProperty().copy(), query.getExtraTokens());
 		MapQueryToNewNames(clonedQuery, transformedModel.value2());
