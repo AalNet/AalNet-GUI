@@ -30,6 +30,7 @@ import dk.aau.cs.verification.NameMapping;
 import dk.aau.cs.verification.TAPNComposer;
 import net.tapaal.gui.DrawingSurfaceManager.AbstractDrawingSurfaceManager;
 import net.tapaal.helpers.Reference.MutableReference;
+import net.tapaal.swinghelpers.GridBagHelper;
 import net.tapaal.swinghelpers.JSplitPaneFix;
 import org.jdesktop.swingx.MultiSplitLayout.Divider;
 import org.jdesktop.swingx.MultiSplitLayout.Leaf;
@@ -51,6 +52,8 @@ import pipe.gui.widgets.WorkflowDialog;
 import pipe.gui.widgets.filebrowser.FileBrowser;
 
 import java.awt.event.MouseWheelEvent;
+
+import static net.tapaal.swinghelpers.GridBagHelper.*;
 
 public class TabContent extends JSplitPane implements TabContentActions{
 
@@ -713,15 +716,12 @@ public class TabContent extends JSplitPane implements TabContentActions{
 	}
 
 	//GUI
-
-	private final HashMap<TimedArcPetriNet, Boolean> hasPositionalInfos = new HashMap<TimedArcPetriNet, Boolean>();
-
 	private final JScrollPane drawingSurfaceScroller;
 	private JScrollPane editorSplitPaneScroller;
 	private JScrollPane animatorSplitPaneScroller;
 	private DrawingSurfaceImpl drawingSurface;
 	private File appFile;
-	private final JPanel drawingSurfaceDummy;
+	private final JPanel drawingSurfaceDummy = new JPanel(new GridBagLayout());
 	
 	// Normal mode
 	private BugHandledJXMultisplitPane editorSplitPane;
@@ -793,7 +793,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         for (Template template : templates) {
             addGuiModel(template.model(), template.guiModel());
             zoomLevels.put(template.model(), template.zoomer());
-            hasPositionalInfos.put(template.model(), template.getHasPositionalInfo());
+
             for(PetriNetObject o : template.guiModel().getPetriNetObjects()){
                 o.setLens(this.lens);
             }
@@ -815,11 +815,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
             }
         });
 
-        drawingSurfaceDummy = new JPanel(new GridBagLayout());
-        GridBagConstraints gc=new GridBagConstraints();
-        gc.fill=GridBagConstraints.HORIZONTAL;
-        gc.gridx=0;
-        gc.gridy=0;
+        GridBagConstraints gc = as(0,0, Fill.HORIZONTAL);
         drawingSurfaceDummy.add(new JLabel("The net is too big to be drawn"), gc);
 
         createEditorLeftPane();
@@ -833,6 +829,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         this.setOneTouchExpandable(true);
         this.setBorder(null); // avoid multiple borders
         this.setDividerSize(8);
+
         //XXX must be after the animationcontroller is created
         animationModeController = new CanvasAnimationController(getAnimator());
     }
@@ -1251,7 +1248,6 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		ArrayList<Template> list = new ArrayList<Template>();
 		for (TimedArcPetriNet net : tapnNetwork.allTemplates()) {
 			Template template = new Template(net, guiModels.get(net), zoomLevels.get(net));
-			template.setHasPositionalInfo(hasPositionalInfos.get(net));
 			list.add(template);
 		}
 		return list;
@@ -1261,7 +1257,6 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		ArrayList<Template> list = new ArrayList<Template>();
 		for (TimedArcPetriNet net : tapnNetwork.activeTemplates()) {
 			Template template = new Template(net, guiModels.get(net), zoomLevels.get(net));
-			template.setHasPositionalInfo(hasPositionalInfos.get(net));
 			list.add(template);
 		}
 		return list;
@@ -1282,7 +1277,6 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		guiModels.put(template.model(), template.guiModel());
         guiModelToModel.put(template.guiModel(), template.model());
 		zoomLevels.put(template.model(), template.zoomer());
-		hasPositionalInfos.put(template.model(), template.getHasPositionalInfo());
 		templateExplorer.updateTemplateList();
 	}
 
@@ -1296,7 +1290,6 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		guiModels.remove(template.model());
 		guiModelToModel.remove(template.guiModel());
 		zoomLevels.remove(template.model());
-		hasPositionalInfos.remove(template.model());
 		templateExplorer.updateTemplateList();
 	}
 

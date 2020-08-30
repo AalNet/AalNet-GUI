@@ -54,6 +54,11 @@ public class GridBagHelper {
         return as(gridx, gridy, anchor, null, inset);
     }
 
+
+    public static GridBagConstraints as(int gridx, int gridy, Fill fill) {
+        return as(gridx, gridy, null, fill, null);
+    }
+
     public static GridBagConstraints as(int gridx, int gridy, Fill fill, Insets inset) {
         return as(gridx, gridy, null, fill, inset);
     }

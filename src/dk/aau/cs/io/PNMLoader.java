@@ -65,8 +65,7 @@ public class PNMLoader {
 	
 	//If the net is too big, do not make the graphics
 	private int netSize = 0;
-	private final int maxNetSize = 4000;
-	private boolean hasPositionalInfo = false;
+	private static final int maxNetSize = 4000;
 	
 	public PNMLoader() {
 	}
@@ -116,7 +115,6 @@ public class PNMLoader {
 		Template template = new Template(tapn, new DataLayer(), new Zoomer());
 	
 		parseTimedArcPetriNet(netNode, tapn, template);
-		template.setHasPositionalInfo(hasPositionalInfo);
 		
 		network.setPaintNet(isNetDrawable());
 		tapn.setCheckNames(true);
@@ -358,8 +356,7 @@ public class PNMLoader {
 			else 
 				return new Point(100, 100);
 		}
-		
-		hasPositionalInfo = true;
+
 		Element offset = (Element)getFirstDirectChild(node, type == GraphicsType.Offset ? "offset" : "position");
 		
 		String x = offset.getAttribute("x");

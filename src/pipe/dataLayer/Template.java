@@ -7,7 +7,6 @@ public class Template {
 	private final TimedArcPetriNet net;
 	private final DataLayer guiModel;
 	private final Zoomer zoomer;
-	private boolean hasPositionalInfo = false;
 	
 	public Template(TimedArcPetriNet net, DataLayer guiModel, Zoomer zoomer) {
 		this.net = net;
@@ -44,14 +43,6 @@ public class Template {
 
 	public Zoomer zoomer() {
 		return zoomer;
-	}
-	
-	public boolean getHasPositionalInfo() {
-		return hasPositionalInfo;
-	}
-	
-	public void setHasPositionalInfo(boolean positionalInfo) {
-		hasPositionalInfo = positionalInfo;
 	}
 
 	@Override

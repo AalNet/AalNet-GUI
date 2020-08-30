@@ -356,13 +356,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
                     List<TabContent> tabs = get();
                     openTab(tabs);
 
-                    if(files.length != 0 && !CreateGui.getCurrentTab().currentTemplate().getHasPositionalInfo()) {
-                        int dialogResult = JOptionPane.showConfirmDialog (null, "The net does not have any layout information. Would you like to do automatic layout?","Automatic Layout?", JOptionPane.YES_NO_OPTION);
-                        if(dialogResult == JOptionPane.YES_OPTION) {
-                            SmartDrawDialog.showSmartDrawDialog();
-                        }
-                    }
-
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(CreateGui.getApp(),
                             e.getMessage(),
