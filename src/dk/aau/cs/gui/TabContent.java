@@ -1748,7 +1748,8 @@ public class TabContent extends JSplitPane implements TabContentActions{
             ByteArrayOutputStream outputStream = tapnWriter.savePNML();
             String composedName = "composed-" + CreateGui.getApp().getCurrentTabName();
             composedName = composedName.replace(".tapn", "");
-            CreateGui.openNewTabFromStream(new ByteArrayInputStream(outputStream.toByteArray()), composedName);
+            final String composedNameFinal = composedName;
+            guiFrameControllerActions.ifPresent(o->o.createNewTabFromInputStreamAndOpen(new ByteArrayInputStream(outputStream.toByteArray()), composedNameFinal));
         } catch (Exception e1) {
             System.console().printf(e1.getMessage());
         }

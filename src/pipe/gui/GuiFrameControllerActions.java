@@ -57,5 +57,7 @@ public interface GuiFrameControllerActions {
 
     void showSimpleWorkspace();
 
+    void createNewTabFromInputStreamAndOpen(InputStream file, String name);
+
     TabContent createNewTabFromInputStream(InputStream file, String name);
 }

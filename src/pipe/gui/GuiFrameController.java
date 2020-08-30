@@ -820,6 +820,11 @@ public class GuiFrameController implements GuiFrameControllerActions{
         SimulationControl.getInstance().setRandomTransitionMode(false);
     }
 
+    @Override
+    public void createNewTabFromInputStreamAndOpen(InputStream file, String name) {
+        var tab = createNewTabFromInputStream(file, name);
+        openTab(tab);
+    }
 
     /**
      * Creates a new tab with the selected file, or a new file if filename==null

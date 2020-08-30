@@ -133,11 +133,6 @@ public class CreateGui {
 		return tab;
 	}
 
-    @Deprecated
-    public static GuiFrameController getAppGuiController() {
-        return appGuiController;
-    }
-
     public static boolean useExtendedBounds = false;
 
 	@Deprecated
