@@ -1,6 +1,5 @@
 package pipe.gui.widgets;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,14 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.JSpinner;
-import javax.swing.event.ChangeListener;
 
 import dk.aau.cs.gui.TabContent;
 import net.tapaal.swinghelpers.CustomJSpinner;
 import net.tapaal.swinghelpers.GridBagHelper;
 import net.tapaal.swinghelpers.WidthAdjustingComboBox;
 import pipe.dataLayer.Template;
-import pipe.gui.CreateGui;
 import pipe.gui.Pipe;
 import pipe.gui.graphicElements.tapn.TimedPlaceComponent;
 import dk.aau.cs.gui.Context;
@@ -216,7 +213,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 				makeSharedButton.setEnabled(false);
 			}else{
 				switchToNameTextField();
-				nameTextField.setText(place.underlyingPlace().isShared()? CreateGui.getCurrentTab().getNameGenerator().getNewPlaceName(context.activeModel()) : place.getName());
+				nameTextField.setText(place.underlyingPlace().isShared()? context.tabContent().getNameGenerator().getNewPlaceName(context.activeModel()) : place.getName());
 				makeSharedButton.setEnabled(true);
 			}
 		});
@@ -282,14 +279,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 	}
 
 	private boolean isUrgencyOK(){
-		for(TransportArc arc : CreateGui.getCurrentTab().currentTemplate().model().transportArcs()){
+		for(TransportArc arc : context.tabContent().currentTemplate().model().transportArcs()){
 			if(arc.destination().equals(place.underlyingPlace()) && arc.transition().isUrgent()){
 				JOptionPane.showMessageDialog(rootPane, "Transport arcs going through urgent transitions cannot have an invariant at the destination.", "Error", JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 		}
 		if(place.underlyingPlace().isShared()){
-			for(Template t : CreateGui.getCurrentTab().allTemplates()){
+			for(Template t : context.tabContent().allTemplates()){
 				for(TransportArc arc : t.model().transportArcs()){
 					if(arc.destination().equals(place.underlyingPlace()) && arc.transition().isUrgent()){
 						JOptionPane.showMessageDialog(rootPane, "Transport arcs going through urgent transitions cannot have an invariant at the destination.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -442,7 +439,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 	}
 
 	private void setRelationModelForConstants() {
-		int value = CreateGui.getCurrentTab().network().getConstantValue(invConstantsComboBox.getSelectedItem().toString());
+		int value = context.network().getConstantValue(invConstantsComboBox.getSelectedItem().toString());
 
 		String selected = invRelationConstant.getSelectedItem().toString();
 		if (value == 0) {
