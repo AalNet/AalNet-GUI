@@ -63,29 +63,29 @@ public class Export {
 	public static final int PRINTER = 3;
 	public static final int TIKZ = 5;
 	public static final int PNML = 6;
-	public static final int QUERY = 7;	
+	public static final int QUERY = 7;
 
-	private static void toPnml(DrawingSurfaceImpl g, String filename)
-			throws NullPointerException, DOMException, TransformerConfigurationException, 
-			IOException, ParserConfigurationException, TransformerException {
-		TabContent currentTab = CreateGui.getCurrentTab();
-		NetworkMarking currentMarking = null;
-		if(CreateGui.getCurrentTab().isInAnimationMode()){
-			currentMarking = currentTab.network().marking();
-			currentTab.network().setMarking(CreateGui.getAnimator().getInitialMarking());
-		}
+    private static void toPnml(DrawingSurfaceImpl g, String filename) throws NullPointerException, DOMException, IOException, ParserConfigurationException, TransformerException {
 
-		NetWriter tapnWriter = new PNMLWriter(
-				currentTab.network(),
-				currentTab.getGuiModels()
-				);
+        TabContent currentTab = CreateGui.getCurrentTab();
+        NetworkMarking currentMarking = null;
 
-		tapnWriter.savePNML(new File(filename));
+        if (currentTab.isInAnimationMode()) {
+            currentMarking = currentTab.network().marking();
+            currentTab.network().setMarking(currentTab.getAnimator().getInitialMarking());
+        }
 
-		if(CreateGui.getCurrentTab().isInAnimationMode()){
-			currentTab.network().setMarking(currentMarking);
-		}
-	}
+        NetWriter tapnWriter = new PNMLWriter(
+            currentTab.network(),
+            currentTab.getGuiModels()
+        );
+
+        tapnWriter.savePNML(new File(filename));
+
+        if (currentTab.isInAnimationMode()) {
+            currentTab.network().setMarking(currentMarking);
+        }
+    }
 	
 	private static void toQueryXML(String filename){
 		toQueryXML(CreateGui.getCurrentTab().network(), filename, CreateGui.getCurrentTab().queries());
@@ -232,11 +232,12 @@ public class Export {
 			case TIKZ:
 				Object[] possibilities = { "Only the TikZ figure",
 				"Full compilable LaTex including your figure" };
-				String figureOptions = (String) JOptionPane.showInputDialog(
-						CreateGui.getApp(),
-						"Choose how you would like your TikZ figure outputted: \n",
-						"Export to TikZ", JOptionPane.PLAIN_MESSAGE,
-						null, possibilities, "Only the TikZ figure");
+                String figureOptions = (String) JOptionPane.showInputDialog(
+                    CreateGui.getRootFrame(),
+                    "Choose how you would like your TikZ figure outputted: \n",
+                    "Export to TikZ", JOptionPane.PLAIN_MESSAGE,
+                    null, possibilities, "Only the TikZ figure"
+                );
 				TikZExporter.TikZOutputOption tikZOption = TikZExporter.TikZOutputOption.FIGURE_ONLY;
 				if (figureOptions == null)
 					break;
@@ -248,7 +249,7 @@ public class Export {
 
 				filename = FileBrowser.constructor("TikZ figure", "tex", filename).saveFile();
 				if (filename != null) {
-					TikZExporter output = new TikZExporter(model, filename, tikZOption);
+					TikZExporter output = new TikZExporter(model, filename, tikZOption, CreateGui.getApp().showZeroToInfinityIntervals());
 					output.ExportToTikZ();
 				}
 				break;
@@ -268,7 +269,7 @@ public class Export {
 			}
 		} catch (Exception e) {
 			// There was some problem with the action
-			JOptionPane.showMessageDialog(CreateGui.getApp(),
+			JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
 					"There were errors performing the requested action:\n" + e,
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}

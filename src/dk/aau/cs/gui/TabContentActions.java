@@ -32,10 +32,6 @@ public interface TabContentActions {
 
     void stepForward();
 
-    void timeDelay();
-
-    void delayAndFire();
-
     boolean getNetChanged();
 
     void toggleAnimationMode();
@@ -96,4 +92,5 @@ public interface TabContentActions {
 
     void changeGameFeature(boolean isGame);
 
+    void alignPNObjectsToGrid();
 }

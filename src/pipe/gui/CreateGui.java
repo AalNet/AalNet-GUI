@@ -11,6 +11,7 @@ import net.tapaal.resourcemanager.ResourceManager;
 import pipe.dataLayer.DataLayer;
 import pipe.gui.canvas.DrawingSurfaceImpl;
 import dk.aau.cs.gui.TabContent;
+import pipe.gui.undo.UndoManager;
 
 public class CreateGui {
 
@@ -49,21 +50,6 @@ public class CreateGui {
 
 		appGui.setVisible(true);
 		appGuiController.checkForUpdate(false);
-	}
-
-	@Deprecated
-	public static DataLayer getModel() {
-        return getModel(appGui.getSelectedTabIndex());
-	}
-
-	@Deprecated
-	public static DataLayer getModel(int index) {
-		if (index < 0) {
-			return null;
-		}
-
-		TabContent tab = (tabs.get(index));
-		return tab.getModel();
 	}
 
 	@Deprecated
@@ -126,6 +112,9 @@ public class CreateGui {
 		}
 		return getCurrentTab().getAnimator();
 	}
+
+	//Use this only when accessing the Root frame to open a dialog/popup
+    public static Frame getRootFrame() {return getApp(); }
 	
 	//XXX Two Methodes to access same data (created after auto encapsulate)
 	@Deprecated
@@ -140,8 +129,7 @@ public class CreateGui {
 	//XXX The following function should properly not be used and is only used while refactoring, but is better
 	// that the chained access via guiFrame, App or drawingsurface now marked with deprecation.
 	public static TabContent openNewTabFromStream(InputStream file, String name) throws Exception {
-		TabContent tab = TabContent.createNewTabFromInputStream(file, name);
-		appGuiController.openTab(tab);
+		TabContent tab = appGuiController.createNewTabFromInputStream(file, name);
 		return tab;
 	}
 	public static TabContent openNewTabFromStream(TabContent tab) {
@@ -154,11 +142,10 @@ public class CreateGui {
         return appGuiController;
     }
 
-
     public static boolean useExtendedBounds = false;
 
-	//XXX Moved from guiframe to static access, while refactoring.
 	@Deprecated
-    public static Pipe.ElementType guiMode;
-
+    public static UndoManager getUndoManager() {
+        return getCurrentTab().getUndoManager();
+    }
 }

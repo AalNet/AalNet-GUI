@@ -5,6 +5,10 @@ import dk.aau.cs.gui.BatchProcessingDialog;
 import dk.aau.cs.gui.TabContent;
 import dk.aau.cs.gui.TabContentActions;
 import dk.aau.cs.gui.smartDraw.SmartDrawDialog;
+import dk.aau.cs.io.LoadedModel;
+import dk.aau.cs.io.ModelLoader;
+import dk.aau.cs.io.PNMLoader;
+import dk.aau.cs.util.JavaUtil;
 import net.tapaal.resourcemanager.ResourceManager;
 import dk.aau.cs.model.tapn.simulation.ShortestDelayMode;
 import dk.aau.cs.verification.UPPAAL.Verifyta;
@@ -22,21 +26,26 @@ import pipe.gui.widgets.filebrowser.FileBrowser;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class GuiFrameController implements GuiFrameControllerActions{
+
+    public static final String WARNING_OLD_JAVAVERSION = "You are using an older version of Java than 11. Some of the functionalities may not work or display correctly.";
 
     final GuiFrame guiFrameDirectAccess; //XXX - while refactoring shold only use guiFrameActions
     final GuiFrameActions guiFrame;
 
-    final MutableReference<TabContentActions> currentTab = new MutableReference<>();
+    final MutableReference<TabContentActions> activeTab = new MutableReference<>();
 
     public GuiFrameController(GuiFrame appGui) {
         super();
@@ -44,13 +53,102 @@ public class GuiFrameController implements GuiFrameControllerActions{
         guiFrame = appGui;
         guiFrameDirectAccess = appGui;
 
-        loadPrefrences();
-        appGui.registerController(this, currentTab);
+        appGui.registerController(this, activeTab);
 
+        loadPrefrences();
+        loadAndRegisterExampleNets();
+        checkJavaVersion();
 
     }
 
-    //XXX should be private and should prop. live in controllers not GUI, tmp while refactoring //kyrke 2019-11-05
+
+    private void checkJavaVersion() {
+        int version = JavaUtil.getJREMajorVersion();
+
+        if (version < AalNet.MINIMUM_SUPPORTED_JAVAVERSION) {
+            JOptionPane.showMessageDialog(CreateGui.getRootFrame(), WARNING_OLD_JAVAVERSION);
+            System.out.println(WARNING_OLD_JAVAVERSION);
+        }
+    }
+
+    private void loadAndRegisterExampleNets() {
+        var testNets = loadTestNets();
+        guiFrame.registerExampleNets(Arrays.asList(testNets));
+    }
+    /**
+     * The function loads the example nets as InputStream from the resources
+     * Notice the check for if we are inside a jar file, as files inside a jar cant
+     * be listed in the normal way.
+     *
+     * @author Kenneth Yrke Joergensen <kenneth@yrke.dk>, 2011-06-27
+     */
+    private String[] loadTestNets() {
+
+        String[] nets = null;
+
+        try {
+            URL dirURL = Thread.currentThread().getContextClassLoader().getResource("resources/Example nets/");
+            if (dirURL != null && dirURL.getProtocol().equals("file")) {
+                /* A file path: easy enough */
+                nets = new File(dirURL.toURI()).list();
+            }
+
+            if (dirURL == null) {
+                /*
+                 * In case of a jar file, we can't actually find a directory. Have to assume the
+                 * same jar as clazz.
+                 */
+                String me = "TAPAAL.class";
+                dirURL = Thread.currentThread().getContextClassLoader().getResource(me);
+            }
+
+            if (dirURL.getProtocol().equals("jar")) {
+                /* A JAR path */
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf('!')); // strip out only the JAR
+                // file
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8));
+                Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
+                Set<String> result = new HashSet<String>(); // avoid duplicates in case it is a subdirectory
+                while (entries.hasMoreElements()) {
+                    String name = entries.nextElement().getName();
+                    if (name.startsWith("resources/Example nets/")) { // filter according to the path
+                        String entry = name.substring("resources/Example nets/".length());
+                        int checkSubdir = entry.indexOf('/');
+                        if (checkSubdir >= 0) {
+                            // if it is a subdirectory, we just return the directory name
+                            entry = entry.substring(0, checkSubdir);
+                        }
+                        result.add(entry);
+                    }
+                }
+                nets = result.toArray(new String[result.size()]);
+                jar.close();
+            }
+
+            Arrays.sort(nets, (one, two) -> {
+
+                int toReturn = one.compareTo(two);
+                // Special hack to get intro-example first and game-example last
+                if (one.equals("intro-example.tapn")) {
+                    toReturn = -1;
+                } else if (one.equals("game-harddisk.tapn")) {
+                    toReturn = 1;
+                }
+                if (two.equals("intro-example.tapn")) {
+                    toReturn = 1;
+                } else if (two.equals("game-harddisk.tapn")) {
+                    toReturn = -1;
+                }
+                return toReturn;
+            });
+        } catch (Exception e) {
+            Logger.log("Error getting example files:" + e);
+            e.printStackTrace();
+        }
+        return nets;
+    }
+
+    //XXX should be private //kyrke 2019-11-05
     boolean showComponents = true;
     boolean showSharedPT = true;
     boolean showConstants = true;
@@ -143,15 +241,15 @@ public class GuiFrameController implements GuiFrameControllerActions{
     public void changeToTab(TabContent tab) {
 
         //De-register old model
-        currentTab.ifPresent(t -> t.setApp(null));
+        activeTab.ifPresent(t -> t.setApp(null));
 
         //Set current tab
-        currentTab.setReference(tab);
+        activeTab.setReference(tab);
 
         guiFrame.changeToTab(tab);
 
-        currentTab.ifPresent(t -> t.setApp(guiFrame));
-        guiFrameDirectAccess.setTitle(currentTab.map(TabContentActions::getTabTitle).orElse(null));
+        activeTab.ifPresent(t -> t.setApp(guiFrame));
+        guiFrameDirectAccess.setTitle(activeTab.map(TabContentActions::getTabTitle).orElse(null));
 
     }
 
@@ -286,7 +384,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
     public void openTAPNFile() {
         final File[] files = FileBrowser.constructor("Timed-Arc Petri Net","tapn", "xml", FileBrowser.userPath).openFiles();
         //show loading cursor
-        CreateGui.getAppGui().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         //Do loading
         SwingWorker<java.util.List<TabContent>, Void> worker = new SwingWorker<java.util.List<TabContent>, Void>() {
             @Override
@@ -295,7 +393,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
                 for(File f : files){
                     if(f.exists() && f.isFile() && f.canRead()){
                         FileBrowser.userPath = f.getParent();
-                        filesOpened.add(TabContent.createNewTabFromFile(f));
+                        filesOpened.add(createNewTabFromFile(f));
                     }
                 }
                 return filesOpened;
@@ -306,14 +404,14 @@ public class GuiFrameController implements GuiFrameControllerActions{
                     List<TabContent> tabs = get();
                     openTab(tabs);
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(CreateGui.getApp(),
+                    JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
                             e.getMessage(),
                             "Error loading file",
                             JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                     return;
                 }finally {
-                    CreateGui.getAppGui().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }
             }
         };
@@ -336,7 +434,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         final File[] files = FileBrowser.constructor("Import PNML", "pnml", FileBrowser.userPath).openFiles();
 
         //Show loading cursor
-        CreateGui.getAppGui().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         //Do loading of net
         SwingWorker<List<TabContent>, Void> worker = new SwingWorker<List<TabContent>, Void>() {
             @Override
@@ -345,7 +443,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
                 for(File f : files){
                     if(f.exists() && f.isFile() && f.canRead()){
                         FileBrowser.userPath = f.getParent();
-                        fileOpened.add(TabContent.createNewTabFromPNMLFile(f));
+                        fileOpened.add(createNewTabFromPNMLFile(f));
                     }
                 }
                 return fileOpened;
@@ -357,13 +455,13 @@ public class GuiFrameController implements GuiFrameControllerActions{
                     openTab(tabs);
 
                 } catch (Exception e) {
-                    JOptionPane.showMessageDialog(CreateGui.getApp(),
+                    JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
                             e.getMessage(),
                             "Error loading file",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }finally {
-                    CreateGui.getAppGui().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                 }
             }
         };
@@ -472,11 +570,11 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
     @Override
     public void save() {
-        save(currentTab.get());
+        save(activeTab.get());
     }
     @Override
     public void saveAs(){
-        saveAs(currentTab.get());
+        saveAs(activeTab.get());
     }
 
     @Override
@@ -528,7 +626,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
             //XXX: this cast should not be done, its a quick fix while refactoring //kyrke 2019-12-31
             changeToTab((TabContent) tab);
 
-            int result = JOptionPane.showConfirmDialog(CreateGui.getApp(),
+            int result = JOptionPane.showConfirmDialog(CreateGui.getRootFrame(),
                     "The net has been modified. Save the current net?",
                     "Confirm Save Current File",
                     JOptionPane.YES_NO_CANCEL_OPTION,
@@ -603,7 +701,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         Preferences.getInstance().setShowTokenAge(showTokenAge);
 
         guiFrame.setShowTokenAgeSelected(showTokenAge);
-        currentTab.ifPresent(TabContentActions::repaintAll);
+        activeTab.ifPresent(TabContentActions::repaintAll);
 
     }
 
@@ -617,7 +715,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         guiFrame.setShowZeroToInfinityIntervalsSelected(showZeroToInfinityIntervals);
 
         Preferences.getInstance().setShowZeroInfIntervals(showZeroToInfinityIntervals);
-        currentTab.ifPresent(TabContentActions::repaintAll);
+        activeTab.ifPresent(TabContentActions::repaintAll);
     }
 
     @Override
@@ -652,7 +750,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
     private void setEnabledTransitionsList(boolean b){
         showEnabledTransitions = b;
         guiFrame.setShowEnabledTransitionsSelected(b);
-        currentTab.ifPresent(o->o.showEnabledTransitionsList(b));
+        activeTab.ifPresent(o->o.showEnabledTransitionsList(b));
     }
 
     @Override
@@ -663,7 +761,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
     private void setDelayEnabledTransitions(boolean b) {
         showDelayEnabledTransitions = b;
         guiFrame.setShowDelayEnabledTransitionsSelected(b);
-        currentTab.ifPresent(o->o.showDelayEnabledTransitions(b));
+        activeTab.ifPresent(o->o.showDelayEnabledTransitions(b));
     }
 
     @Override
@@ -703,7 +801,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         setEnabledTransitionsList(true);
         setDisplayToolTips(true);
 
-        currentTab.ifPresent(TabContentActions::setResizeingDefault);
+        activeTab.ifPresent(TabContentActions::setResizeingDefault);
 
         if (advanced) {
 
@@ -721,5 +819,125 @@ public class GuiFrameController implements GuiFrameControllerActions{
         DelayEnabledTransitionControl.getInstance().setDelayMode(ShortestDelayMode.getInstance());
         SimulationControl.getInstance().setRandomTransitionMode(false);
     }
+
+
+    /**
+     * Creates a new tab with the selected file, or a new file if filename==null
+     */
+    @Override
+    public TabContent createNewTabFromInputStream(InputStream file, String name) {
+
+        try {
+            ModelLoader loader = new ModelLoader();
+            LoadedModel loadedModel = loader.load(file);
+
+            if (loadedModel.getMessages().size() != 0) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        String message = "While loading the net we found one or more warnings: \n\n";
+                        for (String s : loadedModel.getMessages()) {
+                            message += s + "\n\n";
+                        }
+
+                        new MessengerImpl().displayInfoMessage(message, "Warning");
+                    }
+                }).start();
+            }
+
+            TabContent tab = new TabContent(loadedModel.network(), loadedModel.templates(), loadedModel.queries(), loadedModel.getLens());
+
+            tab.setInitialName(name);
+
+            tab.selectFirstElements();
+
+            tab.setFile(null);
+
+            return tab;
+        } catch (Exception e) {
+            Logger.log("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
+            System.err.println("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
+            //throw new Exception("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
+        }
+        return null;
+
+    }
+
+    /**
+     * Creates a new tab with the selected file, or a new file if filename==null
+     */
+
+    public TabContent createNewTabFromPNMLFile(File file) throws Exception {
+
+        if (file != null) {
+            try {
+
+                LoadedModel loadedModel;
+
+                PNMLoader loader = new PNMLoader();
+                loadedModel = loader.load(file);
+
+                TabContent tab = new TabContent(loadedModel.network(), loadedModel.templates(), loadedModel.queries(),  new TabContent.TAPNLens(true, false));
+
+                String name = null;
+
+                if (file != null) {
+                    name = file.getName().replaceAll(".pnml", ".tapn");
+                }
+                tab.setInitialName(name);
+
+                tab.selectFirstElements();
+
+                tab.setMode(Pipe.ElementType.SELECT);
+
+                //appView.updatePreferredSize(); //XXX 2018-05-23 kyrke seems not to be needed
+                name = name.replace(".pnml",".tapn"); // rename .pnml input file to .tapn
+                return tab;
+
+            } catch (Exception e) {
+                throw new Exception("TAPAAL encountered an error while loading the file: " + file.getName() + "\n\nPossible explanations:\n  - " + e.toString());
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Creates a new tab with the selected file, or a new file if filename==null
+     */
+    //XXX should properly be in controller?
+    public TabContent createNewTabFromFile(File file) throws Exception {
+        try {
+            String name = file.getName();
+            boolean showFileEndingChangedMessage = false;
+
+            if(name.toLowerCase().endsWith(".xml")){
+                name = name.substring(0, name.lastIndexOf('.')) + ".tapn";
+                showFileEndingChangedMessage = true;
+            }
+
+            InputStream stream = new FileInputStream(file);
+            TabContent tab = createNewTabFromInputStream(stream, name);
+            if (tab != null && !showFileEndingChangedMessage) tab.setFile(file);
+
+            if(showFileEndingChangedMessage) {
+                //We thread this so it does not block the EDT
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        new MessengerImpl().displayInfoMessage(FILE_FORMAT_CHANGED_MESSAGE, "FILE CHANGED");
+                    }
+                }).start();
+            }
+
+            return tab;
+        }catch (FileNotFoundException e) {
+            throw new FileNotFoundException("TAPAAL encountered an error while loading the file: " + file.getName() + "\n\nFile not found:\n  - " + e.toString());
+        }
+    }
+
+    public static final String FILE_FORMAT_CHANGED_MESSAGE = "We have changed the ending of TAPAAL files from .xml to .tapn and the opened file was automatically renamed to end with .tapn.\n"
+        + "Once you save the .tapn model, we recommend that you manually delete the .xml file.";
 
 }

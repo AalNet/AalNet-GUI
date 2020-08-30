@@ -1,8 +1,6 @@
 package dk.aau.cs.gui.components;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
 import dk.aau.cs.model.tapn.TimedPlace;
-import pipe.gui.*;
 import pipe.gui.graphicElements.tapn.TimedPlaceComponent;
 import pipe.gui.graphicElements.tapn.TimedTransitionComponent;
 import pipe.gui.undo.DeleteTimedPlaceCommand;
@@ -29,7 +26,8 @@ public class StatisticsPanel extends JPanel{
 
 	private final int topBottomMargin = 3;
 	private final int rightMargin = 10;
-	private Point location;
+    private final TabContent tab;
+    private Point location;
 	
 	private JButton removeOrphanTransitions;
     private JButton removeOrphanPlaces;
@@ -42,16 +40,17 @@ public class StatisticsPanel extends JPanel{
 	private static JDialog dialog;
 	private Object[][] contents;
 
-	private StatisticsPanel(Object[][] statistics) {
+	private StatisticsPanel(Object[][] statistics, TabContent tab) {
 		super(new GridBagLayout());
 
+		this.tab = tab;
 		this.contents = statistics;
 
 		init();
 	}
 	
-	public static void showStatisticsPanel(Object[][] statistics){
-        StatisticsPanel panel = new StatisticsPanel(statistics);
+	public static void showStatisticsPanel(Object[][] statistics, TabContent tab){
+        StatisticsPanel panel = new StatisticsPanel(statistics, tab);
 
 		JOptionPane optionPane = new JOptionPane(panel, JOptionPane.INFORMATION_MESSAGE);
 		
@@ -61,7 +60,7 @@ public class StatisticsPanel extends JPanel{
 		dialog.setVisible(true);
 	}
 
-	private JPanel init() {
+	private void init() {
         addRow(headLines, 0, true);
 		
 		//Add the content - make space for separators (except the orphan transitions)
@@ -87,9 +86,7 @@ public class StatisticsPanel extends JPanel{
 		addOrphanButtons(gbc);
 
         this.setVisible(true);
-
-		return null;
-	}
+    }
 	
 	private void addRow(Object[] row, int rowNumber, boolean isHeadLine){
 		GridBagConstraints gbc;
@@ -155,12 +152,12 @@ public class StatisticsPanel extends JPanel{
 
 		final JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-	    if (orphanTransition) {
-	        addTransitionAction();
+        if (orphanTransition) {
+            removeOrphanTransitions.addActionListener(e -> removeOrphanTransitions(tab));
             buttonsPanel.add(removeOrphanTransitions);
         }
         if (orphanPlace) {
-            addPlaceAction();
+            removeOrphanPlaces.addActionListener(e -> removeOrphanPlaces(tab));
             buttonsPanel.add(removeOrphanPlaces);
         }
 
@@ -173,87 +170,78 @@ public class StatisticsPanel extends JPanel{
 		this.add(buttonsPanel, gbc);
 	}
 
-    private void addTransitionAction() {
-	    removeOrphanTransitions.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                TabContent tab = CreateGui.getCurrentTab();
-                Iterable<Template> templates = tab.allTemplates();
+    private void removeOrphanPlaces(TabContent tab) {
+        Iterable<Template> templates = tab.allTemplates();
 
-                UndoManager undoManager = tab.getUndoManager();
-                boolean first = true;
-                for (Template template : templates) {
-                    List<TimedTransition> orphans = template.model().getOrphanTransitions();
-                    for (TimedTransition trans : orphans) {
-                        TimedTransitionComponent t = (TimedTransitionComponent)template.guiModel().getTransitionByName(trans.name());
-                        Command cmd = new DeleteTimedTransitionCommand(t, t.underlyingTransition().model(), template.guiModel());
+        UndoManager undoManager = tab.getUndoManager();
+        boolean first = true;
+        for (Template template : templates) {
+            List<TimedPlace> orphans = template.model().getOrphanPlaces();
+            for (TimedPlace place : orphans) {
+                TimedPlaceComponent timedPlace = (TimedPlaceComponent) template.guiModel().getPlaceByName(place.name());
+                Command cmd = new DeleteTimedPlaceCommand(timedPlace, template.model(), template.guiModel());
 
-                        if (first) {
-                            undoManager.addNewEdit(cmd);
-                            first = false;
-                        } else {
-                            undoManager.addEdit(cmd);
-                        }
-                        cmd.redo();
-                    }
-                    contents = template.model().getStatistics();
+                if (first) {
+                    undoManager.addNewEdit(cmd);
+                    first = false;
+                } else {
+                    undoManager.addEdit(cmd);
                 }
-                tab.drawingSurface().repaint();
-
-                location = StatisticsPanel.dialog.getLocationOnScreen();
-
-                StatisticsPanel.this.removeAll();
-                StatisticsPanel.this.init();
-
-                JOptionPane optionPane = new JOptionPane(StatisticsPanel.this, JOptionPane.INFORMATION_MESSAGE);
-
-                dialog.dispose();
-                dialog = optionPane.createDialog(DIALOG_TITLE);
-                dialog.setLocation(location);
-                dialog.pack();
-                dialog.setVisible(true);
+                cmd.redo();
             }
-        });
+            contents = template.model().getStatistics();
+        }
+        tab.drawingSurface().repaint();
+
+        location = StatisticsPanel.dialog.getLocationOnScreen();
+
+        StatisticsPanel.this.removeAll();
+        StatisticsPanel.this.init();
+
+        JOptionPane optionPane = new JOptionPane(StatisticsPanel.this, JOptionPane.INFORMATION_MESSAGE);
+
+        dialog.dispose();
+        dialog = optionPane.createDialog(DIALOG_TITLE);
+        dialog.setLocation(location);
+        dialog.pack();
+        dialog.setVisible(true);
     }
 
-	private void addPlaceAction() {
-        removeOrphanPlaces.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                TabContent tab = CreateGui.getCurrentTab();
-                Iterable<Template> templates = tab.allTemplates();
+    private void removeOrphanTransitions(TabContent tab) {
+        Iterable<Template> templates = tab.allTemplates();
 
-                UndoManager undoManager = tab.getUndoManager();
-                boolean first = true;
-                for (Template template : templates) {
-                    List<TimedPlace> orphans = template.model().getOrphanPlaces();
-                    for (TimedPlace place : orphans) {
-                        TimedPlaceComponent timedPlace = (TimedPlaceComponent)template.guiModel().getPlaceByName(place.name());
-                        Command cmd = new DeleteTimedPlaceCommand(timedPlace, template.model(), template.guiModel());
+        UndoManager undoManager = tab.getUndoManager();
+        boolean first = true;
+        for (Template template : templates) {
+            List<TimedTransition> orphans = template.model().getOrphanTransitions();
+            for (TimedTransition trans : orphans) {
+                TimedTransitionComponent t = (TimedTransitionComponent) template.guiModel().getTransitionByName(trans.name());
+                Command cmd = new DeleteTimedTransitionCommand(t, t.underlyingTransition().model(), template.guiModel());
 
-                        if (first) {
-                            undoManager.addNewEdit(cmd);
-                            first = false;
-                        } else {
-                            undoManager.addEdit(cmd);
-                        }
-                        cmd.redo();
-                    }
-                    contents = template.model().getStatistics();
+                if (first) {
+                    undoManager.addNewEdit(cmd);
+                    first = false;
+                } else {
+                    undoManager.addEdit(cmd);
                 }
-                tab.drawingSurface().repaint();
-
-                location = StatisticsPanel.dialog.getLocationOnScreen();
-
-                StatisticsPanel.this.removeAll();
-                StatisticsPanel.this.init();
-
-                JOptionPane optionPane = new JOptionPane(StatisticsPanel.this, JOptionPane.INFORMATION_MESSAGE);
-
-                dialog.dispose();
-                dialog = optionPane.createDialog(DIALOG_TITLE);
-                dialog.setLocation(location);
-                dialog.pack();
-                dialog.setVisible(true);
+                cmd.redo();
             }
-        });
+            contents = template.model().getStatistics();
+        }
+        tab.drawingSurface().repaint();
+
+        location = StatisticsPanel.dialog.getLocationOnScreen();
+
+        StatisticsPanel.this.removeAll();
+        StatisticsPanel.this.init();
+
+        JOptionPane optionPane = new JOptionPane(StatisticsPanel.this, JOptionPane.INFORMATION_MESSAGE);
+
+        dialog.dispose();
+        dialog = optionPane.createDialog(DIALOG_TITLE);
+        dialog.setLocation(location);
+        dialog.pack();
+        dialog.setVisible(true);
     }
+
 }

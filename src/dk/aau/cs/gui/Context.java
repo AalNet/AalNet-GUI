@@ -7,7 +7,7 @@ import dk.aau.cs.model.tapn.TimedArcPetriNet;
 import dk.aau.cs.model.tapn.TimedArcPetriNetNetwork;
 import dk.aau.cs.util.Require;
 
-public class Context { // TODO: consider having only currentTab as a field and have methods ask it for the things?
+public class Context {
 	private final TimedArcPetriNetNetwork network;
 	private final Template selectedTemplate;
 	
@@ -43,6 +43,6 @@ public class Context { // TODO: consider having only currentTab as a field and h
 	}
 
 	public NameGenerator nameGenerator() {
-		return currentTab.drawingSurface().getNameGenerator();
+		return currentTab.getNameGenerator();
 	}
 }

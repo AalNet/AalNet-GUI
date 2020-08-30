@@ -1,5 +1,6 @@
 package dk.aau.cs.io;
 
+import pipe.gui.Animator;
 import pipe.gui.CreateGui;
 import java.io.BufferedReader;
 import java.io.File;
@@ -77,7 +78,7 @@ public class TraceImportExport {
         } catch (NullPointerException e) {
             // Aborted by user
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(CreateGui.getApp(), "Error exporting trace.", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(CreateGui.getRootFrame(), "Error exporting trace.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -147,9 +148,9 @@ public class TraceImportExport {
         return os;
     }
 
-    public static void importTrace() {
-        if (pipe.gui.CreateGui.getCurrentTab().getAnimationHistorySidePanel().getListModel().size() > 1) {
-            int answer = JOptionPane.showConfirmDialog(CreateGui.getApp(),
+    public static void importTrace(Animator animator) {
+        if (animator.hasNonZeroTrance()) {
+            int answer = JOptionPane.showConfirmDialog(CreateGui.getRootFrame(),
                     "You are about to import a trace. This removes the current trace.",
                     "Import Trace", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
             if (answer != JOptionPane.OK_OPTION) {
@@ -164,7 +165,7 @@ public class TraceImportExport {
             return;
         }
 
-        CreateGui.getAnimator().reset(true);
+        animator.reset(true);
 
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
@@ -175,13 +176,13 @@ public class TraceImportExport {
             TimedArcPetriNetTrace traceComposed = traceParser.parseTrace(br);
             TAPNTraceDecomposer decomposer = new TAPNTraceDecomposer(traceComposed, CreateGui.getCurrentTab().network(), model.value2());
 
-            CreateGui.getAnimator().setTrace(decomposer.decompose());
+            animator.setTrace(decomposer.decompose());
 
         } catch (FileNotFoundException e) {
             // Will never happen
         } catch (Exception e) { //IOException
-            CreateGui.getAnimator().reset(true);
-            JOptionPane.showMessageDialog(CreateGui.getApp(), "Error importing trace. Does the trace belong to this model?", "Error", JOptionPane.ERROR_MESSAGE);
+            animator.reset(true);
+            JOptionPane.showMessageDialog(CreateGui.getRootFrame(), "Error importing trace. Does the trace belong to this model?", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }

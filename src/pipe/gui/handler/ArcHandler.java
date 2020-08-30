@@ -32,8 +32,7 @@ public class ArcHandler extends PetriNetObjectHandler {
 
         popup.insert(new JPopupMenu.Separator(), popupIndex);
 
-
-        if ("DEV".equals(AalNet.VERSION)){
+        if (AalNet.debugEnabled()){
             JTextArea pane = new JTextArea();
             pane.setEditable(false);
 

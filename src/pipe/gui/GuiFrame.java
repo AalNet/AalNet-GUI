@@ -8,17 +8,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
-import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import javax.swing.*;
 
 import com.sun.jna.Platform;
 import dk.aau.cs.gui.*;
-import dk.aau.cs.util.JavaUtil;
 import dk.aau.cs.verification.VerifyTAPN.VerifyPN;
 import net.tapaal.AalNet;
 import net.tapaal.Preferences;
@@ -40,12 +35,18 @@ import dk.aau.cs.verification.VerifyTAPN.VerifyTAPNDiscreteVerification;
 
 public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameActions {
 
+    /*
+      DEBUG
+      Set a break point at line actionPerformed, to allow to break execution from the gui. Eg. for inspecting elements
+     */
+    private final GuiAction breakExecutionAction = new GuiAction("Break Execution", "This action can be used to set a break while debugging, the action has no function.", KeyStroke.getKeyStroke('B',InputEvent.CTRL_DOWN_MASK + InputEvent.ALT_DOWN_MASK + InputEvent.SHIFT_DOWN_MASK)) {
+        public void actionPerformed(ActionEvent e) {}
+    };
+
     // for zoom combobox and dropdown
     private final int[] zoomLevels = {40, 60, 80, 100, 120, 140, 160, 180, 200, 300};
 
     private final String frameTitle;
-
-    private int newNameCounter = 1;
 
     final MutableReference<GuiFrameControllerActions> guiFrameController = new MutableReference<>();
 
@@ -53,13 +54,18 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     private final StatusBar statusBar;
     private JMenuBar menuBar;
-    JMenu drawMenu;
-    JMenu animateMenu;
-    JMenu viewMenu;
+
+    private JMenu fileMenu;
+    private JMenu exampleMenu;
+    private JMenu drawMenu;
+    private JMenu animateMenu;
+    private JMenu viewMenu;
+
     private JToolBar drawingToolBar;
-    private final JLabel featureInfoText = new JLabel();
-    private JComboBox<String> timeFeatureOptions = new JComboBox(new String[]{"No", "Yes"});
-    private JComboBox<String> gameFeatureOptions = new JComboBox(new String[]{"No", "Yes"});
+
+    private final JComboBox<String> timeFeatureOptions = new JComboBox<>(new String[]{"No", "Yes"});
+    private final JComboBox<String> gameFeatureOptions = new JComboBox<>(new String[]{"No", "Yes"});
+
     private JComboBox<String> zoomComboBox;
 
     private static final int shortcutkey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
@@ -198,7 +204,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     };
     private final GuiAction alignToGrid = new GuiAction("Align To Grid", "Align Petri net objects to current grid", KeyStroke.getKeyStroke("shift G")) {
         public void actionPerformed(ActionEvent e) {
-            Grid.alignPNObjectsToGrid();
+            currentTab.ifPresent(TabContentActions::alignPNObjectsToGrid);
         }
     };
     private final GuiAction netStatisticsAction = new GuiAction("Net statistics", "Shows information about the number of transitions, places, arcs, etc.", KeyStroke.getKeyStroke(KeyEvent.VK_I, shortcutkey)) {
@@ -376,7 +382,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         }
     };
 
-
     private final GuiAction selectAllAction = new GuiAction("Select all", "Select all components", KeyStroke.getKeyStroke('A', shortcutkey)) {
         public void actionPerformed(ActionEvent e) {
             currentTab.ifPresent(TabContentActions::selectAll);
@@ -399,8 +404,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         }
     };
 
-
-    private GuiAction prevcomponentAction = new GuiAction("Previous component", "Previous component", "pressed UP") {
+    private final GuiAction prevcomponentAction = new GuiAction("Previous component", "Previous component", "pressed UP") {
         public void actionPerformed(ActionEvent e) {
             currentTab.ifPresent(TabContentActions::previousComponent);
         }
@@ -411,14 +415,14 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         }
     };
 
-    private GuiAction changeTimeFeatureAction = new GuiAction("Time", "Change time semantics") {
+    private final GuiAction changeTimeFeatureAction = new GuiAction("Time", "Change time semantics") {
         public void actionPerformed(ActionEvent e) {
             boolean isTime = timeFeatureOptions.getSelectedIndex() != 0;
             currentTab.ifPresent(o -> o.changeTimeFeature(isTime));
         }
     };
 
-    private GuiAction changeGameFeatureAction = new GuiAction("Game", "Change game semantics") {
+    private final GuiAction changeGameFeatureAction = new GuiAction("Game", "Change game semantics") {
         public void actionPerformed(ActionEvent e) {
             boolean isGame = gameFeatureOptions.getSelectedIndex() != 0;
             currentTab.ifPresent(o -> o.changeGameFeature(isGame));
@@ -438,8 +442,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     public GuiFrame(String title) {
         // HAK-arrange for frameTitle to be initialized and the default file
         // name to be appended to basic window title
-
-        checkJavaVersion();
 
         frameTitle = title;
         setTitle(null);
@@ -511,15 +513,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     }
 
-    private void checkJavaVersion() {
-        int version = JavaUtil.getJREMajorVersion();
-
-        if (version < 11) {
-            JOptionPane.showMessageDialog(CreateGui.getApp(), "You are using an older version of Java than 11. Some of the functionalities may not be shown correctly.");
-            System.out.println("You are using an older version of Java than 11. Some of the functionalities may not be shown correctly.");
-        }
-    }
-
     private void trySetLookAndFeel() {
         try {
             // Set the Look and Feel native for the system.
@@ -580,8 +573,20 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         menuBar.add(buildMenuTools());
         menuBar.add(buildMenuHelp());
 
+        if (AalNet.debugEnabled()){
+            menuBar.add(buildMenuDebug());
+        }
+
         setJMenuBar(menuBar);
 
+    }
+
+    private JMenu buildMenuDebug() {
+        JMenu debugMenu = new JMenu("DEBUG");
+
+        debugMenu.add(breakExecutionAction);
+
+        return debugMenu;
     }
 
     private JMenu buildMenuEdit() {
@@ -724,13 +729,15 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         JMenu toolsMenu = new JMenu("Tools");
         toolsMenu.setMnemonic('t');
 
-        toolsMenu.add(verifyAction).setMnemonic('m');
-
-        toolsMenu.add(netStatisticsAction).setMnemonic('i');
-
         JMenuItem batchProcessing = new JMenuItem(batchProcessingAction);
         batchProcessing.setMnemonic('b');
         toolsMenu.add(batchProcessing);
+
+        toolsMenu.addSeparator();
+
+        toolsMenu.add(verifyAction).setMnemonic('m');
+
+        toolsMenu.add(netStatisticsAction).setMnemonic('i');
 
         JMenuItem workflowDialog = new JMenuItem(workflowDialogAction);
         workflowDialog.setMnemonic('f');
@@ -933,10 +940,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
                 timeFeatureOptions.setEnabled(true);
                 gameFeatureOptions.setEnabled(true);
-
-                if (getCurrentTab().restoreWorkflowDialog()) {
-                    WorkflowDialog.showDialog();
-                }
 
                 //Enable editor focus traversal policy
                 setFocusTraversalPolicy(new EditorFocusTraversalPolicy());
@@ -1166,13 +1169,12 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
                 drawingToolBar.add(new ToggleButtonWithoutText(action));
                 drawMenu.add(action);
             }
-
-            drawingToolBar.add(featureInfoText);
         } else {
             drawMenu.setEnabled(false);
         }
 
     }
+
     @Override
     public void registerAnimationActions(@NotNull List<GuiAction> animationActions) {
 
@@ -1339,7 +1341,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     private JMenu buildMenuFiles() {
-        JMenu fileMenu = new JMenu("File");
+        fileMenu = new JMenu("File");
         fileMenu.setMnemonic('F');
 
         fileMenu.add(createAction);
@@ -1395,15 +1397,22 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         fileMenu.addSeparator();
 
-        // Loads example files, retuns null if not found
-        String[] nets = loadTestNets();
+        exampleMenu = new JMenu("Example nets");
+        exampleMenu.setEnabled(false);
+        exampleMenu.setIcon(ResourceManager.getIcon("Example.png"));
+        fileMenu.add(exampleMenu);
+        fileMenu.addSeparator();
 
-        // Oliver Haggarty - fixed code here so that if folder contains non
-        // .xml file the Example x counter is not incremented when that file
-        // is ignored
-        if (nets != null && nets.length > 0) {
-            JMenu exampleMenu = new JMenu("Example nets");
-            exampleMenu.setIcon(ResourceManager.getIcon("Example.png"));
+
+        fileMenu.add(exitAction);
+
+        return fileMenu;
+    }
+
+    @Override
+    public void registerExampleNets(List<String> nets) {
+        if (nets != null && nets.size() > 0) {
+            exampleMenu.setEnabled(true);
 
             for (String filename : nets) {
                 if (filename.toLowerCase().endsWith(".tapn")) {
@@ -1413,111 +1422,19 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
                     GuiAction tmp = new GuiAction(netname, "Open example file \"" + netname + "\"") {
                         public void actionPerformed(ActionEvent arg0) {
                             InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("resources/Example nets/" + filenameFinal);
-                            try {
-                                TabContent net = TabContent.createNewTabFromInputStream(file, netname);
-                                guiFrameController.ifPresent(o -> o.openTab(net));
-                            } catch (Exception e) {
-                                // TODO Auto-generated catch block
-                                e.printStackTrace();
-                            }
+                            guiFrameController.ifPresent(o -> {
+                                TabContent tab = o.createNewTabFromInputStream(file, netname);
+                                o.openTab(tab);
+                            });
                         }
                     };
                     tmp.putValue(Action.SMALL_ICON, ResourceManager.getIcon("Net.png"));
                     exampleMenu.add(tmp);
                 }
             }
-            fileMenu.add(exampleMenu);
-            fileMenu.addSeparator();
-
+        } else {
+            exampleMenu.setEnabled(false);
         }
-
-
-        fileMenu.add(exitAction);
-
-        return fileMenu;
-    }
-
-    /**
-     * The function loads the example nets as InputStream from the resources
-     * Notice the check for if we are inside a jar file, as files inside a jar cant
-     * be listed in the normal way.
-     *
-     * @author Kenneth Yrke Joergensen <kenneth@yrke.dk>, 2011-06-27
-     */
-    private String[] loadTestNets() {
-
-
-        String[] nets = null;
-
-        try {
-            URL dirURL = Thread.currentThread().getContextClassLoader().getResource("resources/Example nets/");
-            if (dirURL != null && dirURL.getProtocol().equals("file")) {
-                /* A file path: easy enough */
-                nets = new File(dirURL.toURI()).list();
-            }
-
-            if (dirURL == null) {
-                /*
-                 * In case of a jar file, we can't actually find a directory. Have to assume the
-                 * same jar as clazz.
-                 */
-                String me = this.getName().replace(".", "/") + ".class";
-                dirURL = Thread.currentThread().getContextClassLoader().getResource(me);
-            }
-
-            if (dirURL.getProtocol().equals("jar")) {
-                /* A JAR path */
-                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf('!')); // strip out only the JAR
-                // file
-                JarFile jar = new JarFile(URLDecoder.decode(jarPath, StandardCharsets.UTF_8));
-                Enumeration<JarEntry> entries = jar.entries(); // gives ALL entries in jar
-                Set<String> result = new HashSet<String>(); // avoid duplicates in case it is a subdirectory
-                while (entries.hasMoreElements()) {
-                    String name = entries.nextElement().getName();
-                    if (name.startsWith("resources/Example nets/")) { // filter according to the path
-                        String entry = name.substring("resources/Example nets/".length());
-                        int checkSubdir = entry.indexOf('/');
-                        if (checkSubdir >= 0) {
-                            // if it is a subdirectory, we just return the directory name
-                            entry = entry.substring(0, checkSubdir);
-                        }
-                        result.add(entry);
-                    }
-                }
-                nets = result.toArray(new String[result.size()]);
-                jar.close();
-            }
-
-            Arrays.sort(nets, (one, two) -> {
-
-                int toReturn = one.compareTo(two);
-                // Special hack to get intro-example first and game-example last
-                if (one.equals("intro-example.tapn")) {
-                    toReturn = -1;
-                } else if (one.equals("game-harddisk.tapn")) {
-                    toReturn = 1;
-                }
-                if (two.equals("intro-example.tapn")) {
-                    toReturn = 1;
-                } else if (two.equals("game-harddisk.tapn")) {
-                    toReturn = -1;
-                }
-                return toReturn;
-            });
-        } catch (Exception e) {
-            Logger.log("Error getting example files:" + e);
-            e.printStackTrace();
-        }
-        return nets;
-    }
-
-
-    public int getNameCounter() {
-        return newNameCounter;
-    }
-
-    public void incrementNameCounter() {
-        newNameCounter++;
     }
 
     public String getCurrentTabName() {

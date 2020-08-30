@@ -157,7 +157,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 							if (!(c.lowerBound() == c.value())){
 								Command edit = parent.network().updateConstant(c.name(), new Constant(
 										c.name(), c.value()-1));
-								CreateGui.getCurrentTab().getUndoManager().addNewEdit(edit);
+								CreateGui.getUndoManager().addNewEdit(edit);
 								parent.network().buildConstraints();
 							}
 						}
@@ -165,7 +165,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 							if (!(c.upperBound() == c.value())){
 								Command edit = parent.network().updateConstant(c.name(), new Constant(
 										c.name(), c.value()+1));
-								CreateGui.getCurrentTab().getUndoManager().addNewEdit(edit);
+								CreateGui.getUndoManager().addNewEdit(edit);
 								parent.network().buildConstraints();
 							}
 						} 
@@ -248,7 +248,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 				((Constant) model.getElementAt(i)).setVisible(true);
 			}
 			c.setFocused(true);
-			CreateGui.getCurrentTab().drawingSurface().repaintAll();
+			CreateGui.getDrawingSurface().repaintAll();
 			blinkConstant(c);
 		}
 	}
@@ -259,7 +259,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 			((Constant) model.getElementAt(i)).setFocused(false);
 		}
 		try{
-			CreateGui.getCurrentTab().drawingSurface().repaintAll();
+            CreateGui.getDrawingSurface().repaintAll();
 		}catch(Exception e){
 			// It is okay, the tab has just been closed
 		}
@@ -273,11 +273,10 @@ public class ConstantsPane extends JPanel implements SidePane {
 				if(System.currentTimeMillis() - startTime < 2100) {
 					if(!c.getVisible()) {
 						c.setVisible(true);
-						CreateGui.getCurrentTab().drawingSurface().repaintAll();
 					} else {
 						c.setVisible(false);
-						CreateGui.getCurrentTab().drawingSurface().repaintAll();
 					}
+                    CreateGui.getDrawingSurface().repaintAll();
 				} else {
 					((Timer) e.getSource()).stop();
 				}
@@ -394,7 +393,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 		sortButton.setEnabled(false);
 		sortButton.addActionListener(e -> {
 			Command sortConstantsCommand = new SortConstantsCommand(parent, ConstantsPane.this);
-			CreateGui.getCurrentTab().getUndoManager().addNewEdit(sortConstantsCommand);
+			CreateGui.getUndoManager().addNewEdit(sortConstantsCommand);
 			sortConstantsCommand.redo();
 		});
 
@@ -417,10 +416,11 @@ public class ConstantsPane extends JPanel implements SidePane {
 		TimedArcPetriNetNetwork model = parent.network();
 		Command edit = model.removeConstant(name);
 		if (edit == null) {
-			JOptionPane.showMessageDialog(CreateGui.getApp(),
-					"You cannot remove a constant that is used in the net.\nRemove all references "
-							+ "to the constant in the net and try again.",
-							"Constant in use", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
+                "You cannot remove a constant that is used in the net.\nRemove all references "
+                    + "to the constant in the net and try again.",
+                "Constant in use", JOptionPane.ERROR_MESSAGE
+            );
 		} else {
             parent.getUndoManager().addNewEdit(edit);
         }

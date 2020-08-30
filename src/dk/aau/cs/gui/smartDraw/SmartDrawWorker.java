@@ -11,29 +11,31 @@ import dk.aau.cs.gui.undo.UpdateNameLabelOffsetCommand;
 import dk.aau.cs.gui.undo.Command;
 import dk.aau.cs.gui.undo.MovePlaceTransitionObject;
 import dk.aau.cs.util.Require;
-import pipe.gui.CreateGui;
 import pipe.gui.Zoomer;
 import pipe.gui.canvas.DrawingSurfaceImpl;
 import pipe.gui.graphicElements.*;
 import pipe.gui.undo.DeleteArcPathPointEdit;
 import pipe.gui.undo.TransitionRotationEdit;
+import pipe.gui.undo.UndoManager;
 
 public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	List<SmartDrawListener> listeners = new ArrayList<SmartDrawListener>();
 	PlaceTransitionObject startingObject;
 	int xSpacing;
 	int ySpacing;
-	DrawingSurfaceImpl drawingSurface;
 	String searchOption;
 	Point rootPoint;
 	Point rightMostPointUsed = new Point(0, 0);
 	Boolean isDone = false;
-	
+
 	ArrayList<PlaceTransitionObject> objectsPlaced = new ArrayList<PlaceTransitionObject>();
 	ArrayList<PlaceTransitionObject> placeTransitionObjects = new ArrayList<PlaceTransitionObject>();
 	ArrayList<Point> pointsReserved = new ArrayList<Point>();
-	pipe.gui.undo.UndoManager undoManager = CreateGui.getCurrentTab().getUndoManager();
-	
+
+
+	final DrawingSurfaceImpl drawingSurface;
+    final UndoManager undoManager;
+
 	//weights
 	int diagonalWeight;
 	int straightWeight;
@@ -49,11 +51,23 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	ArrayList<PlaceTransitionObject> unfinishedObjects = new ArrayList<PlaceTransitionObject>();
 	ArrayList<Arc> arcsVisited = new ArrayList<Arc>();
 	
-	public SmartDrawWorker(int xSpacing, int ySpacing, DrawingSurfaceImpl drawingSurface, String searchOption, 
-			int straightWeight, int diagonalWeight, int distanceWeight, int overlappingArcWeight, String startingObject, int minimumIterations) {
+	public SmartDrawWorker(
+        int xSpacing,
+        int ySpacing,
+        DrawingSurfaceImpl drawingSurface,
+        UndoManager undoManager,
+        String searchOption,
+        int straightWeight,
+        int diagonalWeight,
+        int distanceWeight,
+        int overlappingArcWeight,
+        String startingObject,
+        int minimumIterations
+    ) {
 		this.xSpacing = xSpacing;
 		this.ySpacing = ySpacing;
 		this.drawingSurface = drawingSurface;
+		this.undoManager = undoManager;
 		this.searchOption = searchOption;
 		this.straightWeight = straightWeight;
 		this.diagonalWeight = diagonalWeight;
@@ -380,7 +394,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	
 	private void removeArcPathPoints() {
 		ArrayList<ArcPathPoint> toRemove = new ArrayList<ArcPathPoint>();
-		for(PetriNetObject object : CreateGui.getDrawingSurface().getGuiModel().getPNObjects()) {
+		for(PetriNetObject object : drawingSurface.getGuiModel().getPNObjects()) {
 			if(object instanceof ArcPathPoint) {
 				ArcPathPoint arcPathPoint = (ArcPathPoint)object;
 				if(!(arcPathPoint.isEndPoint())) {
@@ -390,7 +404,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 
 		}
 		for(ArcPathPoint p : toRemove) {
-			Command command = new DeleteArcPathPointEdit(p.getArcPath().getArc(), p, p.getIndex(), CreateGui.getModel());
+			Command command = new DeleteArcPathPointEdit(p.getArcPath().getArc(), p, p.getIndex());
 			command.redo();
 			undoManager.addEdit(command);
 		}
@@ -428,11 +442,11 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
     //XXX: out bad handeling of zoom bleads over we need to adjust point relative to zoom
     // midpoint is at current zoom level, but when creaing a new point its coords is at 100% zoom
 	private double unzoom(double pos) {
-	    return Zoomer.getUnzoomedValue(pos, CreateGui.getDrawingSurface().getZoom());
+	    return Zoomer.getUnzoomedValue(pos, drawingSurface.getZoom());
     }
     //XXX: when setting nameoffset the position is unzoomed, so we zoom it first so it gets the value we want
     private double zoom(double pos){
-	    return Zoomer.getZoomedValue(pos, CreateGui.getDrawingSurface().getZoom());
+	    return Zoomer.getZoomedValue(pos, drawingSurface.getZoom());
     }
 	/*
 	 * Add arcPathPoints for arcs where
@@ -519,8 +533,8 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 		if(objectsPlaced.size() == drawingSurface.getGuiModel().getPlaceTransitionObjects().size()) {
 			setTransitionsToUpright();
 			doOffsetForLoops();
-			CreateGui.getModel().repaintAll(true);
-			CreateGui.getDrawingSurface().updatePreferredSize();
+            drawingSurface.getGuiModel().repaintAll(true);
+			drawingSurface.updatePreferredSize();
 			fireDone(false);
 		} else {
 			fireDone(true);

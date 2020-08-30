@@ -132,7 +132,7 @@ public class SmartDrawDialog extends JDialog {
 	public static void showSmartDrawDialog() {
 		
 		if(smartDrawDialog == null){
-			smartDrawDialog = new SmartDrawDialog(CreateGui.getApp(), "Smart Draw", true);
+			smartDrawDialog = new SmartDrawDialog(CreateGui.getRootFrame(), "Smart Draw", true);
 			smartDrawDialog.pack();
 			smartDrawDialog.setPreferredSize(smartDrawDialog.getSize());
 			smartDrawDialog.setMinimumSize(new Dimension(smartDrawDialog.getWidth(), smartDrawDialog.getHeight()));
@@ -189,7 +189,7 @@ public class SmartDrawDialog extends JDialog {
 		helpButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(CreateGui.getAppGui(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(CreateGui.getRootFrame(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE);
 				}
 			});
 		
@@ -209,8 +209,20 @@ public class SmartDrawDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				initLoadingFrame();
-				worker = new SmartDrawWorker(xSpacing, ySpacing, CreateGui.getDrawingSurface(), searchOption, 
-						straightWeight, diagonalWeight, distanceWeight, overlappingArcWeight, startingObject, minimumIterations);
+				worker = new SmartDrawWorker(
+				    xSpacing,
+                    ySpacing,
+                    CreateGui.getDrawingSurface(),
+                    CreateGui.getUndoManager(),
+                    searchOption,
+					straightWeight,
+                    diagonalWeight,
+                    distanceWeight,
+                    overlappingArcWeight,
+                    startingObject,
+                    minimumIterations
+                );
+
 				worker.addSmartDrawListener(new SmartDrawListener() {
 					
 					@Override
@@ -688,7 +700,7 @@ public class SmartDrawDialog extends JDialog {
 	}
 	
 	private void initLoadingFrame() {
-		loadingDialogFrame = new JDialog(CreateGui.getApp(), "Working...", true);
+		loadingDialogFrame = new JDialog(CreateGui.getRootFrame(), "Working...", true);
 		loadingDialogFrame.setLayout(new GridBagLayout());
 		loadingDialogFrame.setType(Window.Type.POPUP);
 		ImageIcon loadingGIF = ResourceManager.getIcon("ajax-loader.gif");

@@ -162,7 +162,7 @@ public class AnnotationNote extends Note {
 		String oldText = note.getText();
 		JDialog.setDefaultLookAndFeelDecorated(true);
 		// Build interface
-		EscapableDialog guiDialog = new EscapableDialog(CreateGui.getApp(), "Edit Annotation", true);
+		EscapableDialog guiDialog = new EscapableDialog(CreateGui.getRootFrame(), "Edit Annotation", true);
 
 		guiDialog.add(new AnnotationPanel(this));
 		guiDialog.setMinimumSize(new Dimension(300, 200));
@@ -188,7 +188,7 @@ public class AnnotationNote extends Note {
 		if (oldText != null && !newText.equals(oldText)) {
 			// Text has been changed
 
-			CreateGui.getCurrentTab().getUndoManager().addNewEdit(
+			CreateGui.getUndoManager().addNewEdit(
 					new AnnotationTextEdit(this, oldText, newText)
 			);
 			updateBounds();

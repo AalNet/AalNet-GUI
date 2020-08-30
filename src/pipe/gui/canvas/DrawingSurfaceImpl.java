@@ -30,14 +30,12 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
 	private final SelectionManager selection;
 
-	private final GuiFrame app = CreateGui.getApp();
-	private Zoomer zoomControl;
+    private Zoomer zoomControl;
 
 	private DataLayer guiModel;
 	private final TabContent tabContent;
 	private final Reference<AbstractDrawingSurfaceManager> managerRef;
 
-    private final NameGenerator nameGenerator = new NameGenerator();
 	private static final boolean showDebugBounds = false;
 
 	public DrawingSurfaceImpl(DataLayer dataLayer, TabContent tabContent, Reference<AbstractDrawingSurfaceManager> managerRef) {
@@ -62,21 +60,15 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
 	}
 
-	public NameGenerator getNameGenerator() {
-		return nameGenerator;
-	}
-
 	public DataLayer getGuiModel() {
 		return guiModel;
 	}
 
-	public void setModel(DataLayer guiModel, TimedArcPetriNet model, Zoomer zoomer) {
+	public void setModel(DataLayer guiModel, Zoomer zoomer) {
 		//Remove the old model from view
 		this.guiModel.removedFromView();
 		//Add the new model to view
 		guiModel.addedToView(this);
-
-		nameGenerator.add(model);
 
 		this.guiModel = guiModel;
 		this.zoomControl = zoomer;
@@ -377,9 +369,7 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
     class MouseHandler extends MouseInputAdapter {
 
-		private DrawingSurfaceImpl view;
-
-        private Point dragStart;
+		private final DrawingSurfaceImpl view;
 
 		public MouseHandler(DrawingSurfaceImpl _view) {
 			super();
@@ -398,48 +388,13 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 			if (managerRef!=null && managerRef.get() != null) {
 				managerRef.get().drawingSurfaceMousePressed(e);
 			}
-			if(app.getCurrentTab().isInAnimationMode()) return;
-
-			// check for control down here enables it to attach the arc being drawn to an existing place/transition
-
-
-			Point clickPoint = e.getPoint();
-
-			if (SwingUtilities.isLeftMouseButton(e)) {
-
-                Pipe.ElementType mode = CreateGui.guiMode;
-
-				switch (mode) {
-					case DRAG:
-						dragStart = new Point(clickPoint);
-						break;
-
-					case SELECT:
-						getSelectionObject().dispatchEvent(e);
-						break;
-
-					default:
-						break;
-				}
-			} else {
-				setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-				dragStart = new Point(clickPoint);
-			}
-			updatePreferredSize();
+			//updatePreferredSize();
 		}
 
         @Override
 		public void mouseReleased(MouseEvent e) {
 			if (managerRef!=null && managerRef.get() != null) {
 				managerRef.get().drawingSurfaceMouseReleased(e);
-			}
-			//setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-			if (dragStart != null) {
-				dragStart = null;
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			}
-            if (CreateGui.guiMode == ElementType.SELECT) {
-				getSelectionObject().dispatchEvent(e);
 			}
 		}
 
@@ -455,11 +410,6 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 		public void mouseDragged(MouseEvent e) {
 			if (managerRef!=null && managerRef.get() != null) {
 				managerRef.get().drawingSurfaceMouseDragged(e);
-			}
-            if (dragStart != null) {
-				view.drag(dragStart, e.getPoint());
-			} else if (CreateGui.guiMode == ElementType.SELECT) {
-				getSelectionObject().dispatchEvent(e);
 			}
 		}
 

@@ -41,10 +41,17 @@ public class AalNet {
 	public static final String TOOLNAME = "AalNet";
 	public static final String VERSION = "DEV";
 
+    public static final int MINIMUM_SUPPORTED_JAVAVERSION = 11;
+
 	public static String getProgramName(){
 		return "" + AalNet.TOOLNAME + " " + AalNet.VERSION;
 	}
 
+	//XXX: This values should never be change while running the program
+	private static boolean debug = false;
+	public static boolean debugEnabled() {
+	    return debug;
+    }
 	
 	public static void main(String[] args) throws Exception {
 		// Create a CommandLineParser using Posix Style
@@ -67,11 +74,13 @@ public class AalNet {
 		// Enable debug
 		if (commandline.hasOption("debug")) {
 			Logger.enableLogging(true);
+			debug = true;
 		}
 
 		if (AalNet.VERSION.equals("DEV")){
 			Logger.enableLogging(true);
 			Logger.log("Debug logging is enabled by default in DEV branch");
+            debug = true;
 		}
 
 		if (commandline.hasOption("batch")) {
@@ -101,7 +110,7 @@ public class AalNet {
 			if (file.exists()) { // Open the file
 				if (file.canRead()) {
 					try {
-                        CreateGui.getAppGuiController().openTab(TabContent.createNewTabFromFile(file));
+                        CreateGui.getAppGuiController().createNewTabFromFile(file);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -122,6 +131,7 @@ public class AalNet {
 
 	private static void batchProcessing(File batchFolder) throws Exception {
 		//Sadly needs to create the gui
+		/*
 		CreateGui.init();
 		CreateGui.getApp().setVisible(false);
 
@@ -177,6 +187,7 @@ public class AalNet {
 		BatchProcessingResultsExporter exporter = new BatchProcessingResultsExporter();
 		exporter.exportToCSV(results.getResults(), System.out);
 		System.out.println("Done" + results.getRowCount());
+		 */
 	}
 
 	public static File getInstallDir() {
