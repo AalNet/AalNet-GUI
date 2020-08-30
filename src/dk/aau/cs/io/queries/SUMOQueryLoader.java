@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dk.aau.cs.gui.TabContent;
 import pipe.dataLayer.TAPNQuery;
 import pipe.dataLayer.TAPNQuery.ExtrapolationOption;
 import pipe.dataLayer.TAPNQuery.HashTableSize;
@@ -72,12 +73,12 @@ public class SUMOQueryLoader extends QueryLoader{
 
 	}
 
-	public static void importQueries(File file, TimedArcPetriNetNetwork network){
+	public static void importQueries(File file, TimedArcPetriNetNetwork network, TabContent tab){
 		SUMOQueryLoader loader = new SUMOQueryLoader(file, network);
 		Collection<TAPNQuery> queries = loader.parseQueries();
 
 		for(TAPNQuery query : queries){
-			CreateGui.getCurrentTab().addQuery(query);
+			tab.addQuery(query);
 		}
 	}
 }

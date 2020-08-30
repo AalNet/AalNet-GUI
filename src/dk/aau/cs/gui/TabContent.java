@@ -1677,7 +1677,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		for(File f : files){
 			if(f.exists() && f.isFile() && f.canRead()){
 				FileBrowser.userPath = f.getParent();
-				SUMOQueryLoader.importQueries(f, network());
+				SUMOQueryLoader.importQueries(f, network(), this);
 			}
 		}
 	}
@@ -1688,7 +1688,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		for(File f : files){
 			if(f.exists() && f.isFile() && f.canRead()){
 				FileBrowser.userPath = f.getParent();
-				XMLQueryLoader.importQueries(f, network());
+				XMLQueryLoader.importQueries(f, network(), this);
 			}
 		}
 	}

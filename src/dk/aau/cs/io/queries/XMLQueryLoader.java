@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 
+import dk.aau.cs.gui.TabContent;
 import pipe.dataLayer.TAPNQuery;
 import pipe.dataLayer.TAPNQuery.ExtrapolationOption;
 import pipe.dataLayer.TAPNQuery.HashTableSize;
@@ -117,7 +118,7 @@ public class XMLQueryLoader extends QueryLoader{
         return queries;
     }
 
-    public static void importQueries(File file, TimedArcPetriNetNetwork network){
+    public static void importQueries(File file, TimedArcPetriNetNetwork network, TabContent tab){
         XMLQueryLoader loader = new XMLQueryLoader(file, network);
 
         // Suppress default error message
@@ -125,7 +126,7 @@ public class XMLQueryLoader extends QueryLoader{
         Collection<TAPNQuery> queries = loader.parseQueries();
 	
         for(TAPNQuery query : queries){
-            CreateGui.getCurrentTab().addQuery(query);
+            tab.addQuery(query);
 
             // Remove successfully parsed queries from list
             for(QueryWrapper q : loader.faultyQueries){
