@@ -42,12 +42,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 import dk.aau.cs.util.Require;
 
@@ -88,6 +83,16 @@ public abstract class TabComponent extends JPanel {
 		JButton button = new TabButton();
 		add(button);
 		setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+
+		addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isMiddleMouseButton(e)) {
+                    int index = pane.indexOfTabComponent(TabComponent.this);
+                    closeTab((TabContent) pane.getComponentAt(index));
+                }
+            }
+        });
 	}
 
 	private class TabButton extends JButton {
@@ -133,8 +138,8 @@ public abstract class TabComponent extends JPanel {
 
 	protected abstract void closeTab(TabContent tab);
 
-	private static final MouseListener buttonMouseListener = new MouseAdapter() {
-		@Override
+	private final MouseListener buttonMouseListener = new MouseAdapter() {
+        @Override
 		public void mouseEntered(MouseEvent e) {
 			Component component = e.getComponent();
 			if (component instanceof AbstractButton) {
