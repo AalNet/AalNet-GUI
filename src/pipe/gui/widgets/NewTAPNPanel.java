@@ -4,28 +4,25 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
 import dk.aau.cs.gui.TabContent;
 import pipe.gui.CreateGui;
-import pipe.gui.Grid;
-import pipe.gui.GuiFrame;
+import pipe.gui.GuiFrameController;
 
 public class NewTAPNPanel extends JPanel {
 
 	private final JRootPane rootPane;
-	private final GuiFrame frame;
+	private final GuiFrameController guiFrameController;
 	private JTextField nameTextBox;
 	private JRadioButton timedNet;
 	private JRadioButton gameNet;
 
-	public NewTAPNPanel(JRootPane rootPane, GuiFrame frame) {
+	public NewTAPNPanel(JRootPane rootPane, GuiFrameController guiFrameController) {
 		this.rootPane = rootPane;
-		this.frame = frame;
+		this.guiFrameController = guiFrameController;
 
 		initComponents();
 	}
@@ -84,31 +81,7 @@ public class NewTAPNPanel extends JPanel {
 	}
 
 	protected void createNewTAPNBasedOnSelection(String name, boolean isTimed, boolean isGame) {
-		if (!name.endsWith(".tapn")) {
-			name = name + ".tapn";
-		}
-
-		if (name.isEmpty()) {
-			JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
-					"You must provide a name for the net.", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-
-		try {
-			TabContent tab = TabContent.createNewEmptyTab(name, isTimed, isGame);
-			CreateGui.openNewTabFromStream(tab);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(
-                CreateGui.getRootFrame(),
-                "Something went wrong while creating a new model. Please try again.",
-                "Error", JOptionPane.INFORMATION_MESSAGE
-            );
-			e.printStackTrace();
-			return;
-		}
-
-        TabContent.incrementNameCounter();
+	    guiFrameController.addNewEmptyTab(name, new TabContent.TAPNLens(isTimed, isGame));
 		exit();
 	}
 

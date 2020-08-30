@@ -588,8 +588,8 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
     }
 
-    public static TabContent createNewEmptyTab(String name, boolean isTimed, boolean isGame){
-        TabContent tab = new TabContent(new TimedArcPetriNetNetwork(), new ArrayList<>(), new TAPNLens(isTimed, isGame));
+    public static TabContent createNewEmptyTab(String name, TAPNLens lens){
+        TabContent tab = new TabContent(new TimedArcPetriNetNetwork(), new ArrayList<>(), lens);
         tab.setInitialName(name);
 
         //Set Default Template

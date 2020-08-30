@@ -286,7 +286,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.PAGE_AXIS));
 
         // 2 Add Place editor
-        contentPane.add(new NewTAPNPanel(guiDialog.getRootPane(), guiFrameDirectAccess));
+        contentPane.add(new NewTAPNPanel(guiDialog.getRootPane(), this));
 
         guiDialog.setResizable(false);
 
@@ -940,4 +940,31 @@ public class GuiFrameController implements GuiFrameControllerActions{
     public static final String FILE_FORMAT_CHANGED_MESSAGE = "We have changed the ending of TAPAAL files from .xml to .tapn and the opened file was automatically renamed to end with .tapn.\n"
         + "Once you save the .tapn model, we recommend that you manually delete the .xml file.";
 
+    public void addNewEmptyTab(String name, TabContent.TAPNLens tapnLens) {
+        if (!name.endsWith(".tapn")) {
+            name = name + ".tapn";
+        }
+
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
+                "You must provide a name for the net.", "Error",
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        try {
+            TabContent tab = TabContent.createNewEmptyTab(name, tapnLens);
+            openTab(tab);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(
+                CreateGui.getRootFrame(),
+                "Something went wrong while creating a new model. Please try again.",
+                "Error", JOptionPane.INFORMATION_MESSAGE
+            );
+            e.printStackTrace();
+            return;
+        }
+
+        TabContent.incrementNameCounter();
+    }
 }

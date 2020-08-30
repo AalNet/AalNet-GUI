@@ -128,12 +128,8 @@ public class CreateGui {
 
 	//XXX The following function should properly not be used and is only used while refactoring, but is better
 	// that the chained access via guiFrame, App or drawingsurface now marked with deprecation.
-	public static TabContent openNewTabFromStream(InputStream file, String name) throws Exception {
+	public static TabContent openNewTabFromStream(InputStream file, String name) {
 		TabContent tab = appGuiController.createNewTabFromInputStream(file, name);
-		return tab;
-	}
-	public static TabContent openNewTabFromStream(TabContent tab) {
-		appGuiController.openTab(tab);
 		return tab;
 	}
 
