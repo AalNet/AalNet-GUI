@@ -1310,7 +1310,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
 	@Override
 	public void importTrace() {
-		TraceImportExport.importTrace(animator);
+		TraceImportExport.importTrace(animator, this);
 	}
 
 	@Override
@@ -1322,11 +1322,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		}
 	}
 
-	public void editSelectedQuery(){
-		queries.showEditDialog();
-	}
-
-	public void makeSureEditorPanelIsVisible(Component c){
+    public void makeSureEditorPanelIsVisible(Component c){
 		//If you "show" a component and the main divider is all the way to the left, make sure it's moved such that the component is actually shown
 		if(c.isVisible()){
 			if(this.getDividerLocation() == 0){

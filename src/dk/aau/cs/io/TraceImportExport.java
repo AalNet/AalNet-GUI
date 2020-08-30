@@ -1,5 +1,6 @@
 package dk.aau.cs.io;
 
+import dk.aau.cs.gui.TabContent;
 import pipe.gui.Animator;
 import pipe.gui.CreateGui;
 import java.io.BufferedReader;
@@ -49,7 +50,6 @@ public class TraceImportExport {
             ByteArrayOutputStream os = prepareTraceStream();
 
             FileBrowser fb = FileBrowser.constructor("Export Trace", "trc");
-            // path = fb.saveFile(CreateGui.appGui.getCurrentTabName().substring(0, CreateGui.appGui.getCurrentTabName().lastIndexOf('.')) + "-trace");
             path = fb.saveFile(CreateGui.getAppGui().getCurrentTabName().substring(0, CreateGui.getAppGui().getCurrentTabName().lastIndexOf('.')));
 
             FileOutputStream fs = new FileOutputStream(path);
@@ -148,7 +148,7 @@ public class TraceImportExport {
         return os;
     }
 
-    public static void importTrace(Animator animator) {
+    public static void importTrace(Animator animator, TabContent tab) {
         if (animator.hasNonZeroTrance()) {
             int answer = JOptionPane.showConfirmDialog(CreateGui.getRootFrame(),
                     "You are about to import a trace. This removes the current trace.",
@@ -170,11 +170,11 @@ public class TraceImportExport {
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f)));
 
-            TAPNComposer composer = new TAPNComposer(new pipe.gui.MessengerImpl(), CreateGui.getCurrentTab().getGuiModels(), false, true);
+            TAPNComposer composer = new TAPNComposer(new pipe.gui.MessengerImpl(), tab.getGuiModels(), false, true);
             Tuple<TimedArcPetriNet, NameMapping> model = composer.transformModel(CreateGui.getCurrentTab().network());
             VerifyTAPNTraceParser traceParser = new VerifyTAPNTraceParser(model.value1());
             TimedArcPetriNetTrace traceComposed = traceParser.parseTrace(br);
-            TAPNTraceDecomposer decomposer = new TAPNTraceDecomposer(traceComposed, CreateGui.getCurrentTab().network(), model.value2());
+            TAPNTraceDecomposer decomposer = new TAPNTraceDecomposer(traceComposed, tab.network(), model.value2());
 
             animator.setTrace(decomposer.decompose());
 
