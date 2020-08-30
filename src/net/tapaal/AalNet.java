@@ -83,114 +83,13 @@ public class AalNet {
             debug = true;
 		}
 
-		if (commandline.hasOption("batch")) {
-
-			String[] files = commandline.getArgs();
-			//String [] files = new String[] {"C:\\kyrke\\tapaal\\3.6\\src\\resources\\Example nets"};
-
-			//String [] files = new String[] {"C:\\kyrke\\tapaal\\testmodels-tapaal"};
-			//String [] files = new String[] {"C:\\tmp\\subset2"};
-			File batchFolder = new File(files[0]);
-
-			batchProcessing(batchFolder);
-
-
-			return;
-		}
-
 		// Create the TAPAAL GUI
 		CreateGui.init();
 
-		// Open files
-		String[] files = commandline.getArgs();
-		Logger.log("Opening #files: " + files.length);
-		for (String f : files) {
-			File file = new File(f);
-
-			if (file.exists()) { // Open the file
-				if (file.canRead()) {
-					try {
-                        CreateGui.getAppGuiController().createNewTabFromFile(file);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				} else if (file.exists()) {
-					System.err.println("Can not read file " + file.toString());
-				}
-			} else {
-				// XXX: Can we create the file? what would the default file type
-				// be?
-				// XXX: Can we check if we can write to the directory?
-				System.err.println("Can not find file " + file.toString());
-
-			}
-		}
 
 	}
 
-	private static void batchProcessing(File batchFolder) throws Exception {
-		//Sadly needs to create the gui
-		/*
-		CreateGui.init();
-		CreateGui.getApp().setVisible(false);
-
-		System.out.println("=============================================================");
-		System.out.println("Batch Porcessing");
-		System.out.println("=============================================================");
-
-		System.out.println("Running in batch mode for " + batchFolder.getAbsolutePath());
-
-		BatchProcessingResultsTableModel results = new BatchProcessingResultsTableModel();
-
-		for (File f : batchFolder.listFiles()) {
-			if (f.getName().toLowerCase().endsWith(".tapn") || f.getName().toLowerCase().endsWith(".xml")) {
-				System.out.println("Processing File: " + f);
-
-				TabContent tab = TabContent.createNewTabFromInputStream(new FileInputStream(f), f.getName());
-				TimedArcPetriNetNetwork network = tab.network();
-				List<TAPNQuery> queries = StreamSupport
-						.stream(tab.queries().spliterator(), false)
-						.collect(Collectors.toList());
-
-				for (TAPNQuery query : queries) {
-
-					System.out.println("    | Running query: " + query.getName());
-
-					if(query.getReductionOption() == ReductionOption.VerifyTAPN || query.getReductionOption() == ReductionOption.VerifyTAPNdiscreteVerification || query.getReductionOption() == ReductionOption.VerifyPN) {
-						Verifier.runVerifyTAPNVerification(network, query, new VerificationCallback() {
-							@Override
-							public void run(VerificationResult<TAPNNetworkTrace> result) {
-
-								String resultString = result.getQueryResult().isQuerySatisfied() ? "Satisfied" : "Not Satisfied";
-								System.out.println("    | Result: " + resultString);
-
-								results.addResult(new BatchProcessingVerificationResult(
-										f.toString(), query,resultString ,result.verificationTime(), MemoryMonitor.getPeakMemory(),result.stats()
-								));
-							}
-
-						});
-					} else {
-						System.out.println("    | Skipped");
-						//Verifier.runUppaalVerification(network, query);
-					}
-
-				}
-
-			}
-		}
-
-		System.out.println("===========================================");
-		System.out.println("===========================================");
-
-		BatchProcessingResultsExporter exporter = new BatchProcessingResultsExporter();
-		exporter.exportToCSV(results.getResults(), System.out);
-		System.out.println("Done" + results.getRowCount());
-		 */
-	}
-
-	public static File getInstallDir() {
+    public static File getInstallDir() {
 		
 		String str = ClassLoader.getSystemResource("AalNet.class").getPath();
 		
