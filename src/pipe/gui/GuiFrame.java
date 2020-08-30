@@ -941,8 +941,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
                 timeFeatureOptions.setEnabled(true);
                 gameFeatureOptions.setEnabled(true);
 
-                //Enable editor focus traversal policy
-                setFocusTraversalPolicy(new EditorFocusTraversalPolicy());
                 fixBug812694GrayMenuAfterSimulationOnMac();
                 break;
 
@@ -980,9 +978,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
                 getCurrentTab().removeConstantHighlights();
 
                 getCurrentTab().getAnimationController().requestFocusInWindow();
-
-                //Enable simulator focus traversal policy
-                setFocusTraversalPolicy(new SimulatorFocusTraversalPolicy());
 
                 break;
             case noNet:
