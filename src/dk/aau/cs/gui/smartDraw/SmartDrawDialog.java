@@ -95,14 +95,10 @@ public class SmartDrawDialog extends JDialog {
 	
 	JPanel mainPanel;
 	String startingObject = "Random";
-	//String template;
-	String[] objectNames;
-	//String[] templateNames;
 	JComboBox<String> objectDropdown = new JComboBox<String>();
 	JCheckBox randomStartObjectCheckBox;
-	//JComboBox<Object> templateSelector = new JComboBox<Object>();
 	JDialog loadingDialogFrame;
-	//JDialog choiceModal;
+
 	SmartDrawWorker worker;
 	JLabel timerLabel = new JLabel("Time elapsed: ");
 	JLabel progressLabel = new JLabel("Objects placed: ");
@@ -110,7 +106,7 @@ public class SmartDrawDialog extends JDialog {
 	JSpinner xSpinner;
 	JButton drawButton;
 	long startTimeMs;
-	int objectsProgress;
+
 
 	
 	int xSpacing = 80;
@@ -155,11 +151,6 @@ public class SmartDrawDialog extends JDialog {
 		for(String name : getObjectNames()) {
 			objectDropdown.addItem(name);
 		}
-		
-		/*templateSelector.removeAllItems();
-		for(String name : getTemplatesAsString()) {
-			templateSelector.addItem(name);
-		}*/
 	}
 	
 	private void initComponents() {
@@ -170,28 +161,10 @@ public class SmartDrawDialog extends JDialog {
 		initSpacingSelecters();
 		initCheckBoxes();
 		initAdvancedOptionsPanel();
-		//initChoiceModal();
-		
-		/*templateSelector.setEnabled(false);
-		
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		mainPanel.add(templateSelector, gbc);*/
+
 		JButton helpButton = new JButton("Help");
 		helpButton.setToolTipText("Help with the different options");
-		helpButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-					JOptionPane.showMessageDialog(CreateGui.getRootFrame(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE);
-				}
-			});
+		helpButton.addActionListener(e -> JOptionPane.showMessageDialog(CreateGui.getRootFrame(), getMessageComponent(), "Help", JOptionPane.INFORMATION_MESSAGE));
 		
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -255,9 +228,6 @@ public class SmartDrawDialog extends JDialog {
 				worker.execute();
 				smartDrawDialog.setVisible(false);
 				loadingDialogFrame.setVisible(true);
-				/*loadingDialogFrame.toFront();
-				loadingDialogFrame.requestFocus();
-				loadingDialogFrame.setAlwaysOnTop(true);*/
 			}
 		});
 		
@@ -297,14 +267,10 @@ public class SmartDrawDialog extends JDialog {
 		
 		objectDropdown.setEnabled(false);
 		objectDropdown.setToolTipText("Choose a starting object");
-		objectDropdown.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(objectDropdown.getSelectedItem() != null && objectDropdown.isEnabled())
-					startingObject = objectDropdown.getSelectedItem().toString();
-			}
-		});
+		objectDropdown.addActionListener(e -> {
+            if(objectDropdown.getSelectedItem() != null && objectDropdown.isEnabled())
+                startingObject = objectDropdown.getSelectedItem().toString();
+        });
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -318,21 +284,15 @@ public class SmartDrawDialog extends JDialog {
 		
 		randomStartObjectCheckBox = new JCheckBox("Random Initial Object:", true);
 		randomStartObjectCheckBox.setHorizontalTextPosition(SwingConstants.LEFT);
-		randomStartObjectCheckBox.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(randomStartObjectCheckBox.isSelected()) {
-					startingObject = "Random";
-					objectDropdown.setEnabled(false);
-				} else {
-					objectDropdown.setEnabled(true);
-					startingObject = objectDropdown.getSelectedItem().toString();
-				}
-					
-				
-			}
-		});
+		randomStartObjectCheckBox.addActionListener(e -> {
+            if(randomStartObjectCheckBox.isSelected()) {
+                startingObject = "Random";
+                objectDropdown.setEnabled(false);
+            } else {
+                objectDropdown.setEnabled(true);
+                startingObject = objectDropdown.getSelectedItem().toString();
+            }
+        });
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -343,8 +303,7 @@ public class SmartDrawDialog extends JDialog {
 		gbc.insets = new Insets(10, 20, 10, 0);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		advancedOptionsPanel.add(randomStartObjectCheckBox, gbc);
-		
-		
+
 		JLabel straightWeightLabel = new JLabel("Straight Arc Penalty:");
 		straightWeightLabel.setToolTipText("Higher number decreases the number of horizontal and vertical arcs");
 		gbc = new GridBagConstraints();
@@ -359,13 +318,7 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner straightWeightSpinner = new CustomJSpinner(straightWeight);
 		straightWeightSpinner.setToolTipText("Higher number decreases the number of horizontal and vertical arcs");
-		straightWeightSpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				straightWeight = (Integer) straightWeightSpinner.getValue();
-			}
-		});
+		straightWeightSpinner.addChangeListener(e -> straightWeight = (Integer) straightWeightSpinner.getValue());
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -391,13 +344,7 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner diagonalWeightSpinner = new CustomJSpinner(diagonalWeight);
 		diagonalWeightSpinner.setToolTipText("Higher number decreases the number of diagonal arcs");
-		diagonalWeightSpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				diagonalWeight = (Integer) diagonalWeightSpinner.getValue();
-			}
-		});
+		diagonalWeightSpinner.addChangeListener(e -> diagonalWeight = (Integer) diagonalWeightSpinner.getValue());
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -423,13 +370,7 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner distanceWeightSpinner = new CustomJSpinner(distanceWeight);
 		distanceWeightSpinner.setToolTipText("Higher penalty will make the layout more compact");
-		distanceWeightSpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				distanceWeight = (Integer) distanceWeightSpinner.getValue();
-			}
-		});
+		distanceWeightSpinner.addChangeListener(e -> distanceWeight = (Integer) distanceWeightSpinner.getValue());
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -455,13 +396,7 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner overlappingWeightSpinner = new CustomJSpinner(overlappingArcWeight);
 		overlappingWeightSpinner.setToolTipText("Higher penalty will decrease the number of arcs that cross other objects");
-		overlappingWeightSpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				overlappingArcWeight = (Integer) overlappingWeightSpinner.getValue();
-			}
-		});
+		overlappingWeightSpinner.addChangeListener(e -> overlappingArcWeight = (Integer) overlappingWeightSpinner.getValue());
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -487,13 +422,7 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner minimumIterationSpinner = new CustomJSpinner(minimumIterations);
 		minimumIterationSpinner.setToolTipText("Higher number increases the number of positions tried for each object");
-		minimumIterationSpinner.addChangeListener(new ChangeListener() {
-			
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				minimumIterations = (Integer) minimumIterationSpinner.getValue();
-			}
-		});
+		minimumIterationSpinner.addChangeListener(e -> minimumIterations = (Integer) minimumIterationSpinner.getValue());
 		
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
@@ -524,35 +453,15 @@ public class SmartDrawDialog extends JDialog {
 		
 		JRadioButton DFS = new JRadioButton("DFS:");
 		DFS.setToolTipText("Draw in a depth first manner from start object");
-		DFS.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				searchOption = "DFS";
-			}
-		});
+		DFS.addActionListener(e -> searchOption = "DFS");
 		JRadioButton BFS = new JRadioButton("BFS:");
 		BFS.setToolTipText("Draw in a breadth first manner from start object");
 
-		BFS.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				searchOption = "BFS";
-			}
-		});
-		
-		/*JRadioButton randomSearch = new JRadioButton("Random:");
-		randomSearch.setEnabled(false);
-		randomSearch.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				searchOption = "Random";
-			}
-		});*/
+		BFS.addActionListener(e -> searchOption = "BFS");
 		
 	    ButtonGroup group = new ButtonGroup();
 	    group.add(DFS);
 	    group.add(BFS);
-	    //group.add(randomSearch);
 	    
 	    DFS.setSelected(true);
 	    DFS.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -576,19 +485,7 @@ public class SmartDrawDialog extends JDialog {
 		gbc.insets = new Insets(10, 20, 10, 0);
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		checkBoxPanel.add(BFS, gbc);
-		
-		/*randomSearch.setHorizontalTextPosition(SwingConstants.LEFT);
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(10, 20, 10, 0);
-		gbc.anchor = GridBagConstraints.NORTHWEST;
-		checkBoxPanel.add(randomSearch, gbc);*/
-		
-		
+
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 2;
@@ -605,7 +502,6 @@ public class SmartDrawDialog extends JDialog {
 		JPanel spacingPanel = new JPanel(new GridBagLayout());
 		spacingPanel.setBorder(new TitledBorder("Spacing"));
 		
-		
 		JLabel xLabel = new JLabel("Spacing on the x-axis:");
 		xLabel.setToolTipText("Set the distance there should be between objects on the x-axis");
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -621,12 +517,7 @@ public class SmartDrawDialog extends JDialog {
 		xSpinner = new CustomJSpinner(xSpacing);
 		xSpinner.setToolTipText("Set the distance there should be between objects on the x-axis");
 
-		xSpinner.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				xSpacing = (Integer)xSpinner.getValue();
-			}
-		});
+		xSpinner.addChangeListener(e -> xSpacing = (Integer)xSpinner.getValue());
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 0;
@@ -651,12 +542,8 @@ public class SmartDrawDialog extends JDialog {
 		
 		final JSpinner ySpinner = new CustomJSpinner(ySpacing);
 		ySpinner.setToolTipText("Set the distance there should be between objects on the y-axis");
-		ySpinner.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				ySpacing = (Integer)ySpinner.getValue();
-			}
-		});
+		ySpinner.addChangeListener(e -> ySpacing = (Integer)ySpinner.getValue());
+
 		gbc = new GridBagConstraints();
 		gbc.gridx = 1;
 		gbc.gridy = 1;
@@ -667,8 +554,7 @@ public class SmartDrawDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		spacingPanel.add(ySpinner, gbc);
 		
-		
-		
+
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.gridy = 1;
@@ -679,19 +565,8 @@ public class SmartDrawDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		mainPanel.add(spacingPanel, gbc);
 	}
-	
-	private String[] getTemplatesAsString() {
-		String[] templateNames = {"Choose Template"};
-		Iterator<pipe.dataLayer.Template> iterator = CreateGui.getCurrentTab().activeTemplates().iterator();
-		int i = 0;
-		while(iterator.hasNext()) {
-			pipe.dataLayer.Template template = iterator.next();
-			templateNames[i] = template.model().name();
-		}
-		return templateNames;
-	}
-	
-	static private String[] getObjectNames() {
+
+    static private String[] getObjectNames() {
 		ArrayList<String> names = new ArrayList<String>();
 		for(PetriNetObject object : CreateGui.getDrawingSurface().getGuiModel().getPlaceTransitionObjects()) {
 			names.add(object.getName());
@@ -746,20 +621,15 @@ public class SmartDrawDialog extends JDialog {
 		loadingDialogFrame.add(progressLabel, gbc);
 		
 		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cancelWorker();
-				CreateGui.getCurrentTab().getUndoManager().undo();
-				CreateGui.getDrawingSurface().repaintAll();
-				loadingDialogFrame.setVisible(false);
-				//smartDrawDialog.setVisible(true);
-				CreateGui.getAppGui().toFront();
-				CreateGui.getAppGui().requestFocus();
-				
-			}
-		});
+		cancelButton.addActionListener(e -> {
+            cancelWorker();
+            CreateGui.getCurrentTab().getUndoManager().undo();
+            CreateGui.getDrawingSurface().repaintAll();
+            loadingDialogFrame.setVisible(false);
+            CreateGui.getAppGui().toFront();
+            CreateGui.getAppGui().requestFocus();
+        });
+
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.weightx = 1.0;
@@ -776,95 +646,6 @@ public class SmartDrawDialog extends JDialog {
 		loadingDialogFrame.setLocationRelativeTo(CreateGui.getAppGui());
 		loadingDialogFrame.pack();
 	}
-	
-	
-	
-	
-	/*
-	 * Asks if you want to keep, revert or try again
-	 * is not used currently
-	 */
-	/*private void initChoiceModal() {
-		choiceModal = new JDialog(smartDrawDialog, "Keep?", true);
-		choiceModal.setLayout(new GridBagLayout());
-		choiceModal.setVisible(false);
-		choiceModal.setLocationRelativeTo(smartDrawDialog);
-		choiceModal.setResizable(false);
-		choiceModal.setSize(300, 100);
-
-		
-		JLabel choiceLabel = new JLabel("<html><div style='text-align: center;'>Would you like to keep the new layout,<br/> revert or try again?</div></html>", SwingConstants.CENTER);
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.gridwidth = 3;
-		gbc.anchor = GridBagConstraints.NORTH;
-		
-		choiceModal.add(choiceLabel, gbc);
-		
-		JButton keepButton = new JButton("Keep layout");
-		keepButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				smartDrawDialog.setVisible(false);
-				choiceModal.setVisible(false);				
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.anchor = GridBagConstraints.NORTH;
-		choiceModal.add(keepButton, gbc);
-		
-		JButton revertButton = new JButton("Revert");
-		revertButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CreateGui.getDrawingSurface().getUndoManager().undo();
-				smartDrawDialog.setVisible(false);
-				choiceModal.setVisible(false);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.anchor = GridBagConstraints.NORTH;
-		choiceModal.add(revertButton, gbc);
-		
-		JButton retryButton = new JButton("Try Again");
-		retryButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				choiceModal.setVisible(false);
-				smartDrawDialog.setVisible(true);
-			}
-		});
-		gbc = new GridBagConstraints();
-		gbc.gridx = 2;
-		gbc.gridy = 1;
-		gbc.weightx = 1.0;
-		gbc.weighty = 1.0;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.insets = new Insets(0, 0, 0, 0);
-		gbc.anchor = GridBagConstraints.NORTH;
-		choiceModal.add(retryButton, gbc);
-		
-	}*/
 	
 	private Object getMessageComponent(){
 		JTextPane pane = new JTextPane();
@@ -883,7 +664,6 @@ public class SmartDrawDialog extends JDialog {
 		return scrollPane;  
 	}
 
-	
 	private void cancelWorker() {
 		if (worker != null && !worker.isDone()) {
 			boolean cancelled = false;
