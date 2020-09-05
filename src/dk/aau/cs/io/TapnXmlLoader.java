@@ -8,12 +8,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.TabContent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,7 +22,6 @@ import org.xml.sax.SAXException;
 import pipe.dataLayer.TAPNQuery;
 import pipe.dataLayer.DataLayer;
 import pipe.dataLayer.Template;
-import pipe.gui.CreateGui;
 import pipe.gui.Pipe;
 import pipe.gui.Zoomer;
 import pipe.gui.graphicElements.*;
@@ -48,10 +45,8 @@ import dk.aau.cs.model.tapn.TimedArcPetriNet;
 import dk.aau.cs.model.tapn.TimedArcPetriNetNetwork;
 import dk.aau.cs.model.tapn.TimedInhibitorArc;
 import dk.aau.cs.model.tapn.TimedInputArc;
-import dk.aau.cs.model.tapn.TimedMarking;
 import dk.aau.cs.model.tapn.TimedOutputArc;
 import dk.aau.cs.model.tapn.TimedPlace;
-import dk.aau.cs.model.tapn.TimedToken;
 import dk.aau.cs.model.tapn.TimedTransition;
 import dk.aau.cs.model.tapn.TransportArc;
 import dk.aau.cs.model.tapn.Weight;
@@ -71,7 +66,8 @@ public class TapnXmlLoader {
 	private final IdResolver idResolver = new IdResolver();
     private final Collection<String> messages = new ArrayList<>(10);
 
-    private TabContent.TAPNLens lens;
+    boolean hasFeatureTag = false;
+    private TabContent.TAPNLens lens = TabContent.TAPNLens.Default;
 
 	public TapnXmlLoader() {
 
@@ -129,19 +125,24 @@ public class TapnXmlLoader {
 
 		network.buildConstraints();
 
-		return new LoadedModel(network, templates, queries,messages, lens);
+        if (hasFeatureTag) {
+            return new LoadedModel(network, templates, queries, messages, lens);
+        } else {
+            return new LoadedModel(network, templates, queries, messages, null);
+        }
+
 	}
 
     private void parseFeature(Document doc) {
         if (doc.getElementsByTagName("feature").getLength() > 0) {
 	        NodeList nodeList = doc.getElementsByTagName("feature");
 
+	        hasFeatureTag = true;
+
             var isTimed = Boolean.parseBoolean(nodeList.item(0).getAttributes().getNamedItem("isTimed").getNodeValue());
             var isGame = Boolean.parseBoolean(nodeList.item(0).getAttributes().getNamedItem("isGame").getNodeValue());
 
             lens = new TabContent.TAPNLens(isTimed, isGame);
-        } else {
-            lens = new TabContent.TAPNLens(true, false);
         }
     }
 
