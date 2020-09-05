@@ -15,11 +15,8 @@ class NativeFileBrowser extends FileBrowser {
 	private final String ext;
         private final String optionalExt;
 	private String specifiedPath;
-	NativeFileBrowser(String filetype, final String ext, String path) {
-		this(filetype, ext, "", path);
-	}
-	
-	NativeFileBrowser(String filetype, final String ext, final String optionalExt, String path) {
+
+    NativeFileBrowser(String filetype, final String ext, final String optionalExt, String path) {
 		fc = new FileDialog(CreateGui.getRootFrame(), filetype);
 		this.specifiedPath = path;
 
