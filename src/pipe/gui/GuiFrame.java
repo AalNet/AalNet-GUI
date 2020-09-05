@@ -24,7 +24,6 @@ import net.tapaal.swinghelpers.ToggleButtonWithoutText;
 import org.jetbrains.annotations.NotNull;
 import pipe.gui.Pipe.ElementType;
 import pipe.gui.action.GuiAction;
-import pipe.gui.widgets.WorkflowDialog;
 import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.smartDraw.SmartDrawDialog;
 import net.tapaal.resourcemanager.ResourceManager;
@@ -334,21 +333,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     private final GuiAction showToolTipsAction = new GuiAction("Display tool tips", "Show/hide tool tips when mouse is over an element", KeyStroke.getKeyStroke('8', shortcutkey), true) {
         public void actionPerformed(ActionEvent e) {
             guiFrameController.ifPresent(GuiFrameControllerActions::toggleDisplayToolTips);
-        }
-    };
-    private final GuiAction showAdvancedWorkspaceAction = new GuiAction("Show advanced workspace", "Show all panels", false) {
-        public void actionPerformed(ActionEvent e) {
-            guiFrameController.ifPresent(GuiFrameControllerActions::showAdvancedWorkspace);
-        }
-    };
-    private final GuiAction showSimpleWorkspaceAction = new GuiAction("Show simple workspace", "Show only the most important panels", false) {
-        public void actionPerformed(ActionEvent e) {
-            guiFrameController.ifPresent(GuiFrameControllerActions::showSimpleWorkspace);
-        }
-    };
-    private final GuiAction saveWorkSpaceAction = new GuiAction("Save workspace", "Save the current workspace as the default one", false) {
-        public void actionPerformed(ActionEvent e) {
-            guiFrameController.ifPresent(GuiFrameControllerActions::saveWorkspace);
         }
     };
     private final GuiAction showAboutAction = new GuiAction("About", "Show the About menu") {
@@ -672,11 +656,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         showTokenAgeCheckBox = addCheckboxMenuItem(viewMenu, showTokenAge(), showTokenAgeAction);
 
-        viewMenu.addSeparator();
-
-        viewMenu.add(showSimpleWorkspaceAction);
-        viewMenu.add(showAdvancedWorkspaceAction);
-        viewMenu.add(saveWorkSpaceAction);
         return viewMenu;
     }
 
@@ -1058,9 +1037,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         showDelayEnabledTransitionsAction.setEnabled(enable);
         showToolTipsAction.setEnabled(enable);
         showTokenAgeAction.setEnabled(enable);
-        showAdvancedWorkspaceAction.setEnabled(enable);
-        showSimpleWorkspaceAction.setEnabled(enable);
-        saveWorkSpaceAction.setEnabled(enable);
 
         // Simulator
         startAction.setEnabled(enable);

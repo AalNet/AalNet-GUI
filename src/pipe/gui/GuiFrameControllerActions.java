@@ -26,8 +26,6 @@ public interface GuiFrameControllerActions {
 
     void showNewPNDialog();
 
-    void saveWorkspace();
-
     void checkForUpdate();
 
     void showAbout();
@@ -51,11 +49,6 @@ public interface GuiFrameControllerActions {
     void toggleDelayEnabledTransitions();
     void toggleDisplayToolTips();
 
-    void showAdvancedWorkspace();
-
-    void showSimpleWorkspace();
-
     void createNewTabFromInputStreamAndOpen(InputStream file, String name);
-
     TabContent createNewTabFromInputStream(InputStream file, String name);
 }

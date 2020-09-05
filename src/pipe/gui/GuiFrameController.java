@@ -8,7 +8,6 @@ import dk.aau.cs.io.LoadedModel;
 import dk.aau.cs.io.ModelLoader;
 import dk.aau.cs.util.JavaUtil;
 import net.tapaal.resourcemanager.ResourceManager;
-import dk.aau.cs.model.tapn.simulation.ShortestDelayMode;
 import dk.aau.cs.verification.UPPAAL.Verifyta;
 import dk.aau.cs.verification.VerifyTAPN.VerifyTAPN;
 import dk.aau.cs.verification.VerifyTAPN.VerifyTAPNDiscreteVerification;
@@ -25,7 +24,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -295,34 +293,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         guiDialog.setLocationRelativeTo(null);
         guiDialog.setVisible(true);
 
-
-    }
-
-    @Override
-    public void saveWorkspace() {
-
-        Preferences prefs = Preferences.getInstance();
-
-        prefs.setAdvancedQueryView(QueryDialog.getAdvancedView());
-        prefs.setEditorModelRoot(TabContent.getEditorModelRoot());
-        prefs.setSimulatorModelRoot(TabContent.getSimulatorModelRoot());
-        prefs.setWindowSize(guiFrameDirectAccess.getSize());
-
-        prefs.setShowComponents(showComponents);
-        prefs.setShowQueries(showQueries);
-        prefs.setShowConstants(showConstants);
-
-        prefs.setShowEnabledTrasitions(showEnabledTransitions);
-        prefs.setShowDelayEnabledTransitions(showDelayEnabledTransitions);
-        prefs.setShowTokenAge(guiFrameDirectAccess.showTokenAge());
-        prefs.setDelayEnabledTransitionDelayMode(DelayEnabledTransitionControl.getDefaultDelayMode());
-        prefs.setDelayEnabledTransitionGranularity(DelayEnabledTransitionControl.getDefaultGranularity());
-        prefs.setDelayEnabledTransitionIsRandomTransition(SimulationControl.isRandomTransition());
-
-        JOptionPane.showMessageDialog(guiFrameDirectAccess,
-                "The workspace has now been saved into your preferences.\n"
-                        + "It will be used as the initial workspace next time you run the tool.",
-                "Workspace Saved", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
@@ -727,45 +697,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setReshowDelay(800);
         ToolTipManager.sharedInstance().setDismissDelay(60000);
-    }
-
-    @Override
-    public void showAdvancedWorkspace() {
-        showAdvancedWorkspace(true);
-    }
-
-    @Override
-    public void showSimpleWorkspace() {
-        showAdvancedWorkspace(false);
-    }
-    private void showAdvancedWorkspace(boolean advanced){
-        QueryDialog.setAdvancedView(advanced);
-        setComponents(advanced);
-        setSharedPT(advanced);
-        setConstants(advanced);
-
-        //Queries and enabled transitions should always be shown
-        setQueries(true);
-        setEnabledTransitionsList(true);
-        setDisplayToolTips(true);
-
-        activeTab.ifPresent(TabContentActions::setResizeingDefault);
-
-        if (advanced) {
-
-            setZeroToInfinityIntervals(true);
-            setTokenAge(true);
-
-        } else {
-            setZeroToInfinityIntervals(false);
-            setTokenAge(false);
-        }
-
-        //Delay-enabled Transitions
-        //showDelayEnabledTransitions(advanced);
-        DelayEnabledTransitionControl.getInstance().setValue(new BigDecimal("0.1"));
-        DelayEnabledTransitionControl.getInstance().setDelayMode(ShortestDelayMode.getInstance());
-        SimulationControl.getInstance().setRandomTransitionMode(false);
     }
 
     @Override
