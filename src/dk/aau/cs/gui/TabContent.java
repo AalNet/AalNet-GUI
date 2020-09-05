@@ -943,11 +943,6 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		return this.guiModels;
 	}
 
-	public void setDrawingSurface(DrawingSurfaceImpl drawingSurface) {
-		this.drawingSurface = drawingSurface;
-	}
-
-
 	//XXX this is a temp solution while refactoring
 	// to keep the name of the net when the when a file is not set.
 	String initialName = "";
