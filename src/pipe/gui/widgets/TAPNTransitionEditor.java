@@ -105,7 +105,7 @@ public class TAPNTransitionEditor extends JPanel {
                 switchToNameTextField();
                 nameTextField.setText(transition.underlyingTransition().isShared()?
                 CreateGui.getCurrentTab().getNameGenerator().getNewTransitionName(context.activeModel()) : transition.getName());
-                makeSharedButton.setEnabled(true);
+                //makeSharedButton.setEnabled(true);
             }
         });
 		gridBagConstraints = GridBagHelper.as(2, 1, Anchor.WEST, new Insets(3, 3, 3, 3));
@@ -114,6 +114,7 @@ public class TAPNTransitionEditor extends JPanel {
 		
 		makeSharedButton = new JButton();
 		makeSharedButton.setText("Make shared");
+		makeSharedButton.setEnabled(false);
 		makeSharedButton.setMaximumSize(new java.awt.Dimension(110, 25));
 		makeSharedButton.setMinimumSize(new java.awt.Dimension(110, 25));
 		makeSharedButton.setPreferredSize(new java.awt.Dimension(110, 25));
@@ -253,7 +254,7 @@ public class TAPNTransitionEditor extends JPanel {
 		}else{
 			switchToNameTextField();
 		}
-		makeSharedButton.setEnabled(!sharedCheckBox.isSelected() && !hasArcsToSharedPlaces(transition.underlyingTransition()));
+		//makeSharedButton.setEnabled(!sharedCheckBox.isSelected() && !hasArcsToSharedPlaces(transition.underlyingTransition()));
 		attributesCheckBox.setSelected(transition.getAttributesVisible());
 	}
 	

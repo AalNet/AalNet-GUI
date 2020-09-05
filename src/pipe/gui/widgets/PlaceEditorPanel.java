@@ -169,7 +169,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 		sharedCheckBox.setEnabled(sharedPlaces.size() > 0 && !hasArcsToSharedTransitions(place.underlyingPlace()));
 		sharedCheckBox.setSelected(place.underlyingPlace().isShared());
 		
-		makeSharedButton.setEnabled(!sharedCheckBox.isSelected() && !hasArcsToSharedTransitions(place.underlyingPlace()));
+		//makeSharedButton.setEnabled(!sharedCheckBox.isSelected() && !hasArcsToSharedTransitions(place.underlyingPlace()));
 
 		nameTextField.setText(place.underlyingPlace().name());
 		nameTextField.selectAll();
@@ -214,7 +214,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 			}else{
 				switchToNameTextField();
 				nameTextField.setText(place.underlyingPlace().isShared()? context.tabContent().getNameGenerator().getNewPlaceName(context.activeModel()) : place.getName());
-				makeSharedButton.setEnabled(true);
+				//makeSharedButton.setEnabled(true);
 			}
 		});
 
@@ -223,6 +223,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
 		makeSharedButton = new javax.swing.JButton();
 		makeSharedButton.setText("Make shared");
+		makeSharedButton.setEnabled(false);
 		makeSharedButton.setMaximumSize(new java.awt.Dimension(110, 25));
 		makeSharedButton.setMinimumSize(new java.awt.Dimension(110, 25));
 		makeSharedButton.setPreferredSize(new java.awt.Dimension(110, 25));
