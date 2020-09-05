@@ -2581,7 +2581,10 @@ public class TabContent extends JSplitPane implements TabContentActions{
         private void placeTranstionObjectReleased(PetriNetObject pno, boolean shiftDown, MouseEvent e) {
             if (isDragging) {
                 isDragging = false;
-                drawingSurface.translateSelection(pno.getParent().getSelectionObject().getSelection(), totalX, totalY);
+                getUndoManager().newEdit(); // new "transaction""
+                for (PetriNetObject pnobject : pno.getParent().getSelectionObject().getSelection()) {
+                    getUndoManager().addEdit(new TranslatePetriNetObjectEdit(pnobject, totalX, totalY, drawingSurface));
+                }
                 totalX = 0;
                 totalY = 0;
             } else if (!justSelected) {
