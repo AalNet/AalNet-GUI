@@ -29,24 +29,15 @@ import javax.print.SimpleDoc;
 import javax.print.StreamPrintServiceFactory;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.w3c.dom.DOMException;
 
 import dk.aau.cs.TCTL.visitors.CTLQueryVisitor;
 import dk.aau.cs.TCTL.visitors.RenameAllPlacesVisitor;
 import dk.aau.cs.TCTL.visitors.RenameAllTransitionsVisitor;
-import dk.aau.cs.gui.TabContent;
-import dk.aau.cs.io.PNMLWriter;
-import dk.aau.cs.model.tapn.NetworkMarking;
 import dk.aau.cs.model.tapn.TimedArcPetriNetNetwork;
 import dk.aau.cs.verification.ITAPNComposer;
 import dk.aau.cs.verification.NameMapping;
 import dk.aau.cs.verification.TAPNComposer;
 import pipe.dataLayer.DataLayer;
-import pipe.dataLayer.NetWriter;
 import pipe.dataLayer.TAPNQuery;
 import pipe.gui.canvas.DrawingSurfaceImpl;
 import pipe.gui.widgets.filebrowser.FileBrowser;
@@ -62,30 +53,7 @@ public class Export {
 	public static final int POSTSCRIPT = 2;
 	public static final int PRINTER = 3;
 	public static final int TIKZ = 5;
-	public static final int PNML = 6;
 	public static final int QUERY = 7;
-
-    private static void toPnml(DrawingSurfaceImpl g, String filename) throws NullPointerException, DOMException, IOException, ParserConfigurationException, TransformerException {
-
-        TabContent currentTab = CreateGui.getCurrentTab();
-        NetworkMarking currentMarking = null;
-
-        if (currentTab.isInAnimationMode()) {
-            currentMarking = currentTab.network().marking();
-            currentTab.network().setMarking(currentTab.getAnimator().getInitialMarking());
-        }
-
-        NetWriter tapnWriter = new PNMLWriter(
-            currentTab.network(),
-            currentTab.getGuiModels()
-        );
-
-        tapnWriter.savePNML(new File(filename));
-
-        if (currentTab.isInAnimationMode()) {
-            currentTab.network().setMarking(currentMarking);
-        }
-    }
 	
 	private static void toQueryXML(String filename){
 		toQueryXML(CreateGui.getCurrentTab().network(), filename, CreateGui.getCurrentTab().queries());
@@ -196,9 +164,6 @@ public class Export {
 				case TIKZ:
 					filename += "tex";
 					break;
-				case PNML:
-					filename += "pnml";
-					break;
 				case QUERY:
 					filename = filename.substring(0, dotpos);
 					filename += "-queries.xml";
@@ -251,13 +216,6 @@ public class Export {
 				if (filename != null) {
 					TikZExporter output = new TikZExporter(model, filename, tikZOption, CreateGui.getApp().showZeroToInfinityIntervals());
 					output.ExportToTikZ();
-				}
-				break;
-			case PNML:
-				filename = FileBrowser.constructor("PNML file", "pnml", filename)
-				.saveFile();
-				if (filename != null) {
-					toPnml(g, filename);
 				}
 				break;
 			case QUERY:

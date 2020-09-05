@@ -6,7 +6,6 @@ import java.util.Map.Entry;
 
 import dk.aau.cs.gui.TabContent;
 import pipe.dataLayer.DataLayer;
-import pipe.gui.ExportBatchDialog;
 import pipe.gui.graphicElements.Arc;
 import pipe.gui.graphicElements.ArcPath;
 import pipe.gui.graphicElements.ArcPathPoint;
@@ -32,7 +31,6 @@ import dk.aau.cs.model.tapn.TimedInhibitorArc;
 import dk.aau.cs.model.tapn.TimedInputArc;
 import dk.aau.cs.model.tapn.TimedOutputArc;
 import dk.aau.cs.model.tapn.TimedPlace;
-import dk.aau.cs.model.tapn.TimedToken;
 import dk.aau.cs.model.tapn.TimedTransition;
 import dk.aau.cs.model.tapn.TransportArc;
 import dk.aau.cs.util.Tuple;
@@ -308,14 +306,6 @@ public class TAPNComposer implements ITAPNComposer {
 							mapping.addMappingForShared(name, uniqueTransitionName);
 						}else{
 							mapping.addMapping(tapn.name(), timedTransition.name(), uniqueTransitionName);
-						}
-					}else{
-						if(!hasShownMessage && !(ExportBatchDialog.isDialogVisible())){
-							messenger.displayInfoMessage("There are orphan transitions (no incoming and no outgoing arcs) in the model.");
-							hasShownMessage = true;
-						}
-						else if(ExportBatchDialog.isDialogVisible()) {
-							ExportBatchDialog.setNoOrphanTransitions(true);
 						}
 					}
 				}

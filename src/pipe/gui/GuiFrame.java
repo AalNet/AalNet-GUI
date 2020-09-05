@@ -135,20 +135,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
                 Export.exportGuiView(getCurrentTab().drawingSurface(), Export.TIKZ, getCurrentTab().drawingSurface().getGuiModel());
         }
     };
-    private final GuiAction exportToPNMLAction = new GuiAction("PNML", "Export the net to PNML format", KeyStroke.getKeyStroke('D', shortcutkey)) {
-        public void actionPerformed(ActionEvent arg0) {
-            if (Preferences.getInstance().getShowPNMLWarning()) {
-                JCheckBox showAgain = new JCheckBox("Do not show this warning.");
-                String message = "In the saved PNML all timing information will be lost\n" +
-                    "and the components in the net will be merged into one big net.";
-                Object[] dialogContent = {message, showAgain};
-                JOptionPane.showMessageDialog(null, dialogContent,
-                    "PNML loss of information", JOptionPane.WARNING_MESSAGE);
-                Preferences.getInstance().setShowPNMLWarning(!showAgain.isSelected());
-            }
-            Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PNML, null);
-        }
-    };
     private final GuiAction exportToXMLAction = new GuiAction("XML Queries", "Export the queries to XML format", KeyStroke.getKeyStroke('H', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
             Export.exportGuiView(getCurrentTab().drawingSurface(), Export.QUERY, null);
@@ -162,11 +148,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     private final GuiAction importTraceAction = new GuiAction("Import trace", "Import trace to simulator", "") {
         public void actionPerformed(ActionEvent arg0) {
             currentTab.ifPresent(TabContentActions::importTrace);
-        }
-    };
-    private final GuiAction exportBatchAction = new GuiAction("Batch Export to PNML and XML Queries", "Export multiple nets into PNML together with the XML queries, while removing the timing information", KeyStroke.getKeyStroke('D', (shortcutkey + InputEvent.SHIFT_DOWN_MASK))) {
-        public void actionPerformed(ActionEvent e) {
-            ExportBatchDialog.ShowExportBatchDialog();
         }
     };
 
@@ -974,7 +955,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         exportPNGAction.setEnabled(enable);
         exportPSAction.setEnabled(enable);
         exportToTikZAction.setEnabled(enable);
-        exportToPNMLAction.setEnabled(enable);
         exportToXMLAction.setEnabled(enable);
 
         exportTraceAction.setEnabled(enable);
@@ -1293,20 +1273,9 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         exportMenu.setIcon(ResourceManager.getIcon("Export.png"));
 
         exportMenu.add(exportPNGAction);
-
         exportMenu.add(exportPSAction);
-
-
         exportMenu.add(exportToTikZAction);
-
-
-        exportMenu.add(exportToPNMLAction);
-
-
         exportMenu.add(exportToXMLAction);
-
-        exportMenu.add(exportBatchAction);
-
 
         fileMenu.add(exportMenu);
 
