@@ -340,24 +340,15 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
             guiFrameController.ifPresent(GuiFrameControllerActions::showAbout);
         }
     };
-    private final GuiAction showHomepage = new GuiAction("Visit TAPAAL home", "Visit the TAPAAL homepage") {
+    private final GuiAction showHomepage = new GuiAction("Visit AalNet home", "Visit the AalNet homepage") {
         public void actionPerformed(ActionEvent arg0) {
-            guiFrameController.ifPresent(o -> o.openURL("http://www.tapaal.net"));
+            guiFrameController.ifPresent(o -> o.openURL("https://github.com/AalNet/AalNet-GUI"));
         }
     };
-    private final GuiAction showAskQuestionAction = new GuiAction("Ask a question", "Ask a question about TAPAAL") {
+
+    private final GuiAction showReportBugAction = new GuiAction("Report bug", "Report a bug in AalNet") {
         public void actionPerformed(ActionEvent arg0) {
-            guiFrameController.ifPresent(o -> o.openURL("https://answers.launchpad.net/tapaal/+addquestion"));
-        }
-    };
-    private final GuiAction showReportBugAction = new GuiAction("Report bug", "Report a bug in TAPAAL") {
-        public void actionPerformed(ActionEvent arg0) {
-            guiFrameController.ifPresent(o -> o.openURL("https://bugs.launchpad.net/tapaal/+filebug"));
-        }
-    };
-    private final GuiAction showFAQAction = new GuiAction("Show FAQ", "See TAPAAL frequently asked questions") {
-        public void actionPerformed(ActionEvent arg0) {
-            guiFrameController.ifPresent(o -> o.openURL("https://answers.launchpad.net/tapaal/+faqs"));
+            guiFrameController.ifPresent(o -> o.openURL("https://github.com/AalNet/AalNet-GUI/issues"));
         }
     };
     private final GuiAction checkUpdate = new GuiAction("Check for updates", "Check if there is a new version of TAPAAL") {
@@ -688,14 +679,11 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         helpMenu.setMnemonic('H');
 
         helpMenu.add(showHomepage);
-
-        helpMenu.add(checkUpdate);
+        helpMenu.add(showReportBugAction);
 
         helpMenu.addSeparator();
 
-        helpMenu.add(showFAQAction);
-        helpMenu.add(showAskQuestionAction);
-        helpMenu.add(showReportBugAction);
+        helpMenu.add(checkUpdate);
 
         helpMenu.addSeparator();
 
