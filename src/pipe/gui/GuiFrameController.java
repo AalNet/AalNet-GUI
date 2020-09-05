@@ -153,7 +153,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
     boolean showDelayEnabledTransitions = true;
     private boolean showToolTips = true;
     private boolean showZeroToInfinityIntervals = true;
-    private boolean showTokenAge = true;
 
     private void loadPrefrences() {
         Preferences prefs = Preferences.getInstance();
@@ -187,9 +186,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
         showZeroToInfinityIntervals = prefs.getShowZeroInfIntervals();
         guiFrame.setShowZeroToInfinityIntervalsSelected(showZeroToInfinityIntervals);
-
-        showTokenAge = prefs.getShowTokenAge();
-        guiFrame.setShowTokenAgeSelected(showTokenAge);
 
         guiFrame.setWindowSize(prefs.getWindowSize());
 
@@ -578,20 +574,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         guiFrame.setShowConstantsSelected(showConstants);
         //currentTab.ifPresent(o->o.showConstantsPanel(showConstants));
         CreateGui.getTabs().forEach(o->o.showConstantsPanel(showConstants));
-
-    }
-
-    @Override
-    public void toggleTokenAge(){
-        setTokenAge(!showTokenAge);
-    }
-    public void setTokenAge(boolean b){
-        showTokenAge = b;
-
-        Preferences.getInstance().setShowTokenAge(showTokenAge);
-
-        guiFrame.setShowTokenAgeSelected(showTokenAge);
-        activeTab.ifPresent(TabContentActions::repaintAll);
 
     }
 

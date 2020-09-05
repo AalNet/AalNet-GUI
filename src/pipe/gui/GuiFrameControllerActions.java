@@ -41,7 +41,6 @@ public interface GuiFrameControllerActions {
     void showBatchProcessingDialog();
     void toggleQueries();
     void toggleConstants();
-    void toggleTokenAge();
     void toggleZeroToInfinityIntervals();
     void toggleComponents();
     void toggleSharedPT();

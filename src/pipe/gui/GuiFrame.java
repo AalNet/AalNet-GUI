@@ -276,11 +276,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         }
     };
 
-    private final GuiAction showTokenAgeAction = new GuiAction("Display token age", "Show/hide displaying the token age 0.0 (when hidden the age 0.0 is drawn as a dot)", KeyStroke.getKeyStroke('9', shortcutkey), true) {
-        public void actionPerformed(ActionEvent e) {
-            guiFrameController.ifPresent(GuiFrameControllerActions::toggleTokenAge);
-        }
-    };
     private final GuiAction showComponentsAction = new GuiAction("Display components", "Show/hide the list of components.", KeyStroke.getKeyStroke('1', shortcutkey), true) {
         public void actionPerformed(ActionEvent e) {
             guiFrameController.ifPresent(GuiFrameControllerActions::toggleComponents);
@@ -395,7 +390,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     private JCheckBoxMenuItem showZeroToInfinityIntervalsCheckBox;
-    private JCheckBoxMenuItem showTokenAgeCheckBox;
     private JCheckBoxMenuItem showDelayEnabledTransitionsCheckbox;
 
     private JMenu zoomMenu;
@@ -630,8 +624,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         showZeroToInfinityIntervalsCheckBox = addCheckboxMenuItem(viewMenu, showZeroToInfinityIntervals(), showZeroToInfinityIntervalsAction);
 
         addCheckboxMenuItem(viewMenu, showToolTipsAction);
-
-        showTokenAgeCheckBox = addCheckboxMenuItem(viewMenu, showTokenAge(), showTokenAgeAction);
 
         return viewMenu;
     }
@@ -1010,7 +1002,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         showEnabledTransitionsAction.setEnabled(enable);
         showDelayEnabledTransitionsAction.setEnabled(enable);
         showToolTipsAction.setEnabled(enable);
-        showTokenAgeAction.setEnabled(enable);
 
         // Simulator
         startAction.setEnabled(enable);
@@ -1154,11 +1145,9 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         if (!getCurrentTab().getLens().isTimed()) {
             showZeroToInfinityIntervalsCheckBox.setVisible(false);
-            showTokenAgeCheckBox.setVisible(false);
             showDelayEnabledTransitionsCheckbox.setVisible(false);
         } else {
             showZeroToInfinityIntervalsCheckBox.setVisible(true);
-            showTokenAgeCheckBox.setVisible(true);
             showDelayEnabledTransitionsCheckbox.setVisible(true);
         }
     }
@@ -1236,11 +1225,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     @Override
     public void setShowZeroToInfinityIntervalsSelected(boolean b) {
         showZeroToInfinityIntervalsAction.setSelected(b);
-    }
-
-    @Override
-    public void setShowTokenAgeSelected(boolean b) {
-        showTokenAgeAction.setSelected(b);
     }
 
     public void setTitle(String title) {
