@@ -624,9 +624,9 @@ public class WorkflowDialog extends JDialog {
 		panel.add(new JLabel(" Number of extra tokens:  "), gbc);
 
 		if (numberOfExtraTokensInNet == null) {
-			numberOfExtraTokensInNet = new CustomJSpinner(model.getDefaultBound(), 0, 100000);    // Allow at most 100.000 extra tokens.
+			numberOfExtraTokensInNet = new CustomJSpinner(3, 0, 100000);    // Allow at most 100.000 extra tokens.
 		} else {
-			numberOfExtraTokensInNet.setValue(model.getDefaultBound());
+			numberOfExtraTokensInNet.setValue(3);
 		}
 		
 		numberOfExtraTokensInNet.setMaximumSize(new Dimension(55, 30));

@@ -735,11 +735,8 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
         constantsPanel.setNetwork(tapnNetwork);
 
-        if(network.paintNet()){
-            this.setRightComponent(drawingSurfaceScroller);
-        } else {
-            this.setRightComponent(drawingSurfaceDummy);
-        }
+        this.setRightComponent(drawingSurfaceScroller);
+
         //update queries
         this.queries.setQueries(tapnqueries);
     }

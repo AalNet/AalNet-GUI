@@ -580,9 +580,4 @@ public class TimedArcPetriNetNetwork {
 		return network;
 	}
 
-	public int getDefaultBound() {
-        int defaultBound = 3;
-        return defaultBound;
-	}
-
 }
