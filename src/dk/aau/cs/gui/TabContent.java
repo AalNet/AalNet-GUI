@@ -1312,7 +1312,8 @@ public class TabContent extends JSplitPane implements TabContentActions{
 	//XXX not sure about this
     @Override
     public void repaintAll() {
-		drawingSurface().repaintAll();
+        drawingSurface.repaint();
+        currentTemplate().guiModel().repaintAll(!isInAnimationMode());
     }
 
     public void showConstantsPanel(boolean enable) {
@@ -1537,7 +1538,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
 				setManager(animationModeController);
 
-				drawingSurface().repaintAll();
+				repaintAll();
 
 				rememberSelectedTemplate();
 				if (currentTemplate().isActive()){

@@ -624,7 +624,7 @@ public class SmartDrawDialog extends JDialog {
 		cancelButton.addActionListener(e -> {
             cancelWorker();
             CreateGui.getCurrentTab().getUndoManager().undo();
-            CreateGui.getDrawingSurface().repaintAll();
+            CreateGui.getCurrentTab().repaintAll();
             loadingDialogFrame.setVisible(false);
             CreateGui.getAppGui().toFront();
             CreateGui.getAppGui().requestFocus();

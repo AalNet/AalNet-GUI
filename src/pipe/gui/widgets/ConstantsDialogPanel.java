@@ -249,7 +249,7 @@ public class ConstantsDialogPanel extends javax.swing.JPanel {
 					return;
 				} else {
 					CreateGui.getUndoManager().addNewEdit(edit);
-					CreateGui.getDrawingSurface().repaintAll();
+					CreateGui.getCurrentTab().repaintAll();
 					exit();
 				}
 			} else {

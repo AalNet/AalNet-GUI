@@ -431,11 +431,4 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 			}
 		}
 	}
-
-	public void repaintAll() {
-		this.repaint();
-		guiModel.repaintAll(!tabContent.isInAnimationMode());
-	}
-
-
 }
