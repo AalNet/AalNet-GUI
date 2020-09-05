@@ -707,7 +707,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
 	// / Animation
 	private AnimationControlSidePanel animControlerBox;
-    private AnimationHistorySidePanel animationHistorySidePanel;
+    private AnimationHistorySidePanel animationHistorySidePanel = new AnimationHistorySidePanel();
 
 	private JScrollPane animationControllerScrollPane;
 	private AnimationHistoryList abstractAnimationPane = null;
@@ -975,16 +975,9 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		safeApp.ifPresent(tab -> tab.updatedTabName(this));
 	}
 
-	/** Creates a new animationHistory text area, and returns a reference to it */
-	private void createAnimationHistory() {
-        animationHistorySidePanel = new AnimationHistorySidePanel();
-	}
+    private void createAnimatorSplitPane() {
 
-	private void createAnimatorSplitPane() {
-
-	    createAnimationHistory();
-
-		if (animControlerBox == null) {
+        if (animControlerBox == null) {
             createAnimationControlSidePanel();
         }
 		if (transitionFireing == null) {
