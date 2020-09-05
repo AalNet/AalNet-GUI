@@ -24,8 +24,6 @@ public class TimedArcPetriNetNetwork {
 
     private final List<ConstantsListener> constantsListeners = new ArrayList<ConstantsListener>();
 	
-	private boolean paintNet = true;
-	
 	public TimedArcPetriNetNetwork() {
 		this(new ConstantStore());
 	}
@@ -585,14 +583,6 @@ public class TimedArcPetriNetNetwork {
 	public int getDefaultBound() {
         int defaultBound = 3;
         return defaultBound;
-	}
-
-	public boolean paintNet() {
-		return paintNet;
-	}
-	
-	public void setPaintNet(boolean paintNet){
-		this.paintNet = paintNet;
 	}
 
 }
