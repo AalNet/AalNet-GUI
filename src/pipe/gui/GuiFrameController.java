@@ -4,10 +4,8 @@ import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.BatchProcessingDialog;
 import dk.aau.cs.gui.TabContent;
 import dk.aau.cs.gui.TabContentActions;
-import dk.aau.cs.gui.smartDraw.SmartDrawDialog;
 import dk.aau.cs.io.LoadedModel;
 import dk.aau.cs.io.ModelLoader;
-import dk.aau.cs.io.PNMLoader;
 import dk.aau.cs.util.JavaUtil;
 import net.tapaal.resourcemanager.ResourceManager;
 import dk.aau.cs.model.tapn.simulation.ShortestDelayMode;
@@ -429,56 +427,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
 			    }
     }
 
-    @Override
-    public void importPNMLFile() {
-        final File[] files = FileBrowser.constructor("Import PNML", "pnml", FileBrowser.userPath).openFiles();
-
-        //Show loading cursor
-        guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        //Do loading of net
-        SwingWorker<List<TabContent>, Void> worker = new SwingWorker<List<TabContent>, Void>() {
-            @Override
-            protected List<TabContent> doInBackground() throws InterruptedException, Exception {
-                List<TabContent> fileOpened = new ArrayList<>();
-                for(File f : files){
-                    if(f.exists() && f.isFile() && f.canRead()){
-                        FileBrowser.userPath = f.getParent();
-                        fileOpened.add(createNewTabFromPNMLFile(f));
-                    }
-                }
-                return fileOpened;
-            }
-            @Override
-            protected void done() {
-                try {
-                    List<TabContent> tabs = get();
-                    openTab(tabs);
-
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
-                            e.getMessage(),
-                            "Error loading file",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }finally {
-                    guiFrameDirectAccess.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-                }
-            }
-        };
-        worker.execute();
-
-        //Sleep redrawing thread (EDT) until worker is done
-        //This enables the EDT to schedule the many redraws called in createNewTabFromPNMLFile(f); much better
-			    while(!worker.isDone()) {
-			    	try {
-			    		Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			    }
-    }
-
     //XXX 2018-05-23 kyrke, moved from CreateGui, static method
     //Needs further refactoring to seperate conserns
     public void checkForUpdate(boolean forcecheck) {
@@ -867,44 +815,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         }
         return null;
 
-    }
-
-    /**
-     * Creates a new tab with the selected file, or a new file if filename==null
-     */
-
-    public TabContent createNewTabFromPNMLFile(File file) throws Exception {
-
-        if (file != null) {
-            try {
-
-                LoadedModel loadedModel;
-
-                PNMLoader loader = new PNMLoader();
-                loadedModel = loader.load(file);
-
-                TabContent tab = new TabContent(loadedModel.network(), loadedModel.templates(), loadedModel.queries(),  new TabContent.TAPNLens(true, false));
-
-                String name = null;
-
-                if (file != null) {
-                    name = file.getName().replaceAll(".pnml", ".tapn");
-                }
-                tab.setInitialName(name);
-
-                tab.selectFirstElements();
-
-                tab.setMode(Pipe.ElementType.SELECT);
-
-                //appView.updatePreferredSize(); //XXX 2018-05-23 kyrke seems not to be needed
-                name = name.replace(".pnml",".tapn"); // rename .pnml input file to .tapn
-                return tab;
-
-            } catch (Exception e) {
-                throw new Exception("TAPAAL encountered an error while loading the file: " + file.getName() + "\n\nPossible explanations:\n  - " + e.toString());
-            }
-        }
-        return null;
     }
 
     /**

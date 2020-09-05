@@ -110,11 +110,11 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
             Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PRINTER, null);
         }
     };
-    private final GuiAction importPNMLAction = new GuiAction("PNML untimed net", "Import an untimed net in the PNML format", KeyStroke.getKeyStroke('X', shortcutkey)) {
+    /*private final GuiAction importPNMLAction = new GuiAction("PNML untimed net", "Import an untimed net in the PNML format", KeyStroke.getKeyStroke('X', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
             guiFrameController.ifPresent(GuiFrameControllerActions::importPNMLFile);
         }
-    };
+    };*/
     private final GuiAction importSUMOAction = new GuiAction("SUMO queries (.txt)", "Import SUMO queries in a plain text format") {
         public void actionPerformed(ActionEvent arg0) {
             currentTab.ifPresent(TabContentActions::importSUMOQueries);
@@ -1357,7 +1357,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         JMenu importMenu = new JMenu("Import");
         importMenu.setIcon(ResourceManager.getIcon("Export.png"));
 
-        importMenu.add(importPNMLAction);
+        //importMenu.add(importPNMLAction);
 
 
         importMenu.add(importSUMOAction);
