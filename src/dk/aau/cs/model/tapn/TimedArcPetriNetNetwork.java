@@ -95,27 +95,8 @@ public class TimedArcPetriNetNetwork {
 		}
 		return false;
 	}
-	
-	public boolean isNameUsedForPlacesOnly(String name) {
-		for(TimedArcPetriNet net : tapns){
-			for(TimedTransition transition : net.transitions()) {
-				if(name.equalsIgnoreCase(transition.name()))
-					return false;
-			}
-		}
-		return true;
-	}
-	public boolean isNameUsedForTransitionsOnly(String name) {
-		for(TimedArcPetriNet net : tapns){
-			for(TimedPlace place : net.places()) {
-				if(name.equalsIgnoreCase(place.name()))
-					return false;
-			}
-		}
-		return true;
-	}
-		
-	public boolean isNameUsed(String name) {
+
+    public boolean isNameUsed(String name) {
 		return isNameUsedForShared(name) || isNameUsedInTemplates(name);
 	}
 
@@ -145,8 +126,9 @@ public class TimedArcPetriNetNetwork {
 	public List<TimedArcPetriNet> activeTemplates() {
 		List<TimedArcPetriNet> activeTemplates = new ArrayList<TimedArcPetriNet>();
 		for(TimedArcPetriNet t : tapns) {
-			if(t.isActive())
-				activeTemplates.add(t);
+			if(t.isActive()) {
+                activeTemplates.add(t);
+            }
 		}
 		
 		return activeTemplates;
@@ -157,9 +139,11 @@ public class TimedArcPetriNetNetwork {
 	}
 
 	public boolean hasTAPNCalled(String newName) {
-		for (TimedArcPetriNet tapn : tapns)
-			if (tapn.name().equalsIgnoreCase(newName))
-				return true;
+        for (TimedArcPetriNet tapn : tapns) {
+            if (tapn.name().equalsIgnoreCase(newName)) {
+                return true;
+            }
+        }
 		return false;
 	}
 
