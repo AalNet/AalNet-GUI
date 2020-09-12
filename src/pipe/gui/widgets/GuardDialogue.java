@@ -38,11 +38,7 @@ import pipe.gui.graphicElements.tapn.TimedOutputArcComponent;
 import pipe.gui.undo.UndoManager;
 import dk.aau.cs.model.tapn.Bound.InfBound;
 
-public class GuardDialogue extends JPanel /*
- * implements ActionListener,
- * PropertyChangeListener
- */
-{
+public class GuardDialogue extends JPanel {
 	private final JRootPane myRootPane;
 	private JPanel guardEditPanel;
 	private JPanel weightEditPanel;
@@ -146,8 +142,7 @@ public class GuardDialogue extends JPanel /*
 				Weight weight;
 				
 				if(weightUseConstant.isSelected()){
-					String constantName = weightConstantsComboBox
-							.getSelectedItem().toString();
+					String constantName = weightConstantsComboBox.getSelectedItem().toString();
 					weight = new ConstantWeight(CreateGui.getCurrentTab().network().getConstant(constantName));
 				} else {
 					weight = new IntWeight((Integer) weightNumber.getValue());
@@ -156,8 +151,7 @@ public class GuardDialogue extends JPanel /*
 				return weight;
 			}
 
-			private dk.aau.cs.model.tapn.TimeInterval composeGuard(
-					dk.aau.cs.model.tapn.TimeInterval oldGuard) {
+			private dk.aau.cs.model.tapn.TimeInterval composeGuard(TimeInterval oldGuard) {
 				boolean useConstantLeft = leftUseConstant.isSelected();
 				boolean useConstantRight = rightUseConstant.isSelected();
 
@@ -167,30 +161,28 @@ public class GuardDialogue extends JPanel /*
 				Bound rightInterval = null;
 
 				if (useConstantLeft) {
-					String constantName = leftConstantsComboBox
-					.getSelectedItem().toString();
-					leftInterval = new ConstantBound(CreateGui.getCurrentTab()
-							.network().getConstant(constantName));
+					String constantName = leftConstantsComboBox.getSelectedItem().toString();
+					leftInterval = new ConstantBound(CreateGui.getCurrentTab().network().getConstant(constantName));
 				} else
 					leftInterval = new IntBound((Integer) firstIntervalNumber
 							.getValue());
 
 				if (useConstantRight) {
-					String constantName = rightConstantsComboBox
-					.getSelectedItem().toString();
-					rightInterval = new ConstantBound(CreateGui.getCurrentTab()
-							.network().getConstant(constantName));
-				} else if (inf.isSelected())
-					rightInterval = Bound.Infinity;
-				else
-					rightInterval = new IntBound((Integer) secondIntervalNumber
-							.getValue());
+					String constantName = rightConstantsComboBox.getSelectedItem().toString();
+					rightInterval = new ConstantBound(CreateGui.getCurrentTab().network().getConstant(constantName));
+				} else if (inf.isSelected()) {
+                    rightInterval = Bound.Infinity;
+                } else {
+                    rightInterval = new IntBound((Integer) secondIntervalNumber.getValue());
+                }
 
-				if (rightInterval instanceof InfBound
-						|| leftInterval.value() <= rightInterval.value()) {
-					return new dk.aau.cs.model.tapn.TimeInterval(
-							(leftDelim.equals("[")), leftInterval,
-							rightInterval, (rightDelim.equals("]")));
+				if (rightInterval instanceof InfBound || leftInterval.value() <= rightInterval.value()) {
+                    return new TimeInterval(
+                        (leftDelim.equals("[")),
+                        leftInterval,
+                        rightInterval,
+                        (rightDelim.equals("]"))
+                    );
 				} else {
 					return oldGuard;
 				}
@@ -250,8 +242,7 @@ public class GuardDialogue extends JPanel /*
 		weightEditPanel.add(weightNumber, gridBagConstraints);
 		
 
-		Set<String> constants = CreateGui.getCurrentTab().network()
-		.getConstantNames();
+		Set<String> constants = CreateGui.getCurrentTab().network().getConstantNames();
 		ArrayList<String> filteredConstants = new ArrayList<String>();
 		for(String constant : constants){
 			if(CreateGui.getCurrentTab().network().getConstantValue(constant) != 0){
@@ -400,8 +391,7 @@ public class GuardDialogue extends JPanel /*
 		gridBagConstraints.gridy = 1;
 		guardEditPanel.add(secondIntervalNumber, gridBagConstraints);
 
-		Set<String> constants = CreateGui.getCurrentTab().network()
-		.getConstantNames();
+		Set<String> constants = CreateGui.getCurrentTab().network().getConstantNames();
 		String[] constantArray = constants.toArray(new String[constants.size()]);
 	    Arrays.sort(constantArray, String.CASE_INSENSITIVE_ORDER);
 		
@@ -495,8 +485,7 @@ public class GuardDialogue extends JPanel /*
 			secondIsNumber = false;
 		}
 
-		SpinnerNumberModel spinnerModelForFirstNumber = new SpinnerNumberModel(
-				first, 0, Integer.MAX_VALUE, 1);
+		SpinnerNumberModel spinnerModelForFirstNumber = new SpinnerNumberModel(first, 0, Integer.MAX_VALUE, 1);
 
 		SpinnerNumberModel spinnerModelForSecondNumber = null;
 		boolean isInf = secondNumber.equals("inf");
@@ -504,12 +493,10 @@ public class GuardDialogue extends JPanel /*
 			inf.setSelected(true);
 			secondIntervalNumber.setEnabled(false);
 			rightDelimiter.setEnabled(false);
-			spinnerModelForSecondNumber = new SpinnerNumberModel(0, 0,
-					Integer.MAX_VALUE, 1);
+			spinnerModelForSecondNumber = new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1);
 		} else {
 			inf.setSelected(false);
-			spinnerModelForSecondNumber = new SpinnerNumberModel(second, 0,
-					Integer.MAX_VALUE, 1);
+			spinnerModelForSecondNumber = new SpinnerNumberModel(second, 0, Integer.MAX_VALUE, 1);
 		}
 		firstIntervalNumber.setModel(spinnerModelForFirstNumber);
 		secondIntervalNumber.setModel(spinnerModelForSecondNumber);
@@ -554,10 +541,11 @@ public class GuardDialogue extends JPanel /*
 	private void updateRightComponents() {
 		boolean value = rightUseConstant.isSelected();
 		inf.setVisible(!value);
-		if (value)
-			rightDelimiter.setEnabled(true);
-		else
-			rightDelimiter.setEnabled(!inf.isSelected());
+		if (value) {
+            rightDelimiter.setEnabled(true);
+        } else {
+            rightDelimiter.setEnabled(!inf.isSelected());
+        }
 		secondIntervalNumber.setVisible(!value);
 		rightConstantsComboBox.setVisible(value);
 
@@ -593,29 +581,29 @@ public class GuardDialogue extends JPanel /*
 		} else {
 			leftDelimiter.setModel(modelLeftBoth);
 
-			if (inf.isSelected() && !rightUseConstant.isSelected())
-				rightDelimiter.setModel(modelRightExcludedOnly);
-			else
-				rightDelimiter.setModel(modelRightBoth);
+			if (inf.isSelected() && !rightUseConstant.isSelected()) {
+                rightDelimiter.setModel(modelRightExcludedOnly);
+            } else {
+                rightDelimiter.setModel(modelRightBoth);
+            }
 		}
 
 		leftDelimiter.setSelectedItem(leftOldDelim);
-		if (rightUseConstant.isSelected())
-			rightDelimiter.setSelectedItem("]");
-		else
-			rightDelimiter.setSelectedItem(rightOldDelim);
+		if (rightUseConstant.isSelected()) {
+            rightDelimiter.setSelectedItem("]");
+        } else {
+            rightDelimiter.setSelectedItem(rightOldDelim);
+        }
 	}
 
 	private int getSecondValue() {
 		int secondValue;
 		if (rightUseConstant.isSelected()) {
-			secondValue = CreateGui.getCurrentTab().network().getConstantValue(
-					rightConstantsComboBox.getSelectedItem().toString());
+			secondValue = CreateGui.getCurrentTab().network().getConstantValue(rightConstantsComboBox.getSelectedItem().toString());
 		} else if (inf.isSelected()) {
 			secondValue = Integer.MAX_VALUE;
 		} else {
-			secondValue = Integer.parseInt(String.valueOf(secondIntervalNumber
-					.getValue()));
+			secondValue = Integer.parseInt(String.valueOf(secondIntervalNumber.getValue()));
 		}
 		return secondValue;
 	}
@@ -623,54 +611,22 @@ public class GuardDialogue extends JPanel /*
 	private int getFirstValue() {
 		int firstValue;
 		if (leftUseConstant.isSelected()) {
-			firstValue = CreateGui.getCurrentTab().network().getConstantValue(
-					leftConstantsComboBox.getSelectedItem().toString());
+			firstValue = CreateGui.getCurrentTab().network().getConstantValue(leftConstantsComboBox.getSelectedItem().toString());
 		} else {
-			firstValue = Integer.parseInt(String.valueOf(firstIntervalNumber
-					.getValue()));
+			firstValue = Integer.parseInt(String.valueOf(firstIntervalNumber.getValue()));
 		}
 		return firstValue;
 	}
-	
-	private void updateWeightConstantComboBox() {
-		int value = getFirstValue();
 
-		String oldWeight = weightConstantsComboBox.getSelectedItem() != null ? weightConstantsComboBox
-				.getSelectedItem().toString()
-				: null;
-				weightConstantsComboBox.removeAllItems();
-				Collection<Constant> constants = CreateGui.getCurrentTab().network()
-						.constants();
-
-				//List <Constant> constantList = new ArrayList(constants);
-				List <Constant> constantList = new ArrayList<Constant>();
-				constantList.addAll(constants);
-
-				constantList.sort((o1, o2) -> o1.name().compareToIgnoreCase(o2.name()));
-
-				for (Constant c : constantList) {
-					if (c.value() >= value) {
-						weightConstantsComboBox.addItem(c.name());
-					}
-				}
-
-				// if(rightConstantsComboBox.getItemCount() == 0){
-				// rightUseConstant.setEnabled(false);
-				// }
-
-				if (oldWeight != null)
-					weightConstantsComboBox.setSelectedItem(oldWeight);
-	}
-
-	private void updateRightConstantComboBox() {
+    private void updateRightConstantComboBox() {
 		int value = getFirstValue();
 
 		String oldRight = rightConstantsComboBox.getSelectedItem() != null ? rightConstantsComboBox
 				.getSelectedItem().toString()
 				: null;
+
 				rightConstantsComboBox.removeAllItems();
-				Collection<Constant> constants = CreateGui.getCurrentTab().network()
-				.constants();
+				Collection<Constant> constants = CreateGui.getCurrentTab().network().constants();
 				
 				//List <Constant> constantList = new ArrayList(constants);
 				List <Constant> constantList = new ArrayList<Constant>();
@@ -691,8 +647,9 @@ public class GuardDialogue extends JPanel /*
 					rightUseConstant.setEnabled(true);
 				}
 
-				if (oldRight != null)
-					rightConstantsComboBox.setSelectedItem(oldRight);
+				if (oldRight != null) {
+                    rightConstantsComboBox.setSelectedItem(oldRight);
+                }
 	}
 
 	private void firstSpinnerStateChanged(ChangeEvent evt) {
