@@ -7,7 +7,7 @@ import pipe.gui.Pipe;
 
 public class TimedToken {
 	private final TimedPlace place;
-	private BigDecimal age;
+	private final BigDecimal age;
 
 	public TimedToken(TimedPlace place) {
 		this(place, BigDecimal.ZERO);
@@ -25,12 +25,8 @@ public class TimedToken {
 	public BigDecimal age() {
 		return age;
 	}
-	
-	public void setAge(BigDecimal age) {
-		this.age = age;		
-	}
-	
-	public TimedToken clone() {
+
+    public TimedToken clone() {
 		return new TimedToken(place, age); // age is immutable so ok to pass it to constructor
 	}
 
