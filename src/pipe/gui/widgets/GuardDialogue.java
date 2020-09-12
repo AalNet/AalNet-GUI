@@ -702,10 +702,9 @@ public class GuardDialogue extends JPanel /*
 			rightUseConstant.setSelected(false);
 			updateRightComponents();
 		}
-		if (firstValue > CreateGui.getCurrentTab().network()
-				.getLargestConstantValue())
-			rightUseConstant.setEnabled(false);
-		else {
+		if (firstValue > CreateGui.getCurrentTab().network().getLargestConstantValue()) {
+            rightUseConstant.setEnabled(false);
+        } else {
 			rightUseConstant.setEnabled(true);
 			updateRightConstantComboBox();
 		}

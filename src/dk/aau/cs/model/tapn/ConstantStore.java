@@ -75,16 +75,18 @@ public class ConstantStore {
 
 	public boolean containsConstantByName(String name) {
 		for(Constant c : constants) {
-			if(c.name().equalsIgnoreCase(name))
-				return true;
+			if(c.name().equalsIgnoreCase(name)) {
+                return true;
+            }
 		}
 		return false;
 	}
 
 	public Constant getConstantByName(String name) {
 		for(Constant c : constants) {
-			if(c.name().equalsIgnoreCase(name))
-				return c;
+			if(c.name().equalsIgnoreCase(name)) {
+                return c;
+            }
 		}
 		return null;
 	}
@@ -112,8 +114,7 @@ public class ConstantStore {
 		Bound lower = interval.lowerBound();
 		Bound upper = interval.upperBound();
 
-		int diff = interval.isLowerBoundNonStrict()
-				&& interval.isUpperBoundNonStrict() ? 0 : 1;
+		int diff = interval.isLowerBoundNonStrict() && interval.isUpperBoundNonStrict() ? 0 : 1;
 
 		if (lower instanceof ConstantBound && upper instanceof ConstantBound) {
 			Constant lowerConstant = getConstantByName(((ConstantBound) lower).name());
@@ -173,8 +174,9 @@ public class ConstantStore {
 	public void add(Constant constant) {
 		if(!containsConstantByName(constant.name())) {
 			constants.add(constant);
-			if (constant.value() > largest)
-				largest = constant.value();
+			if (constant.value() > largest) {
+                largest = constant.value();
+            }
 		}
 	}
 
@@ -208,8 +210,9 @@ public class ConstantStore {
 		largest = -1;
 
 		for (Constant c : constants) {
-			if (c.value() > largest)
-				largest = c.value();
+			if (c.value() > largest) {
+                largest = c.value();
+            }
 		}
 
 	}
@@ -241,9 +244,10 @@ public class ConstantStore {
 
 	public Set<String> getConstantNames() {
 		Set<String> names = new HashSet<String>();
-		for(Constant c : constants)
-			names.add(c.name());
-		
+		for(Constant c : constants) {
+            names.add(c.name());
+        }
+
 		return names;
 	}
 
