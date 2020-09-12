@@ -62,8 +62,9 @@ public class TimedArcPetriNetNetwork {
 		}
 		
 		sharedTransition.setNetwork(this);
-		if(!(sharedTransitions.contains(sharedTransition)))
-			sharedTransitions.add(sharedTransition);
+		if(!(sharedTransitions.contains(sharedTransition))) {
+            sharedTransitions.add(sharedTransition);
+        }
 	}
 	
 	public void add(SharedPlace sharedPlace) {

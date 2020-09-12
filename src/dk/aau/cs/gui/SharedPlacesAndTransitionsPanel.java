@@ -429,10 +429,8 @@ public class SharedPlacesAndTransitionsPanel extends JPanel implements SidePane 
 			sharedTransitionsListModel.removeElement(transition);
 		}
 	}
-	public void addSharedTransition(SharedTransition transition){
-		addSharedTransition(transition, false);
-	}
-	public void addSharedTransition(SharedTransition transition, boolean multiAdd){
+
+    public void addSharedTransition(SharedTransition transition, boolean multiAdd){
 		sharedTransitionsListModel.addElement(transition, multiAdd);
 	}
 
