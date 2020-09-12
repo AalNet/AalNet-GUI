@@ -652,6 +652,7 @@ public class GuardDialogue extends JPanel {
                 }
 	}
 
+	final int largestConstant = CreateGui.getCurrentTab().network().getLargestConstantValue();
 	private void firstSpinnerStateChanged(ChangeEvent evt) {
 		int firstValue = getFirstValue();
 		int secondValue = getSecondValue();
@@ -659,7 +660,7 @@ public class GuardDialogue extends JPanel {
 			rightUseConstant.setSelected(false);
 			updateRightComponents();
 		}
-		if (firstValue > CreateGui.getCurrentTab().network().getLargestConstantValue()) {
+		if (firstValue > largestConstant) {
             rightUseConstant.setEnabled(false);
         } else {
 			rightUseConstant.setEnabled(true);

@@ -10,7 +10,6 @@ import dk.aau.cs.util.StringComparator;
 
 public class ConstantStore {
 	private List<Constant> constants = new ArrayList<Constant>();
-	private int largest = -1;
 
 	public ConstantStore() {
 
@@ -174,9 +173,6 @@ public class ConstantStore {
 	public void add(Constant constant) {
 		if(!containsConstantByName(constant.name())) {
 			constants.add(constant);
-			if (constant.value() > largest) {
-                largest = constant.value();
-            }
 		}
 	}
 
@@ -185,7 +181,6 @@ public class ConstantStore {
 			if (containsConstantByName(name)) {
 				Constant c = getConstantByName(name);
 				remove(c);
-				findLargestConstantValue();
 				return new RemoveConstantEdit(c, this);
 			}
 		}
@@ -203,22 +198,15 @@ public class ConstantStore {
 
 	public void remove(Constant constant) {
 		constants.remove(constant);
-		findLargestConstantValue();
-	}
-
-	private void findLargestConstantValue() {
-		largest = -1;
-
-		for (Constant c : constants) {
-			if (c.value() > largest) {
-                largest = c.value();
-            }
-		}
-
 	}
 
 	public int getLargestConstantValue() {
-		return largest;
+        int largest = -1;
+
+        for (Constant c : constants) {
+            largest = Math.max(largest, c.value());
+        }
+        return largest;
 	}
 
 	private boolean isNameInf(String name) {
@@ -235,7 +223,6 @@ public class ConstantStore {
 				int index = constants.indexOf(old);
 				constants.remove(old);
 				constants.add(index, updatedConstant);
-				findLargestConstantValue();
 				return new UpdateConstantEdit(old, updatedConstant, this, model);
 			}
 		}
