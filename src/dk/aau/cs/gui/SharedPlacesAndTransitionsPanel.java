@@ -411,35 +411,17 @@ public class SharedPlacesAndTransitionsPanel extends JPanel implements SidePane 
 		guiDialog.setVisible(true);
 	}
 
-	public void removeSharedPlace(SharedPlace place){
-		if(sharedPlacesListModel.network.getSharedPlaceByName(place.name()) != null){
-			sharedPlacesListModel.removeElement(place);
-		}
-	}
-	
-	public void addSharedPlace(SharedPlace place){
-		addSharedPlace(place, false);
-	}
-	public void addSharedPlace(SharedPlace place, boolean multiAdd){
-		sharedPlacesListModel.addElement(place, multiAdd);
-	}
-	
-	public void removeSharedTransition(SharedTransition transition){
-		if(sharedTransitionsListModel.network.getSharedTransitionByName(transition.name()) != null){
-			sharedTransitionsListModel.removeElement(transition);
-		}
-	}
-
-    public void addSharedTransition(SharedTransition transition, boolean multiAdd){
-		sharedTransitionsListModel.addElement(transition, multiAdd);
+    public void addSharedPlace(SharedPlace place){
+        sharedPlacesListModel.addElement(place);
 	}
 
     @Override
     public void moveUp(int index) {
-        if(isDisplayingTransitions())
+        if(isDisplayingTransitions()) {
             sharedTransitionsListModel.swap(index, index-1);
-        else
+        } else {
             sharedPlacesListModel.swap(index, index-1);
+        }
     }
 
     @Override
@@ -508,11 +490,8 @@ public class SharedPlacesAndTransitionsPanel extends JPanel implements SidePane 
 		}
 
 		public void addElement(SharedPlace place){
-			addElement(place, false);
-		}
-		public void addElement(SharedPlace place, boolean multiAdd){
-			network.add(place, multiAdd);
-			fireIntervalAdded(this, network.numberOfSharedPlaces()-1, network.numberOfSharedPlaces());
+            network.add(place);
+            fireIntervalAdded(this, network.numberOfSharedPlaces()-1, network.numberOfSharedPlaces());
 		}
 
 		public void removeElement(SharedPlace place) {
@@ -588,13 +567,10 @@ public class SharedPlacesAndTransitionsPanel extends JPanel implements SidePane 
 		public int getSize() {
 			return network.numberOfSharedTransitions();
 		}
-		public void addElement(SharedTransition transition){
-			addElement(transition, false);
-		}
 
-		public void addElement(SharedTransition transition, boolean multiAdd){
-			network.add(transition, multiAdd);
-			fireIntervalAdded(this, network.numberOfSharedTransitions()-1, network.numberOfSharedTransitions());
+		public void addElement(SharedTransition transition){
+            network.add(transition);
+            fireIntervalAdded(this, network.numberOfSharedTransitions()-1, network.numberOfSharedTransitions());
 		}
 
 		public void removeElement(SharedTransition transition) {

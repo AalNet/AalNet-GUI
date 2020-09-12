@@ -50,36 +50,27 @@ public class TimedArcPetriNetNetwork {
 		currentMarking.addMarking(tapn, marking);
 		tapn.setMarking(currentMarking);
 	}
-	public void add(SharedTransition sharedTransition){
-		add(sharedTransition, false);
-	}
 
-	
-	public void add(SharedTransition sharedTransition, boolean multiAdd){
-		Require.that(sharedTransition != null, "sharedTransition must not be null");
-		if(!multiAdd) {
-			Require.that(!isNameUsed(sharedTransition.name()), "There is already a transition or place with that name");
-		}
-		
-		sharedTransition.setNetwork(this);
-		if(!(sharedTransitions.contains(sharedTransition))) {
+    public void add(SharedTransition sharedTransition) {
+        Require.that(sharedTransition != null, "sharedTransition must not be null");
+        Require.that(!isNameUsed(sharedTransition.name()), "There is already a transition or place with that name");
+
+        sharedTransition.setNetwork(this);
+        if (!(sharedTransitions.contains(sharedTransition))) {
             sharedTransitions.add(sharedTransition);
         }
-	}
-	
-	public void add(SharedPlace sharedPlace) {
-		add(sharedPlace, false);
-	}
-	
-	public void add(SharedPlace sharedPlace, boolean multiremove) {
-		Require.that(sharedPlace != null, "sharedPlace must not be null");
-		if(!multiremove) {
-			Require.that(!isNameUsed(sharedPlace.name()), "There is already a transition or place with that name");
-		}
-		sharedPlace.setNetwork(this);
-		sharedPlace.setCurrentMarking(currentMarking);
-		if(!(sharedPlaces.contains(sharedPlace)))
-			sharedPlaces.add(sharedPlace);
+    }
+
+
+    public void add(SharedPlace sharedPlace) {
+        Require.that(sharedPlace != null, "sharedPlace must not be null");
+        Require.that(!isNameUsed(sharedPlace.name()), "There is already a transition or place with that name");
+
+        sharedPlace.setNetwork(this);
+        sharedPlace.setCurrentMarking(currentMarking);
+        if(!(sharedPlaces.contains(sharedPlace))) {
+            sharedPlaces.add(sharedPlace);
+        }
 	}
 
 	public boolean isNameUsedForShared(String name){
