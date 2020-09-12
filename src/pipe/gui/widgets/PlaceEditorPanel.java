@@ -1,56 +1,28 @@
 package pipe.gui.widgets;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JRootPane;
-import javax.swing.JSpinner;
-
+import dk.aau.cs.gui.Context;
 import dk.aau.cs.gui.TabContent;
+import dk.aau.cs.gui.undo.*;
+import dk.aau.cs.model.tapn.Bound.InfBound;
+import dk.aau.cs.model.tapn.*;
+import dk.aau.cs.util.RequireException;
 import net.tapaal.swinghelpers.CustomJSpinner;
 import net.tapaal.swinghelpers.GridBagHelper;
 import net.tapaal.swinghelpers.WidthAdjustingComboBox;
 import pipe.dataLayer.Template;
 import pipe.gui.Pipe;
 import pipe.gui.graphicElements.tapn.TimedPlaceComponent;
-import dk.aau.cs.gui.Context;
-import dk.aau.cs.gui.undo.ChangedInvariantCommand;
-import dk.aau.cs.gui.undo.Command;
-import dk.aau.cs.gui.undo.MakePlaceSharedCommand;
-import dk.aau.cs.gui.undo.MakePlaceNewSharedCommand;
-import dk.aau.cs.gui.undo.MakePlaceNewSharedMultiCommand;
-import dk.aau.cs.gui.undo.RenameTimedPlaceCommand;
-import dk.aau.cs.gui.undo.TimedPlaceMarkingEdit;
-import dk.aau.cs.gui.undo.UnsharePlaceCommand;
-import dk.aau.cs.model.tapn.Bound.InfBound;
-import dk.aau.cs.model.tapn.Constant;
-import dk.aau.cs.model.tapn.ConstantBound;
-import dk.aau.cs.model.tapn.IntBound;
-import dk.aau.cs.model.tapn.LocalTimedPlace;
-import dk.aau.cs.model.tapn.SharedPlace;
-import dk.aau.cs.model.tapn.TimeInvariant;
-import dk.aau.cs.model.tapn.TimedInhibitorArc;
-import dk.aau.cs.model.tapn.TimedInputArc;
-import dk.aau.cs.model.tapn.TimedOutputArc;
-import dk.aau.cs.model.tapn.TimedPlace;
-import dk.aau.cs.model.tapn.TransportArc;
-import dk.aau.cs.util.RequireException;
 
-import static net.tapaal.swinghelpers.GridBagHelper.Anchor.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.Vector;
+
+import static net.tapaal.swinghelpers.GridBagHelper.Anchor.EAST;
+import static net.tapaal.swinghelpers.GridBagHelper.Anchor.WEST;
 import static net.tapaal.swinghelpers.GridBagHelper.Fill.HORIZONTAL;
 
 public class PlaceEditorPanel extends javax.swing.JPanel {
@@ -593,30 +565,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 				return false;
 			}
 			context.nameGenerator().updateIndices(context.activeModel(), newName);
-		
-			if(makeNewShared){
-				Command command = new MakePlaceNewSharedCommand(context.activeModel(), newName, place.underlyingPlace(), place, context.tabContent(), false);
-				context.undoManager().addEdit(command);
-				try{
-					command.redo();
-				}catch(RequireException e){
-					context.undoManager().undo();
-					//This is checked as a place cannot be shared if there exists a transition with the same name
-					if(context.activeModel().parentNetwork().isNameUsedForPlacesOnly(newName)) {
-						int dialogResult = JOptionPane.showConfirmDialog(this, "A place with the specified name already exists in one or more components, or the specified name is invalid.\n\nAcceptable names for places are defined by the regular expression:\n[a-zA-Z][_a-zA-Z0-9]*\n\nNote that \"true\" and \"false\" are reserved keywords. \n\nThis place name will be changed into shared one also in all other components.", "Error", JOptionPane.OK_CANCEL_OPTION);
-						if(dialogResult == JOptionPane.OK_OPTION) {
-							Command cmd = new MakePlaceNewSharedMultiCommand(context, newName, place);	
-							cmd.redo();
-							context.undoManager().addNewEdit(cmd);
-						} else {
-							return false;
-						}
-					} else {
-						JOptionPane.showMessageDialog(this, "A transition with the specified name already exists in one or more components, or the specified name is invalid.\n\nAcceptable names for places are defined by the regular expression:\n[a-zA-Z][_a-zA-Z0-9]*\n\nNote that \"true\" and \"false\" are reserved keywords.", "Error", JOptionPane.ERROR_MESSAGE);
-						return false;
-					}
-				}	
-			}
+
 		}
 
 		if(newMarking != place.underlyingPlace().numberOfTokens()){

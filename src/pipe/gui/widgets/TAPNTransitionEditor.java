@@ -396,33 +396,6 @@ public class TAPNTransitionEditor extends JPanel {
 				return false;
 			}
 			context.nameGenerator().updateIndices(transition.underlyingTransition().model(), newName);
-		
-			
-			if(makeNewShared){
-				Command command = new MakeTransitionNewSharedCommand(context.activeModel(), newName, transition.underlyingTransition(), context.tabContent(), false);
-				context.undoManager().addEdit(command);
-				try{
-					command.redo();
-				}catch(RequireException e){
-					context.undoManager().undo();
-					//This is checked as a transition cannot be shared if there exists a place with the same name
-					if(transition.underlyingTransition().model().parentNetwork().isNameUsedForTransitionsOnly(newName)) {
-						int dialogResult = JOptionPane.showConfirmDialog(this, "A transition with the specified name already exists in one or more components, or the specified name is invalid.\n\nAcceptable names for transitions are defined by the regular expression:\n[a-zA-Z][_a-zA-Z0-9]*\n\nNote that \"true\" and \"false\" are reserved keywords. \n\nThis transition name will be changed into shared one also in all other components.", "Error", JOptionPane.OK_CANCEL_OPTION);
-						if(dialogResult == JOptionPane.OK_OPTION) {
-							Command cmd = new MakeTransitionNewSharedMultiCommand(context, newName, transition);	
-							cmd.redo();
-							context.undoManager().addEdit(cmd);
-						} else {
-							return false;
-						}
-					} else {
-						JOptionPane.showMessageDialog(this, "A place with the specified name already exists in one or more components, or the specified name is invalid.\n\nAcceptable names for transitions are defined by the regular expression:\n[a-zA-Z][_a-zA-Z0-9]*\n\nNote that \"true\" and \"false\" are reserved keywords.", "Error", JOptionPane.ERROR_MESSAGE);
-						return false;
-					}
-				}
-				transition.setUrgent(urgentCheckBox.isSelected());
-				transition.setUncontrollable(uncontrollableCheckBox.isSelected());
-			}
 		}
 		
 		if(transition.isUrgent() != urgentCheckBox.isSelected()){
