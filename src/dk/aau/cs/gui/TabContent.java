@@ -686,11 +686,10 @@ public class TabContent extends JSplitPane implements TabContentActions{
 	private final JScrollPane drawingSurfaceScroller;
 	private JScrollPane editorSplitPaneScroller;
 	private JScrollPane animatorSplitPaneScroller;
-	private DrawingSurfaceImpl drawingSurface;
+	private final DrawingSurfaceImpl drawingSurface;
 	private File appFile;
-	private final JPanel drawingSurfaceDummy = new JPanel(new GridBagLayout());
-	
-	// Normal mode
+
+    // Normal mode
 	private BugHandledJXMultisplitPane editorSplitPane;
 	private static Split editorModelroot = null;
 	private static Split simulatorModelRoot = null;
@@ -707,10 +706,9 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
 	// / Animation
 	private AnimationControlSidePanel animControlerBox;
-    private AnimationHistorySidePanel animationHistorySidePanel = new AnimationHistorySidePanel();
+    private final AnimationHistorySidePanel animationHistorySidePanel = new AnimationHistorySidePanel();
 
-	private JScrollPane animationControllerScrollPane;
-	private AnimationHistoryList abstractAnimationPane = null;
+    private AnimationHistoryList abstractAnimationPane = null;
 	private JPanel animationControlsPanel;
 	private TransitionFireingComponent transitionFireing;
 
@@ -776,6 +774,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         });
 
         GridBagConstraints gc = as(0,0, Fill.HORIZONTAL);
+        JPanel drawingSurfaceDummy = new JPanel(new GridBagLayout());
         drawingSurfaceDummy.add(new JLabel("The net is too big to be drawn"), gc);
 
         createEditorLeftPane();
