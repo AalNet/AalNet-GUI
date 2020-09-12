@@ -99,13 +99,9 @@ public class TemplateExplorer extends JPanel implements SidePane {
     //	"A Net can be broken up in several components and connected via shared places and transitions.";
 
     public TemplateExplorer(TabContent parent) {
-        this(parent, false);
-    }
-
-    public TemplateExplorer(TabContent parent, boolean hideButtons) {
         this.parent = parent;
         undoManager = parent.getUndoManager();
-        init(hideButtons);
+        init();
     }
 
     public void selectPrevious() {
@@ -128,7 +124,7 @@ public class TemplateExplorer extends JPanel implements SidePane {
         templateList.setSelectedIndex(value);
     }
 
-    private void init(boolean hideButtons) {
+    private void init() {
         setLayout(new BorderLayout());
         isInAnimationMode = false;
         initExplorerPanel();
@@ -136,7 +132,7 @@ public class TemplateExplorer extends JPanel implements SidePane {
 
         setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Components"), BorderFactory.createEmptyBorder(3, 3, 3, 3)));
         this.setToolTipText("List of components. Click a component to display it.");
-        addCreatedComponents(hideButtons);
+        addCreatedComponents(false);
 
         this.addComponentListener(new ComponentListener() {
             int minimumHegiht = TemplateExplorer.this.getMinimumSize().height + sortButton.getMinimumSize().height;
