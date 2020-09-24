@@ -31,6 +31,8 @@ import pipe.gui.CreateGui;
 import dk.aau.cs.debug.Logger;
 import pipe.gui.Verifier;
 
+import javax.swing.*;
+
 /**
  * Main class for lunching TAPAAL
  *
@@ -83,7 +85,15 @@ public class AalNet {
             debug = true;
 		}
 
-		// Create the TAPAAL GUI
+
+        try {
+            // Set the Look and Feel native for the system.
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (UnsupportedLookAndFeelException ignored) {
+            //Default l&f will be used
+        }
+
+        // Create the TAPAAL GUI
 		CreateGui.init();
 
 

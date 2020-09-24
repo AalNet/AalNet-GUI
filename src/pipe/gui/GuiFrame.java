@@ -14,7 +14,6 @@ import javax.swing.*;
 
 import com.sun.jna.Platform;
 import dk.aau.cs.gui.*;
-import dk.aau.cs.verification.VerifyTAPN.VerifyPN;
 import net.tapaal.AalNet;
 import net.tapaal.Preferences;
 import net.tapaal.helpers.Reference.MutableReference;
@@ -27,9 +26,6 @@ import pipe.gui.action.GuiAction;
 import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.smartDraw.SmartDrawDialog;
 import net.tapaal.resourcemanager.ResourceManager;
-import dk.aau.cs.verification.UPPAAL.Verifyta;
-import dk.aau.cs.verification.VerifyTAPN.VerifyTAPN;
-import dk.aau.cs.verification.VerifyTAPN.VerifyTAPNDiscreteVerification;
 
 
 public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameActions {
@@ -47,20 +43,33 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     private final String frameTitle;
 
-    final MutableReference<GuiFrameControllerActions> guiFrameController = new MutableReference<>();
+    private final MutableReference<GuiFrameControllerActions> guiFrameController = new MutableReference<>();
 
-    private final ExtendedJTabbedPane<TabContent> appTab;
+    private final ExtendedJTabbedPane<TabContent> appTab = new ExtendedJTabbedPane<>() {
+        @Override
+        public Component generator() {
+            return new TabComponent(this) {
+                @Override
+                protected void closeTab(TabContent tab) {
+                    GuiFrame.this.guiFrameController.ifPresent(o -> o.closeTab(tab));
+                }
+            };
+        }
+    };
 
-    private final StatusBar statusBar;
-    private JMenuBar menuBar;
+    // Status bar...
+    private final StatusBar statusBar = new StatusBar();
+    private final JMenuBar menuBar = new JMenuBar();
 
-    private JMenu fileMenu;
-    private JMenu exampleMenu;
-    private JMenu drawMenu;
-    private JMenu animateMenu;
-    private JMenu viewMenu;
+    private final JMenu fileMenu = new JMenu("File");
+    private final JMenu exampleMenu = new JMenu("Example nets");
 
-    private JToolBar drawingToolBar;
+    private final JMenu drawMenu = new JMenu("Draw");
+    private final JMenu animateMenu = new JMenu("Simulator");
+    private final JMenu viewMenu = new JMenu("View");
+
+    // Start drawingToolBar
+    private final JToolBar drawingToolBar = new JToolBar();
 
     private final JComboBox<String> timeFeatureOptions = new JComboBox<>(new String[]{"No", "Yes"});
     private final JComboBox<String> gameFeatureOptions = new JComboBox<>(new String[]{"No", "Yes"});
@@ -372,7 +381,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     private JCheckBoxMenuItem showDelayEnabledTransitionsCheckbox;
 
-    private JMenu zoomMenu;
+    private final JMenu zoomMenu = new JMenu("Zoom");
 
     public GuiFrame(String title) {
         // HAK-arrange for frameTitle to be initialized and the default file
@@ -380,7 +389,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         frameTitle = title;
         setTitle(null);
-        trySetLookAndFeel();
+        setOSIntegrationAndHotkeys();
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         this.setSize(screenSize.width * 80 / 100, screenSize.height * 80 / 100);
@@ -388,26 +397,12 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         this.setMinimumSize(new Dimension(825, 480));
 
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        appTab = new ExtendedJTabbedPane<TabContent>() {
-            @Override
-            public Component generator() {
-                return new TabComponent(this) {
-                    @Override
-                    protected void closeTab(TabContent tab) {
-                        GuiFrame.this.guiFrameController.ifPresent(o -> o.closeTab(tab));
-                    }
-                };
-            }
-        };
         getContentPane().add(appTab);
         setChangeListenerOnTab(); // sets Tab properties
 
         Grid.enableGrid();
 
         buildMenus();
-
-        // Status bar...
-        statusBar = new StatusBar();
 
         // Net Type
         JPanel featurePanel = new JPanel();
@@ -442,11 +437,8 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     }
 
-    private void trySetLookAndFeel() {
+    private void setOSIntegrationAndHotkeys() {
         try {
-            // Set the Look and Feel native for the system.
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
             // Set enter to select focus button rather than default (makes ENTER selection key on all LAFs)
             UIManager.put("Button.focusInputMap", new UIDefaults.LazyInputMap(new Object[]{
                     "SPACE", "pressed",
@@ -492,7 +484,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
      * Build the menues and actions
      **/
     private void buildMenus() {
-        menuBar = new JMenuBar();
         menuBar.add(buildMenuFiles());
         menuBar.add(buildMenuEdit());
         menuBar.add(buildMenuView());
@@ -546,18 +537,13 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     private JMenu buildMenuDraw() {
-        /* Draw menu */
-        drawMenu = new JMenu("Draw");
         drawMenu.setMnemonic('D');
         return drawMenu;
     }
 
     private JMenu buildMenuView() {
-        /* ViewMenu */
-        viewMenu = new JMenu("View");
         viewMenu.setMnemonic('V');
 
-        zoomMenu = new JMenu("Zoom");
         zoomMenu.setIcon(ResourceManager.getIcon("Zoom.png"));
 
         addZoomMenuItems(zoomMenu);
@@ -602,8 +588,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
 
     private JMenu buildMenuAnimation() {
-        /* Simulator */
-        animateMenu = new JMenu("Simulator");
         animateMenu.setMnemonic('A');
         animateMenu.add(startAction);
 
@@ -726,8 +710,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         toolBar.add(new ToggleButtonWithoutText(startAction));
 
-        // Start drawingToolBar
-        drawingToolBar = new JToolBar();
         drawingToolBar.setFloatable(false);
         drawingToolBar.addSeparator();
         drawingToolBar.setRequestFocusEnabled(false);
@@ -1228,7 +1210,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     private JMenu buildMenuFiles() {
-        fileMenu = new JMenu("File");
         fileMenu.setMnemonic('F');
 
         fileMenu.add(createAction);
@@ -1273,7 +1254,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         fileMenu.addSeparator();
 
-        exampleMenu = new JMenu("Example nets");
         exampleMenu.setEnabled(false);
         exampleMenu.setIcon(ResourceManager.getIcon("Example.png"));
         fileMenu.add(exampleMenu);
