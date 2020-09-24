@@ -44,35 +44,33 @@ import javax.xml.transform.stream.StreamResult;
 
 public class TraceImportExport {
 
-    public static void exportTrace() {
+    public static void exportTrace(String tabName) {
         String path = null;
         try {
             ByteArrayOutputStream os = prepareTraceStream();
 
             FileBrowser fb = FileBrowser.constructor("Export Trace", "trc");
-            path = fb.saveFile(CreateGui.getAppGui().getCurrentTabName().substring(0, CreateGui.getAppGui().getCurrentTabName().lastIndexOf('.')));
+
+            String name = tabName.substring(0, tabName.lastIndexOf('.'));
+            path = fb.saveFile(name);
 
             FileOutputStream fs = new FileOutputStream(path);
             fs.write(os.toByteArray());
             fs.close();
         } catch (ParserConfigurationException e) {
-            System.err
-                    .println("ParserConfigurationException thrown in exportTrace() "
+            System.err.println("ParserConfigurationException thrown in exportTrace() "
                             + ": Animator Class : filename=\"");
         } catch (DOMException e) {
-            System.err
-                    .println("DOMException thrown in exportTrace() "
+            System.err.println("DOMException thrown in exportTrace() "
                             + ": Animator Class : filename=\""
                             + path + "\" transformer=\"");
         } catch (TransformerConfigurationException e) {
-            System.err
-                    .println("TransformerConfigurationException thrown in exportTrace()) "
+            System.err.println("TransformerConfigurationException thrown in exportTrace()) "
                             + ": Animator Class :  filename=\""
                             + path
                             + "\" transformer=\"");
         } catch (TransformerException e) {
-            System.err
-                    .println("TransformerException thrown in exportTrace() : Animator Class : filename=\""
+            System.err.println("TransformerException thrown in exportTrace() : Animator Class : filename=\""
                             + path
                             + "\"" + e);
         } catch (NullPointerException e) {

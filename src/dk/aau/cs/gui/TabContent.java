@@ -1364,7 +1364,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
 	@Override
 	public void exportTrace() {
-		TraceImportExport.exportTrace();
+		TraceImportExport.exportTrace(getTabTitle());
 	}
 
 	@Override
