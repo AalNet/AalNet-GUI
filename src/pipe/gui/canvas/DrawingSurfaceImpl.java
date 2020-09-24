@@ -9,6 +9,8 @@ import java.awt.print.PrinterException;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
+import dk.aau.cs.gui.TabContent;
+import dk.aau.cs.gui.TabContentActions;
 import net.tapaal.gui.DrawingSurfaceManager.AbstractDrawingSurfaceManager;
 import net.tapaal.helpers.Reference.Reference;
 import pipe.dataLayer.DataLayer;
@@ -31,7 +33,7 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
 	private static final boolean showDebugBounds = false;
 
-	public DrawingSurfaceImpl(DataLayer dataLayer, Reference<AbstractDrawingSurfaceManager> managerRef) {
+	public DrawingSurfaceImpl(DataLayer dataLayer, Reference<AbstractDrawingSurfaceManager> managerRef, TabContentActions tca) {
 		guiModel = dataLayer;
 		this.managerRef = managerRef;
 		setLayout(null);
@@ -43,7 +45,7 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 		zoomControl = new Zoomer(100);
 
 		setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-        MouseHandler mouseHandler = new MouseHandler(this);
+        MouseHandler mouseHandler = new MouseHandler(managerRef, tca);
 		addMouseListener(mouseHandler);
 		addMouseMotionListener(mouseHandler);
 		addMouseWheelListener(mouseHandler);
@@ -360,13 +362,16 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
         return newP;
     }
 
-    class MouseHandler extends MouseInputAdapter {
+    final class MouseHandler extends MouseInputAdapter {
 
-		private final DrawingSurfaceImpl view;
+        private final Reference<AbstractDrawingSurfaceManager> managerRef;
+		private final TabContentActions tca;
 
-		public MouseHandler(DrawingSurfaceImpl _view) {
+        public MouseHandler(Reference<AbstractDrawingSurfaceManager> managerRef, TabContentActions tca) {
 			super();
-			view = _view;
+
+			this.managerRef = managerRef;
+			this.tca = tca;
         }
 
 		@Override
@@ -381,7 +386,6 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 			if (managerRef!=null && managerRef.get() != null) {
 				managerRef.get().drawingSurfaceMousePressed(e);
 			}
-			//updatePreferredSize();
 		}
 
         @Override
@@ -408,19 +412,17 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
-			if (managerRef!=null && managerRef.get() != null) {
-				managerRef.get().drawingSurfaceMouseWheelMoved(e);
-			}
 			if (e.isControlDown()) {
 				if (e.getWheelRotation() > 0) {
-					view.zoomIn();
+					tca.zoomIn();
 				} else {
-					view.zoomOut();
+					tca.zoomOut();
 				}
-				CreateGui.getAppGui().updateZoomCombo();
 			} else {
 				//Dispatch Event to scroll pane to allow scrolling up/down. -- kyrke
-				getParent().dispatchEvent(e);
+                if (getParent() != null) {
+                    getParent().dispatchEvent(e);
+                }
 			}
 		}
 	}

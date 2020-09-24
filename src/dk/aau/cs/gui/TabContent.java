@@ -757,7 +757,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
             }
         }
 
-        drawingSurface = new DrawingSurfaceImpl(new DataLayer(), managerRef);
+        drawingSurface = new DrawingSurfaceImpl(new DataLayer(), managerRef, this);
         drawingSurfaceScroller = new JScrollPane(drawingSurface);
         // make it less bad on XP
         drawingSurfaceScroller.setBorder(new BevelBorder(BevelBorder.LOWERED));

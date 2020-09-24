@@ -370,7 +370,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         draw, animation, noNet
     }
 
-    private JCheckBoxMenuItem showZeroToInfinityIntervalsCheckBox;
     private JCheckBoxMenuItem showDelayEnabledTransitionsCheckbox;
 
     private JMenu zoomMenu;
@@ -1122,10 +1121,8 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         //TODO: This is a temporary implementation until view actions can be moved to tab content
 
         if (!getCurrentTab().getLens().isTimed()) {
-            showZeroToInfinityIntervalsCheckBox.setVisible(false);
             showDelayEnabledTransitionsCheckbox.setVisible(false);
         } else {
-            showZeroToInfinityIntervalsCheckBox.setVisible(true);
             showDelayEnabledTransitionsCheckbox.setVisible(true);
         }
     }

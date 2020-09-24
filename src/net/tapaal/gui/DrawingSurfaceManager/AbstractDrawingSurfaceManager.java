@@ -18,7 +18,6 @@ public abstract class AbstractDrawingSurfaceManager {
     public void drawingSurfaceMousePressed(MouseEvent e) {}
     public void drawingSurfaceMouseReleased(MouseEvent e){}
     public void drawingSurfaceMouseDragged(MouseEvent e) {}
-    public void drawingSurfaceMouseWheelMoved(MouseWheelEvent e) {}
     public void drawingSurfaceMouseMoved(MouseEvent e){}
 
     public enum MouseAction {
