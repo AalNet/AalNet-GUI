@@ -440,12 +440,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         // Set GUI mode
         setGUIMode(GUIMode.noNet);
 
-        //XXX 2018-05-23 kyrke: Moved from CreatGUI (static), needs further refactoring to seperate conserns
-        Verifyta.trySetup();
-        VerifyTAPN.trySetup();
-        VerifyTAPNDiscreteVerification.trySetup();
-        VerifyPN.trySetup();
-
     }
 
     private void trySetLookAndFeel() {

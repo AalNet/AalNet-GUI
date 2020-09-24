@@ -7,6 +7,7 @@ import dk.aau.cs.gui.TabContentActions;
 import dk.aau.cs.io.LoadedModel;
 import dk.aau.cs.io.ModelLoader;
 import dk.aau.cs.util.JavaUtil;
+import dk.aau.cs.verification.VerifyTAPN.VerifyPN;
 import net.tapaal.resourcemanager.ResourceManager;
 import dk.aau.cs.verification.UPPAAL.Verifyta;
 import dk.aau.cs.verification.VerifyTAPN.VerifyTAPN;
@@ -54,6 +55,16 @@ public class GuiFrameController implements GuiFrameControllerActions{
         loadPrefrences();
         loadAndRegisterExampleNets();
         checkJavaVersion();
+
+        try {
+            //XXX 2018-05-23 kyrke: Moved from CreatGUI (static), needs further refactoring to seperate conserns
+            Verifyta.trySetup();
+            VerifyTAPN.trySetup();
+            VerifyTAPNDiscreteVerification.trySetup();
+            VerifyPN.trySetup();
+        } catch (Exception ignored) {
+            // Ignored exceptions auto setup of engines, can be set later using gui
+        }
 
     }
 
