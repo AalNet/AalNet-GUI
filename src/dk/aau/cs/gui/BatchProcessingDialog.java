@@ -1293,8 +1293,9 @@ public class BatchProcessingDialog extends JDialog {
 
 		});
 
-		if (useTimeout())
-			setupTimeoutTimer();
+		if (useTimeout()) {
+            setupTimeoutTimer();
+        }
 
 		currentWorker.execute();
 	}
@@ -1379,10 +1380,11 @@ public class BatchProcessingDialog extends JDialog {
 			removeFileButton.setEnabled(false);
 		}
 
-		if (tableModel.getRowCount() > 0)
-			exportButton.setEnabled(true);
-		else
-			exportButton.setEnabled(false);
+		if (tableModel.getRowCount() > 0) {
+            exportButton.setEnabled(true);
+        } else {
+            exportButton.setEnabled(false);
+        }
 
 		enabledVerificationOptionButtons();
 	}
@@ -1466,14 +1468,13 @@ public class BatchProcessingDialog extends JDialog {
 								.rowAtPoint(mousePos));
 					}
 
-					if (table.getColumnName(column).equals("Verification Time"))
-						setToolTipText(result != null ? generateStatsToolTipText(result)
-								: value.toString());
-					else if (table.getColumnName(column).equals("Memory Usage"))
-						setToolTipText(result != null ? generateMemoryToolTipText(result)
-								: value.toString());
-					else
-						setToolTipText(result != null ? generateReductionString(result.query()) : value.toString());
+					if (table.getColumnName(column).equals("Verification Time")) {
+                        setToolTipText(result != null ? generateStatsToolTipText(result) : value.toString());
+                    } else if (table.getColumnName(column).equals("Memory Usage")) {
+                        setToolTipText(result != null ? generateMemoryToolTipText(result) : value.toString());
+                    } else {
+                        setToolTipText(result != null ? generateReductionString(result.query()) : value.toString());
+                    }
 				} else {
 					setToolTipText(value.toString());
 					setText(value.toString());
@@ -1519,14 +1520,15 @@ public class BatchProcessingDialog extends JDialog {
 			s.append("\n\n");
 
 			s.append("Search Method: \n");
-			if (query.getSearchOption() == SearchOption.DFS)
-				s.append(name_DFS);
-			else if (query.getSearchOption() == SearchOption.RANDOM)
-				s.append(name_Random);
-			else if (query.getSearchOption() == SearchOption.HEURISTIC)
-				s.append(name_HEURISTIC);
-			else
-				s.append(name_BFS);
+			if (query.getSearchOption() == SearchOption.DFS) {
+                s.append(name_DFS);
+            } else if (query.getSearchOption() == SearchOption.RANDOM) {
+                s.append(name_Random);
+            } else if (query.getSearchOption() == SearchOption.HEURISTIC) {
+                s.append(name_HEURISTIC);
+            } else {
+                s.append(name_BFS);
+            }
 			s.append("\n\n");
 
 			s.append(generateReductionString(query));
@@ -1562,17 +1564,17 @@ public class BatchProcessingDialog extends JDialog {
 			StringBuilder s = new StringBuilder();
 			if (query != null) {
 				s.append("Reduction: \n");
-				if (query.getReductionOption() == ReductionOption.COMBI)
-					s.append(name_COMBI);
-				else if (query.getReductionOption() == ReductionOption.STANDARD)
-					s.append(name_STANDARD);
-				else if (query.getReductionOption() == ReductionOption.OPTIMIZEDSTANDARD)
-					s.append(name_OPTIMIZEDSTANDARD);
-				else if (query.getReductionOption() == ReductionOption.BROADCAST)
-					s.append(name_BROADCAST);
-				else if (query.getReductionOption() == ReductionOption.DEGREE2BROADCAST)
-					s.append(name_BROADCASTDEG2);
-				else if (query.getReductionOption() == ReductionOption.VerifyTAPN) {
+				if (query.getReductionOption() == ReductionOption.COMBI) {
+                    s.append(name_COMBI);
+                } else if (query.getReductionOption() == ReductionOption.STANDARD) {
+                    s.append(name_STANDARD);
+                } else if (query.getReductionOption() == ReductionOption.OPTIMIZEDSTANDARD) {
+                    s.append(name_OPTIMIZEDSTANDARD);
+                } else if (query.getReductionOption() == ReductionOption.BROADCAST) {
+                    s.append(name_BROADCAST);
+                } else if (query.getReductionOption() == ReductionOption.DEGREE2BROADCAST) {
+                    s.append(name_BROADCASTDEG2);
+                } else if (query.getReductionOption() == ReductionOption.VerifyTAPN) {
 					s.append(name_verifyTAPN);
 					s.append("\n\n");
 					s.append("Discrete Inclusion: ");
@@ -1620,12 +1622,14 @@ public class BatchProcessingDialog extends JDialog {
 			StringBuilder s = new StringBuilder();
 			boolean first = true;
 			for (TimedPlace p : incPlace) {
-				if (!first)
-					s.append(", ");
+				if (!first) {
+                    s.append(", ");
+                }
 
 				s.append(p.toString());
-				if (first)
-					first = false;
+				if (first) {
+                    first = false;
+                }
 			}
 			return s.toString();
 		}
@@ -1758,12 +1762,7 @@ public class BatchProcessingDialog extends JDialog {
 			
 			JButton closeButton = new JButton("Save");
 			rootPane.setDefaultButton(closeButton);
-			closeButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					ReductionOptionDialog.this.setVisible(false);
-					
-				}
-			});
+			closeButton.addActionListener(o -> ReductionOptionDialog.this.setVisible(false));
 			
 			this.getContentPane().setLayout(new GridBagLayout());
 
