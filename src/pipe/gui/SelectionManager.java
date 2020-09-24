@@ -74,7 +74,7 @@ public class SelectionManager extends javax.swing.JComponent implements
 		);
 
 		// Get all the place and transition objects in the current window
-		for (PetriNetObject pnObject : drawingSurface.getGuiModel().getPlaceTransitionObjects()) {
+		for (PetriNetObject pnObject : drawingSurface.getCanvasModel().getPlaceTransitionObjects()) {
 			pnObject.select(intersectionRectangle);
 		}
 	}
@@ -91,7 +91,7 @@ public class SelectionManager extends javax.swing.JComponent implements
 
 	public void clearSelection() {
 		// Get all the objects in the current window
-		for (PetriNetObject pnObject : drawingSurface.getGuiModel().getPNObjects()) {
+		for (PetriNetObject pnObject : drawingSurface.getCanvasModel().getPNObjects()) {
 			if (pnObject.isSelectable()) {
 				pnObject.deselect();
 			}
@@ -164,7 +164,7 @@ public class SelectionManager extends javax.swing.JComponent implements
 		ArrayList<PetriNetObject> selection = new ArrayList<PetriNetObject>();
 
 		// Get all the objects in the current window
-		for (PetriNetObject pnObject : drawingSurface.getGuiModel().getPNObjects()) {
+		for (PetriNetObject pnObject : drawingSurface.getCanvasModel().getPNObjects()) {
 			if (pnObject.isSelected()) {
 				selection.add(pnObject);
 			}
@@ -247,7 +247,7 @@ public class SelectionManager extends javax.swing.JComponent implements
 	}
 
 	public void selectAll() {
-		for (PetriNetObject pnObject : drawingSurface.getGuiModel().getPNObjects()) {
+		for (PetriNetObject pnObject : drawingSurface.getCanvasModel().getPNObjects()) {
 			pnObject.select(false);
 		}
 		drawingSurface.repaint();

@@ -11,6 +11,7 @@ import dk.aau.cs.gui.undo.UpdateNameLabelOffsetCommand;
 import dk.aau.cs.gui.undo.Command;
 import dk.aau.cs.gui.undo.MovePlaceTransitionObject;
 import dk.aau.cs.util.Require;
+import pipe.gui.CreateGui;
 import pipe.gui.Zoomer;
 import pipe.gui.canvas.DrawingSurfaceImpl;
 import pipe.gui.graphicElements.*;
@@ -82,7 +83,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	
 	private void processStartingObject(String startingObject) {
 		if(!(startingObject.equals("Random")))
-			this.startingObject = drawingSurface.getGuiModel().getPlaceTransitionObjectByName(startingObject);
+			this.startingObject = CreateGui.getCurrentTab().getModel().getPlaceTransitionObjectByName(startingObject);
 		else {
 			try {
 				this.startingObject = placeTransitionObjects.get(new Random().nextInt(placeTransitionObjects.size()-1));
@@ -317,7 +318,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 				
 				//newObject --- S ---> T
 				else if((distancePointSource + distanceTargetSource) == distanceTargetPoint) {
-					for(PetriNetObject pNetObject : drawingSurface.getGuiModel().getPNObjects()) {
+					for(PetriNetObject pNetObject : CreateGui.getCurrentTab().getModel().getPNObjects()) {
 						if(pNetObject instanceof Arc) {
 							Arc arc = (Arc)pNetObject;
 							if((arc.getSource() == objectToPlace && arc.getTarget() == placedArc.getTarget()) 
@@ -330,7 +331,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 				
 				//newObject --- T ---> S
 				else if((distanceTargetSource + distanceTargetPoint == distancePointSource)) {
-					for(PetriNetObject pNetObject : drawingSurface.getGuiModel().getPNObjects()) {
+					for(PetriNetObject pNetObject : CreateGui.getCurrentTab().getModel().getPNObjects()) {
 						if(pNetObject instanceof Arc) {
 							Arc arc = (Arc)pNetObject;
 							if((arc.getSource() == objectToPlace && arc.getTarget() == placedArc.getSource()) 
@@ -394,7 +395,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	
 	private void removeArcPathPoints() {
 		ArrayList<ArcPathPoint> toRemove = new ArrayList<ArcPathPoint>();
-		for(PetriNetObject object : drawingSurface.getGuiModel().getPNObjects()) {
+		for(PetriNetObject object : CreateGui.getCurrentTab().getModel().getPNObjects()) {
 			if(object instanceof ArcPathPoint) {
 				ArcPathPoint arcPathPoint = (ArcPathPoint)object;
 				if(!(arcPathPoint.isEndPoint())) {
@@ -476,7 +477,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	
 	private void getPlaceTransitionObjects() {
 		placeTransitionObjects = new ArrayList<PlaceTransitionObject>();
-		for(PetriNetObject object : drawingSurface.getGuiModel().getPlaceTransitionObjects()) {
+		for(PetriNetObject object : CreateGui.getCurrentTab().getModel().getPlaceTransitionObjects()) {
 			if(object instanceof PlaceTransitionObject) {
 				PlaceTransitionObject ptObject = (PlaceTransitionObject) object;
 				placeTransitionObjects.add(ptObject);
@@ -484,7 +485,7 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 		}
 	}
 	public void resetLabelsToDefault() {
-		for(PetriNetObject pNetObject : drawingSurface.getGuiModel().getPNObjects()) {
+		for(PetriNetObject pNetObject : CreateGui.getCurrentTab().getModel().getPNObjects()) {
 			if(pNetObject instanceof PlaceTransitionObject) {
 				Command cmd = new UpdateNameLabelOffsetCommand((int)zoom(pipe.gui.Pipe.DEFAULT_OFFSET_X), (int)zoom(pipe.gui.Pipe.DEFAULT_OFFSET_Y), ((PlaceTransitionObject) pNetObject).getNameOffsetX(),
 																((PlaceTransitionObject) pNetObject).getNameOffsetY(), (PetriNetObjectWithLabel) pNetObject);
@@ -530,10 +531,10 @@ public class SmartDrawWorker extends SwingWorker<Void, Void>{
 	
 	@Override
 	protected void done(){
-		if(objectsPlaced.size() == drawingSurface.getGuiModel().getPlaceTransitionObjects().size()) {
+		if(objectsPlaced.size() == CreateGui.getCurrentTab().getModel().getPlaceTransitionObjects().size()) {
 			setTransitionsToUpright();
 			doOffsetForLoops();
-            drawingSurface.getGuiModel().repaintAll(true);
+            CreateGui.getCurrentTab().getModel().repaintAll(true);
 			drawingSurface.updatePreferredSize();
 			fireDone(false);
 		} else {

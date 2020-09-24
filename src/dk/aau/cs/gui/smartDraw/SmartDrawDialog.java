@@ -200,7 +200,7 @@ public class SmartDrawDialog extends JDialog {
 					
 					@Override
 					public void fireStatusChanged(int objectsPlaced) {
-						progressLabel.setText("Objects placed: " + objectsPlaced +"/" + CreateGui.getDrawingSurface().getGuiModel().getPlaceTransitionObjects().size());
+						progressLabel.setText("Objects placed: " + objectsPlaced +"/" + CreateGui.getCurrentTab().getModel().getPlaceTransitionObjects().size());
 					}
 					
 					@Override
@@ -568,7 +568,7 @@ public class SmartDrawDialog extends JDialog {
 
     static private String[] getObjectNames() {
 		ArrayList<String> names = new ArrayList<String>();
-		for(PetriNetObject object : CreateGui.getDrawingSurface().getGuiModel().getPlaceTransitionObjects()) {
+		for(PetriNetObject object : CreateGui.getCurrentTab().getModel().getPlaceTransitionObjects()) {
 			names.add(object.getName());
 		}
 		return Arrays.copyOf(names.toArray(), names.toArray().length, String[].class);
@@ -674,7 +674,7 @@ public class SmartDrawDialog extends JDialog {
 	}
 	
 	private void enableButtons() {
-		if(CreateGui.getDrawingSurface().getGuiModel().getPlaceTransitionObjects().size() > 0) {
+		if(CreateGui.getCurrentTab().getModel().getPlaceTransitionObjects().size() > 0) {
 			drawButton.setEnabled(true);
 			drawButton.setToolTipText("Smart draw with the current options");
 			if(!(randomStartObjectCheckBox.isSelected()))

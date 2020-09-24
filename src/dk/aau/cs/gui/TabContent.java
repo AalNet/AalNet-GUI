@@ -757,7 +757,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
             }
         }
 
-        drawingSurface = new DrawingSurfaceImpl(new DataLayer(), this, managerRef);
+        drawingSurface = new DrawingSurfaceImpl(new DataLayer(), managerRef);
         drawingSurfaceScroller = new JScrollPane(drawingSurface);
         // make it less bad on XP
         drawingSurfaceScroller.setBorder(new BevelBorder(BevelBorder.LOWERED));
@@ -935,7 +935,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 	}
 
 	public DataLayer getModel() {
-		return drawingSurface.getGuiModel();
+		return currentTemplate().guiModel();
 	}
 	
 	public HashMap<TimedArcPetriNet, DataLayer> getGuiModels() {
@@ -1992,7 +1992,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         public void drawingSurfaceMousePressed(MouseEvent e) {
             Point p = canvas.adjustPointToGridAndZoom(e.getPoint(), canvas.getZoom());
 
-            guiModelManager.addNewTimedPlace(canvas.getGuiModel(), p);
+            guiModelManager.addNewTimedPlace(getModel(), p);
         }
 
         @Override
@@ -2007,7 +2007,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         public void drawingSurfaceMousePressed(MouseEvent e) {
             Point p = canvas.adjustPointToGridAndZoom(e.getPoint(), canvas.getZoom());
 
-            guiModelManager.addNewTimedTransitions(drawingSurface.getGuiModel(), p, false);
+            guiModelManager.addNewTimedTransitions(getModel(), p, false);
         }
 
         @Override
@@ -2022,7 +2022,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         public void drawingSurfaceMousePressed(MouseEvent e) {
             Point p = canvas.adjustPointToGridAndZoom(e.getPoint(), canvas.getZoom());
 
-            guiModelManager.addNewTimedTransitions(drawingSurface.getGuiModel(), p, true);
+            guiModelManager.addNewTimedTransitions(getModel(), p, true);
         }
 
         @Override
@@ -2037,7 +2037,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         public void drawingSurfaceMousePressed(MouseEvent e) {
             Point p = canvas.adjustPointToGridAndZoom(e.getPoint(), canvas.getZoom());
 
-           guiModelManager.addAnnotationNote(drawingSurface.getGuiModel(), p);
+           guiModelManager.addAnnotationNote(getModel(), p);
         }
 
         @Override
@@ -2357,7 +2357,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
         @Override
         public void teardownManager() {
             //Remove all mouse-over menus if we exit animation mode
-            ArrayList<PetriNetObject> selection = drawingSurface().getGuiModel().getPNObjects();
+            ArrayList<PetriNetObject> selection = getModel().getPNObjects();
 
             for (PetriNetObject pn : selection) {
                 if (pn instanceof TimedPlaceComponent) {
@@ -2920,7 +2920,7 @@ public class TabContent extends JSplitPane implements TabContentActions{
 
     @Override
     public void alignPNObjectsToGrid() {
-        ArrayList<PetriNetObject> petriNetObjects = drawingSurface.getGuiModel().getPlaceTransitionObjects();
+        ArrayList<PetriNetObject> petriNetObjects = getModel().getPlaceTransitionObjects();
         pipe.gui.undo.UndoManager undoManager = getUndoManager();
         undoManager.newEdit();
 

@@ -6,20 +6,14 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
-import dk.aau.cs.gui.TabContent;
 import net.tapaal.gui.DrawingSurfaceManager.AbstractDrawingSurfaceManager;
 import net.tapaal.helpers.Reference.Reference;
 import pipe.dataLayer.DataLayer;
 import pipe.gui.*;
-import pipe.gui.Pipe.ElementType;
 import pipe.gui.graphicElements.*;
-import pipe.gui.undo.*;
-import dk.aau.cs.gui.NameGenerator;
-import dk.aau.cs.model.tapn.TimedArcPetriNet;
 
 /**
  * The petrinet is drawn onto this frame.
@@ -32,15 +26,13 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
     private Zoomer zoomControl;
 
-	private DataLayer guiModel;
-	private final TabContent tabContent;
+    private CanvasModel guiModel;
 	private final Reference<AbstractDrawingSurfaceManager> managerRef;
 
 	private static final boolean showDebugBounds = false;
 
-	public DrawingSurfaceImpl(DataLayer dataLayer, TabContent tabContent, Reference<AbstractDrawingSurfaceManager> managerRef) {
+	public DrawingSurfaceImpl(DataLayer dataLayer, Reference<AbstractDrawingSurfaceManager> managerRef) {
 		guiModel = dataLayer;
-		this.tabContent = tabContent;
 		this.managerRef = managerRef;
 		setLayout(null);
 		setOpaque(true);
@@ -60,11 +52,7 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 
 	}
 
-	public DataLayer getGuiModel() {
-		return guiModel;
-	}
-
-	public void setModel(DataLayer guiModel, Zoomer zoomer) {
+	public void setModel(CanvasModel guiModel, Zoomer zoomer) {
 		//Remove the old model from view
 		this.guiModel.removedFromView();
 		//Add the new model to view
@@ -82,6 +70,11 @@ public class DrawingSurfaceImpl extends JLayeredPane implements Printable, Canva
 		validate();
 		repaint();
 	}
+
+
+    public CanvasModel getCanvasModel() {
+        return guiModel;
+    }
 
 	@Override
 	public void addNewPetriNetObject(GraphicalElement newObject) {

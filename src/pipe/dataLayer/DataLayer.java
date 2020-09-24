@@ -3,7 +3,7 @@ package pipe.dataLayer;
 import java.util.*;
 
 import dk.aau.cs.util.RequireException;
-import pipe.gui.canvas.Canvas;
+import pipe.gui.canvas.CanvasModel;
 import pipe.gui.graphicElements.*;
 import pipe.gui.graphicElements.tapn.TimedInhibitorArcComponent;
 import pipe.gui.graphicElements.tapn.TimedInputArcComponent;
@@ -16,28 +16,9 @@ import dk.aau.cs.model.tapn.TimedArcPetriNet;
 import dk.aau.cs.util.Require;
 
 
-public class DataLayer {
+public class DataLayer extends CanvasModel {
 
 
-	//XXX: Temp solution while refactoring, should be changed to interface to now allow to many actions
-	//Long term should use callback to not have tight coupling
-	private Canvas view;
-	public void addedToView(Canvas view){this.view = view;}
-	public void removedFromView() {this.view = null;}
-
-	//XXX temp solution while refactorting, component removes children them self
-	//migth not be best solution long term.
-	private void removeFromViewIfConnected(PetriNetObject pno) {
-		if (view != null) {
-			view.removePetriNetObject(pno.getGraphicalElement());
-		}
-	}
-
-	private void addToViewIfConnected(PetriNetObject pno) {
-		if (view != null) {
-			view.addNewPetriNetObject(pno.getGraphicalElement());
-		}
-	}
 
 	/** PNML File Name */
 	public String pnmlName = null;
@@ -88,6 +69,7 @@ public class DataLayer {
         return petriNetObjects;
     }
 
+    @Override
     public ArrayList<PetriNetObject> getPlaceTransitionObjects(){
         ArrayList<PetriNetObject> result = new ArrayList<PetriNetObject>();
         for (PetriNetObject pnObject : petriNetObjects) {
@@ -367,7 +349,7 @@ public class DataLayer {
 	public void addPetriNetObject(PetriNetObject pnObject) {
 
 		pnObject.setGuiModel(this);
-		addToViewIfConnected(pnObject); // Must be called after model is set
+		addToViewIfConnected(pnObject.getGraphicalElement()); // Must be called after model is set
 
         //XXX: temp solution to have access to all elements types at once
         petriNetObjects.add(pnObject);
@@ -416,7 +398,7 @@ public class DataLayer {
         //XXX: Should remove guiModel for object, but is used for undelete action, KYRKE 2018-10-18
         //pnObject.setGuiModel(null);
 
-		removeFromViewIfConnected(pnObject);
+		removeFromViewIfConnected(pnObject.getGraphicalElement());
 
         //XXX: temp solution to have access to all elements types at once
         petriNetObjects.remove(pnObject);
@@ -616,6 +598,7 @@ public class DataLayer {
 		return all;
 	}
 
+	@Override
 	public Iterable<PetriNetObject> getPetriNetObjectsWithArcPathPoint() {
 		ArrayList<PetriNetObject> all = new ArrayList<PetriNetObject>(placesArray);
 		all.addAll(transitionsArray);

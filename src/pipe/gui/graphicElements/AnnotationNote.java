@@ -170,7 +170,8 @@ public class AnnotationNote extends Note {
 		guiDialog.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				if(isFirstEdit) {
-					getParent().getGuiModel().removePetriNetObject(AnnotationNote.this);
+				    // TODO: templ disabled whitle refactoring
+					//getParent().getGuiModel().removePetriNetObject(AnnotationNote.this);
 				}
 			}
 		});
