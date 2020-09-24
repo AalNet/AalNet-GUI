@@ -602,8 +602,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         showDelayEnabledTransitionsCheckbox = addCheckboxMenuItem(viewMenu, showDelayEnabledTransitionsAction);
 
-        showZeroToInfinityIntervalsCheckBox = addCheckboxMenuItem(viewMenu, showZeroToInfinityIntervals(), showZeroToInfinityIntervalsAction);
-
         addCheckboxMenuItem(viewMenu, showToolTipsAction);
 
         return viewMenu;
@@ -1332,10 +1330,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     @Deprecated
     public boolean isShowingDelayEnabledTransitions() {
         return showDelayEnabledTransitionsAction.isSelected();
-    }
-
-    public boolean showZeroToInfinityIntervals() {
-        return Preferences.getInstance().getShowZeroInfIntervals();
     }
 
     public boolean showTokenAge() {

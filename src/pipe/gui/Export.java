@@ -214,7 +214,7 @@ public class Export {
 
 				filename = FileBrowser.constructor("TikZ figure", "tex", filename).saveFile();
 				if (filename != null) {
-					TikZExporter output = new TikZExporter(model, filename, tikZOption, CreateGui.getApp().showZeroToInfinityIntervals());
+					TikZExporter output = new TikZExporter(model, filename, tikZOption, true);
 					output.ExportToTikZ();
 				}
 				break;

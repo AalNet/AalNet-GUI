@@ -86,7 +86,7 @@ public class TimedInputArcComponent extends TimedOutputArcComponent {
         if (inputArc == null)
             getNameLabel().setText("");
         else {
-            if (!CreateGui.getApp().showZeroToInfinityIntervals() || !lens.isTimed()) {
+            if (!lens.isTimed()) {
                 if (inputArc.interval().toString(showConstantNames).equals("[0,inf)")){
                     getNameLabel().setText("");
                 }

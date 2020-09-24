@@ -103,7 +103,7 @@ public class TimedTransportArcComponent extends TimedInputArcComponent {
 	@Override
 	public void updateLabel(boolean displayConstantNames) {
 		if (isInPreSet && underlyingTransportArc != null) {
-			if (CreateGui.getApp() != null && CreateGui.getApp().showZeroToInfinityIntervals()){
+			if (CreateGui.getApp() != null){
 				getNameLabel().setText(underlyingTransportArc.interval().toString(
 						displayConstantNames)
 						+ " : " + getGroup());
