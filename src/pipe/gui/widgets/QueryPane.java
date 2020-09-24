@@ -454,7 +454,7 @@ public class QueryPane extends JPanel implements SidePane {
 		//Saves the net in a temporary file which is used in batchProcessing
 		//File is deleted on exit
 		try {
-			tempFile = File.createTempFile(CreateGui.getAppGui().getCurrentTabName(), ".xml");
+			tempFile = File.createTempFile("tapaal-", ".xml");
 
 			TabContent tab = CreateGui.getApp().getCurrentTab();
 			tab.writeNetToFile(tempFile, selectedQueries, tab.getLens());

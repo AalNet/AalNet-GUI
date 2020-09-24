@@ -550,28 +550,14 @@ public class BatchProcessingWorker extends SwingWorker<Void, BatchProcessingVeri
 		BatchProcessingVerificationResult result;		
 		if(QueryPane.getTemporaryFile() != null && fileName.equals(QueryPane.getTemporaryFile().getName())) {
 			//removes numbers from tempFile so it looks good
-			result = new BatchProcessingVerificationResult(CreateGui.getAppGui().getCurrentTabName(), query, verificationResult, verificationTime, MemoryMonitor.getPeakMemory(), stats);
+			result = new BatchProcessingVerificationResult("Current File", query, verificationResult, verificationTime, MemoryMonitor.getPeakMemory(), stats);
 		} else {
 			result = new BatchProcessingVerificationResult(fileName, query, verificationResult, verificationTime, MemoryMonitor.getPeakMemory(), stats);
 		}
 		publish(result);
 	}
 
-	
-	private void renameTraceTransitions(TimedArcPetriNetTrace trace) {
-		if (trace != null)
-			trace.reduceTraceForOriginalNet("_traceNet_", "PTRACE");
-	}
-
-	private TAPNNetworkTrace decomposeTrace(TimedArcPetriNetTrace trace, NameMapping mapping) {
-		if (trace == null)
-			return null;
-
-		TAPNTraceDecomposer decomposer = new TAPNTraceDecomposer(trace, model.network(), mapping);
-		return decomposer.decompose();
-	}
-	
-	private VerificationResult<TimedArcPetriNetTrace> verify(Tuple<TimedArcPetriNet, NameMapping> composedModel, pipe.dataLayer.TAPNQuery query) throws Exception {		
+    private VerificationResult<TimedArcPetriNetTrace> verify(Tuple<TimedArcPetriNet, NameMapping> composedModel, pipe.dataLayer.TAPNQuery query) throws Exception {
 		TAPNQuery queryToVerify = getTAPNQuery(composedModel.value1(),query);
 		queryToVerify.setCategory(query.getCategory());
 		MapQueryToNewNames(queryToVerify, composedModel.value2());
