@@ -707,6 +707,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         } catch (Exception e) {
             Logger.log("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
             System.err.println("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
+            e.printStackTrace();
             //throw new Exception("TAPAAL encountered an error while loading the file: " + name + "\n\nPossible explanations:\n  - " + e.toString());
         }
         return null;
