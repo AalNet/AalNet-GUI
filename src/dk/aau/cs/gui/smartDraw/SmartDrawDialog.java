@@ -218,8 +218,8 @@ public class SmartDrawDialog extends JDialog {
 					public void fireDone(boolean cancelled) {
 						if(!(cancelled)) {
 							loadingDialogFrame.dispose();
-							CreateGui.getAppGui().toFront();
-							CreateGui.getAppGui().requestFocus();
+							CreateGui.getRootFrame().toFront();
+							CreateGui.getRootFrame().requestFocus();
 						} else {
 							statusLabel.setText("Cancelling/Undoing");
 						}
@@ -626,8 +626,8 @@ public class SmartDrawDialog extends JDialog {
             CreateGui.getCurrentTab().getUndoManager().undo();
             CreateGui.getCurrentTab().repaintAll();
             loadingDialogFrame.setVisible(false);
-            CreateGui.getAppGui().toFront();
-            CreateGui.getAppGui().requestFocus();
+            CreateGui.getRootFrame().toFront();
+            CreateGui.getRootFrame().requestFocus();
         });
 
 		gbc.gridx = 0;
@@ -643,7 +643,7 @@ public class SmartDrawDialog extends JDialog {
 		loadingDialogFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		loadingDialogFrame.setSize(400, 300);
 		loadingDialogFrame.setVisible(false);
-		loadingDialogFrame.setLocationRelativeTo(CreateGui.getAppGui());
+		loadingDialogFrame.setLocationRelativeTo(CreateGui.getRootFrame());
 		loadingDialogFrame.pack();
 	}
 	
