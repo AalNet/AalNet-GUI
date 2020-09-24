@@ -28,6 +28,7 @@ public abstract class CanvasModel {
         }
     }
 
+    //TODO: cleanup function names and types, moved naively from DataLayer
     public abstract Iterable<PetriNetObject> getPetriNetObjectsWithArcPathPoint();
     public abstract ArrayList<PetriNetObject> getPlaceTransitionObjects();
     public abstract ArrayList<PetriNetObject> getPNObjects();
