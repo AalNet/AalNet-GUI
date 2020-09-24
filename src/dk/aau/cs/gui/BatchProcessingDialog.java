@@ -488,8 +488,7 @@ public class BatchProcessingDialog extends JDialog {
 	
 	private void initVerificationOptionsPanel() {
 		verificationOptionsPanel = new JPanel(new GridBagLayout());
-		verificationOptionsPanel.setBorder(BorderFactory
-				.createTitledBorder("Override Verification Options for the Batch"));
+		verificationOptionsPanel.setBorder(BorderFactory.createTitledBorder("Override Verification Options for the Batch"));
 		
 		initQueryPropertyOptionsComponents();
 		initSearchOptionsComponents();
@@ -527,8 +526,7 @@ public class BatchProcessingDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		verificationOptionsPanel.add(queryLabel, gbc);
 
-		String[] options = new String[] { name_KeepQueryOption,
-				name_SEARCHWHOLESTATESPACE, name_EXISTDEADLOCK, name_SOUNDNESS, name_STRONGSOUNDNESS};
+		String[] options = new String[] { name_KeepQueryOption, name_SEARCHWHOLESTATESPACE, name_EXISTDEADLOCK, name_SOUNDNESS, name_STRONGSOUNDNESS};
 		queryPropertyOption = new JComboBox<>(options);
 		queryPropertyOption.setToolTipText(TOOL_TIP_Query_Property_Option);
 		
@@ -554,27 +552,21 @@ public class BatchProcessingDialog extends JDialog {
 		verificationOptionsPanel.add(approximationLabel, gbc);
 
 		String[] options = new String[] { 
-				name_KeepQueryOption,
-				name_NONE_APPROXIMATION,
-				name_OVER_APPROXIMATION,
-				name_UNDER_APPROXIMATION
+				name_KeepQueryOption, name_NONE_APPROXIMATION, name_OVER_APPROXIMATION, name_UNDER_APPROXIMATION
 				};
 		approximationMethodOption = new JComboBox<>(options);
 		approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Keep);
-		approximationMethodOption.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (approximationMethodOption.getSelectedItem() == name_NONE_APPROXIMATION) {
-					approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_None);
-				} else if (approximationMethodOption.getSelectedItem() == name_OVER_APPROXIMATION) {
-					approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Over);
-				} else if (approximationMethodOption.getSelectedItem() == name_UNDER_APPROXIMATION) {
-					approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Under);
-				} else {
-					approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Keep);
-				}
-			}
-		});
+		approximationMethodOption.addActionListener(arg0 -> {
+            if (approximationMethodOption.getSelectedItem() == name_NONE_APPROXIMATION) {
+                approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_None);
+            } else if (approximationMethodOption.getSelectedItem() == name_OVER_APPROXIMATION) {
+                approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Over);
+            } else if (approximationMethodOption.getSelectedItem() == name_UNDER_APPROXIMATION) {
+                approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Under);
+            } else {
+                approximationMethodOption.setToolTipText(TOOL_TIP_Approximation_Method_Option_Keep);
+            }
+        });
 		
 		gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -611,14 +603,7 @@ public class BatchProcessingDialog extends JDialog {
 		approximationDenominatorCheckbox = new JCheckBox("Do not override");
 		approximationDenominatorCheckbox.setToolTipText(TOOL_TIP_ApproximationDenominatorCheckbox);
 		approximationDenominatorCheckbox.setSelected(true);
-		approximationDenominatorCheckbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (approximationDenominatorCheckbox.isSelected())
-					approximationDenominator.setEnabled(false);
-				else
-					approximationDenominator.setEnabled(true);
-			}
-		});
+		approximationDenominatorCheckbox.addActionListener(e -> approximationDenominator.setEnabled(!approximationDenominatorCheckbox.isSelected()));
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -655,14 +640,7 @@ public class BatchProcessingDialog extends JDialog {
 		keepQueryCapacity = new JCheckBox(name_KeepQueryOption);
 		keepQueryCapacity.setToolTipText(TOOL_TIP_KeepQueryCapacity);
 		keepQueryCapacity.setSelected(true);
-		keepQueryCapacity.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (keepQueryCapacity.isSelected())
-					numberOfExtraTokensInNet.setEnabled(false);
-				else
-					numberOfExtraTokensInNet.setEnabled(true);
-			}
-		});
+		keepQueryCapacity.addActionListener(e -> numberOfExtraTokensInNet.setEnabled(!keepQueryCapacity.isSelected()));
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -682,8 +660,6 @@ public class BatchProcessingDialog extends JDialog {
 		gbc.insets = new Insets(0, 0, 5, 0);
 		verificationOptionsPanel.add(timeoutLabel, gbc);
 
-//		timeoutValue = new JSpinner(new SpinnerNumberModel(30, 5,
-//				Integer.MAX_VALUE, 1));
 		timeoutValue = new CustomJSpinner(30, 5,Integer.MAX_VALUE);
 		timeoutValue.setToolTipText(TOOL_TIP_TimeoutValue);
 		timeoutValue.setMaximumSize(new Dimension(70, 30));
@@ -701,14 +677,7 @@ public class BatchProcessingDialog extends JDialog {
 		noTimeoutCheckbox = new JCheckBox("Do not use timeout");
 		noTimeoutCheckbox.setToolTipText(TOOL_TIP_NoTimeoutCheckBox);
 		noTimeoutCheckbox.setSelected(false);
-		noTimeoutCheckbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (noTimeoutCheckbox.isSelected())
-					timeoutValue.setEnabled(false);
-				else
-					timeoutValue.setEnabled(true);
-			}
-		});
+		noTimeoutCheckbox.addActionListener(e -> timeoutValue.setEnabled(!noTimeoutCheckbox.isSelected()));
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -745,14 +714,7 @@ public class BatchProcessingDialog extends JDialog {
 		noOOMCheckbox = new JCheckBox("Do not limit memory usage");
 		noOOMCheckbox.setToolTipText(TOOL_TIP_NoOOMCheckBox);
 		noOOMCheckbox.setSelected(false);
-		noOOMCheckbox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (noOOMCheckbox.isSelected())
-					oomValue.setEnabled(false);
-				else
-					oomValue.setEnabled(true);
-			}
-		});
+		noOOMCheckbox.addActionListener(e -> oomValue.setEnabled(!noOOMCheckbox.isSelected()));
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 2;
@@ -794,8 +756,7 @@ public class BatchProcessingDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		verificationOptionsPanel.add(symmetryLabel, gbc);
 
-		String[] options = new String[] { name_KeepQueryOption, name_SYMMETRY,
-				name_NOSYMMETRY };
+		String[] options = new String[] { name_KeepQueryOption, name_SYMMETRY, name_NOSYMMETRY };
 		symmetryOption = new JComboBox<>(options);
 		symmetryOption.setToolTipText(TOOL_TIP_SymmetryOption);
 
@@ -819,8 +780,7 @@ public class BatchProcessingDialog extends JDialog {
 		gbc.anchor = GridBagConstraints.WEST;
 		verificationOptionsPanel.add(stubbornReductionLabel, gbc);
 
-		String[] options = new String[] { name_KeepQueryOption, name_STUBBORNREUDCTION,
-				name_NOSTUBBORNREDUCTION };
+		String[] options = new String[] { name_KeepQueryOption, name_STUBBORNREUDCTION, name_NOSTUBBORNREDUCTION };
 		stubbornReductionOption = new JComboBox<>(options);
 		stubbornReductionOption.setToolTipText(TOOL_TIP_StubbornReductionOption);
 
@@ -835,29 +795,32 @@ public class BatchProcessingDialog extends JDialog {
 	}
 
 	private SearchOption getSearchOption() {
-		if (searchOption.getSelectedItem().equals(name_DFS))
-			return SearchOption.DFS;
-		else if (searchOption.getSelectedItem().equals(name_Random))
-			return SearchOption.RANDOM;
-		else if (searchOption.getSelectedItem()
-				.equals(name_HEURISTIC))
-			return SearchOption.HEURISTIC;
-		else if (searchOption.getSelectedItem().equals(name_BFS))
-			return SearchOption.BFS;
-		else
-			return SearchOption.BatchProcessingKeepQueryOption;
+		if (searchOption.getSelectedItem().equals(name_DFS)) {
+            return SearchOption.DFS;
+        } else if (searchOption.getSelectedItem().equals(name_Random)) {
+            return SearchOption.RANDOM;
+        } else if (searchOption.getSelectedItem()
+				.equals(name_HEURISTIC)) {
+            return SearchOption.HEURISTIC;
+        } else if (searchOption.getSelectedItem().equals(name_BFS)) {
+            return SearchOption.BFS;
+        } else {
+            return SearchOption.BatchProcessingKeepQueryOption;
+        }
 	}
 
 	private void disableVerificationOptionsButtons() {
 		verificationOptionsPanel.setEnabled(false);
-		for (Component c : verificationOptionsPanel.getComponents())
-			c.setEnabled(false);
+		for (Component c : verificationOptionsPanel.getComponents()) {
+            c.setEnabled(false);
+        }
 	}
 
 	private void enabledVerificationOptionButtons() {
 		verificationOptionsPanel.setEnabled(true);
-		for (Component c : verificationOptionsPanel.getComponents())
-			c.setEnabled(true);
+		for (Component c : verificationOptionsPanel.getComponents()) {
+            c.setEnabled(true);
+        }
 
 		numberOfExtraTokensInNet.setEnabled(!keepQueryCapacity.isSelected());
 		approximationDenominator.setEnabled(!approximationDenominatorCheckbox.isSelected());
@@ -880,22 +843,24 @@ public class BatchProcessingDialog extends JDialog {
 
 	private SymmetryOption getSymmetryOption() {
 		String symmetryString = (String) symmetryOption.getSelectedItem();
-		if (symmetryString.equals(name_SYMMETRY))
-			return SymmetryOption.Yes;
-		else if (symmetryString.equals(name_NOSYMMETRY))
-			return SymmetryOption.No;
-		else
-			return SymmetryOption.KeepQueryOption;
+		if (symmetryString.equals(name_SYMMETRY)) {
+            return SymmetryOption.Yes;
+        } else if (symmetryString.equals(name_NOSYMMETRY)) {
+            return SymmetryOption.No;
+        } else {
+            return SymmetryOption.KeepQueryOption;
+        }
 	}
 	
 	private StubbornReductionOption getStubbornReductionOption(){
 		String stubbornReductionString = (String) stubbornReductionOption.getSelectedItem();
-		if (stubbornReductionString.equals(name_STUBBORNREUDCTION))
-			return StubbornReductionOption.Yes;
-		else if (stubbornReductionString.equals(name_NOSTUBBORNREDUCTION))
-			return StubbornReductionOption.No;
-		else
-			return StubbornReductionOption.KeepQueryOption;
+		if (stubbornReductionString.equals(name_STUBBORNREUDCTION)) {
+            return StubbornReductionOption.Yes;
+        } else if (stubbornReductionString.equals(name_NOSTUBBORNREDUCTION)) {
+            return StubbornReductionOption.No;
+        } else {
+            return StubbornReductionOption.KeepQueryOption;
+        }
 	}
 
 	private QueryPropertyOption getQueryPropertyOption() {
@@ -942,8 +907,7 @@ public class BatchProcessingDialog extends JDialog {
 		gbc.insets = new Insets(0, 0, 5, 0);
 		verificationOptionsPanel.add(searchLabel, gbc);
 
-		String[] options = new String[] { name_KeepQueryOption, name_HEURISTIC,
-				name_BFS, name_DFS, name_Random };
+		String[] options = new String[] { name_KeepQueryOption, name_HEURISTIC, name_BFS, name_DFS, name_Random };
 		searchOption = new JComboBox<>(options);
 		searchOption.setToolTipText(TOOL_TIP_SearchOption);
 
@@ -1194,11 +1158,7 @@ public class BatchProcessingDialog extends JDialog {
 		startButton.setPreferredSize(new java.awt.Dimension(85, 25));
 
 		startButton.setEnabled(false);
-		startButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				process();
-			}
-		});
+		startButton.addActionListener(e -> process());
 		gbc = new GridBagConstraints();
 		gbc.gridx = 4;
 		gbc.gridy = 0;
@@ -1284,18 +1244,20 @@ public class BatchProcessingDialog extends JDialog {
 		});
 		currentWorker.addBatchProcessingListener(new BatchProcessingListener() {
 			public void fireVerificationTaskStarted() {
-				if (timer.isRunning())
-					timer.restart();
-				else
-					timer.start();
+				if (timer.isRunning()) {
+                    timer.restart();
+                } else {
+                    timer.start();
+                }
 				
 				startMemoryTimer();
 
 				if (useTimeout()) {
-					if (timeoutTimer.isRunning())
-						timeoutTimer.restart();
-					else
-						timeoutTimer.start();
+					if (timeoutTimer.isRunning()) {
+                        timeoutTimer.restart();
+                    } else {
+                        timeoutTimer.start();
+                    }
 				}
 
 				startTimeMs = System.currentTimeMillis();
@@ -1324,9 +1286,9 @@ public class BatchProcessingDialog extends JDialog {
 			public void fireFileChanged(FileChangedEvent e) {
 				if(!(isQueryListEmpty())) {
 					fileStatusLabel.setText(CreateGui.getAppGui().getCurrentTabName());
-				}
-				else
-					fileStatusLabel.setText(e.fileName());
+				} else {
+                    fileStatusLabel.setText(e.fileName());
+                }
 			}
 
 		});

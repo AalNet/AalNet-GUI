@@ -110,7 +110,7 @@ public class Verifier {
 
 		if (timedArcPetriNetNetwork != null) {
 			RunVerificationBase thread = new RunVerification(verifyta, new UppaalIconSelector(), new MessengerImpl());
-			RunningVerificationDialog dialog = new RunningVerificationDialog(CreateGui.getApp(), thread);
+			RunningVerificationDialog dialog = new RunningVerificationDialog(CreateGui.getRootFrame(), thread);
 			thread.execute(
 					verifytaOptions,
 					timedArcPetriNetNetwork,

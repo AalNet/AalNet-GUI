@@ -13,6 +13,8 @@ import pipe.gui.canvas.DrawingSurfaceImpl;
 import dk.aau.cs.gui.TabContent;
 import pipe.gui.undo.UndoManager;
 
+import javax.swing.*;
+
 public class CreateGui {
 
 	private final static GuiFrame appGui = new GuiFrame(AalNet.getProgramName());
@@ -114,7 +116,7 @@ public class CreateGui {
 	}
 
 	//Use this only when accessing the Root frame to open a dialog/popup
-    public static Frame getRootFrame() {return getApp(); }
+    public static JFrame getRootFrame() {return getApp(); }
 	
 	//XXX Two Methodes to access same data (created after auto encapsulate)
 	@Deprecated

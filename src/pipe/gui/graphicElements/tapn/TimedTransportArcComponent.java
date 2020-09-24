@@ -103,26 +103,12 @@ public class TimedTransportArcComponent extends TimedInputArcComponent {
 	@Override
 	public void updateLabel(boolean displayConstantNames) {
 		if (isInPreSet && underlyingTransportArc != null) {
-			if (CreateGui.getApp() != null){
-				getNameLabel().setText(underlyingTransportArc.interval().toString(
-						displayConstantNames)
-						+ " : " + getGroup());
-			}
-			else {
-				if (underlyingTransportArc.interval().toString(
-						displayConstantNames).equals("[0,inf)")) {
 
-					getNameLabel().setText(" : " + getGroup());
+            getNameLabel().setText(
+                underlyingTransportArc.interval().toString(displayConstantNames) + " : " + getGroup()
+            );
 
-				}
-				else {
-					getNameLabel().setText(underlyingTransportArc.interval().toString(
-							displayConstantNames)
-							+ " : " + getGroup());
-				}				
-			}
-			
-			// Handle constant highlighting
+            // Handle constant highlighting
 			boolean focusedConstant = false;
 			boolean isvisible = true;
 			if(underlyingTransportArc.interval().lowerBound() instanceof ConstantBound){
