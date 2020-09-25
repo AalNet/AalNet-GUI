@@ -117,18 +117,13 @@ public class CreateGui {
 
 	//Use this only when accessing the Root frame to open a dialog/popup
     public static JFrame getRootFrame() {return getApp(); }
-	
-	//XXX Two Methodes to access same data (created after auto encapsulate)
+
 	@Deprecated
 	public static GuiFrame getApp() { // returns a reference to the application
-		return getAppGui();
-	}
-	@Deprecated
-	public static GuiFrame getAppGui() {
 		return appGui;
 	}
 
-	//XXX The following function should properly not be used and is only used while refactoring, but is better
+    //XXX The following function should properly not be used and is only used while refactoring, but is better
 	// that the chained access via guiFrame, App or drawingsurface now marked with deprecation.
 	public static TabContent openNewTabFromStream(InputStream file, String name) {
 		TabContent tab = appGuiController.createNewTabFromInputStream(file, name);

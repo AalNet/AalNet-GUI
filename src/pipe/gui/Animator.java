@@ -685,8 +685,8 @@ public class Animator {
         stepforwardAction.setEnabled(b);
     }
 
-    public final GuiAction stepforwardAction = CreateGui.getAppGui().stepforwardAction;
-    public final GuiAction stepbackwardAction = CreateGui.getAppGui().stepbackwardAction;
+    public final GuiAction stepforwardAction = CreateGui.getApp().stepforwardAction;
+    public final GuiAction stepbackwardAction = CreateGui.getApp().stepbackwardAction;
 
     public void updateAnimationButtonsEnabled() {
         AnimationHistoryList animationHistory = tab.getAnimationHistorySidePanel();
