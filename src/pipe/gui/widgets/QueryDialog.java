@@ -2984,8 +2984,13 @@ public class QueryDialog extends JPanel {
 					String xmlFile = null, queryFile = null;
 					ReductionOption reduction = getReductionOption();
 					try {
+
+					    String tabName = CreateGui.getCurrentTab().getTabTitle();
+                        //Remove ext from tab name
+                        tabName = tabName.substring(0, tabName.lastIndexOf('.'));
+
 						FileBrowser browser = FileBrowser.constructor(reduction == ReductionOption.VerifyTAPN || reduction == ReductionOption.VerifyTAPNdiscreteVerification || reduction == ReductionOption.VerifyPN ? "Verifytapn XML" : "Uppaal XML",	"xml", xmlFile);
-						xmlFile = browser.saveFile();
+						xmlFile = browser.saveFile(tabName);
 						if (xmlFile != null) {
 							String[] a = xmlFile.split(".xml");
 							queryFile = a[0] + ".q";
