@@ -234,8 +234,7 @@ public class ConstantsDialogPanel extends javax.swing.JPanel {
 					valueSpinner.requestFocusInWindow();
 					return;
 				}
-				Command edit = model.updateConstant(oldName, new Constant(
-						newName, val));
+				Command edit = model.updateConstant(oldName, new Constant(newName, val));
 				if (edit == null) {
                     JOptionPane.showMessageDialog(
                         CreateGui.getRootFrame(),
@@ -249,7 +248,7 @@ public class ConstantsDialogPanel extends javax.swing.JPanel {
 					return;
 				} else {
 					CreateGui.getUndoManager().addNewEdit(edit);
-					CreateGui.getCurrentTab().repaintAll();
+					CreateGui.repaintAll();
 					exit();
 				}
 			} else {

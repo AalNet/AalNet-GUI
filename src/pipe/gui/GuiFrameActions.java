@@ -48,7 +48,6 @@ public interface GuiFrameActions {
     void setShowEnabledTransitionsSelected(boolean b);
     void setShowDelayEnabledTransitionsSelected(boolean b);
     void setShowToolTipsSelected(boolean b);
-    void setShowZeroToInfinityIntervalsSelected(boolean b);
 
     void registerExampleNets(List<String> nets);
 

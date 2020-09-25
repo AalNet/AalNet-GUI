@@ -248,7 +248,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 				((Constant) model.getElementAt(i)).setVisible(true);
 			}
 			c.setFocused(true);
-			CreateGui.getCurrentTab().repaintAll();
+			CreateGui.repaintAll();
 			blinkConstant(c);
 		}
 	}
@@ -259,7 +259,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 			((Constant) model.getElementAt(i)).setFocused(false);
 		}
 		try{
-            CreateGui.getCurrentTab().repaintAll();
+            CreateGui.repaintAll();
 		}catch(Exception e){
 			// It is okay, the tab has just been closed
 		}
@@ -276,7 +276,7 @@ public class ConstantsPane extends JPanel implements SidePane {
 					} else {
 						c.setVisible(false);
 					}
-                    CreateGui.getCurrentTab().repaintAll();
+                    CreateGui.repaintAll();
 				} else {
 					((Timer) e.getSource()).stop();
 				}

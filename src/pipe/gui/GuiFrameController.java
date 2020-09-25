@@ -163,7 +163,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
     boolean showEnabledTransitions = true;
     boolean showDelayEnabledTransitions = true;
     private boolean showToolTips = true;
-    private boolean showZeroToInfinityIntervals = true;
 
     private void loadPrefrences() {
         Preferences prefs = Preferences.getInstance();
@@ -194,9 +193,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         showToolTips = prefs.getShowToolTips();
         setDisplayToolTips(showToolTips);
         guiFrame.setShowToolTipsSelected(showToolTips);
-
-        showZeroToInfinityIntervals = prefs.getShowZeroInfIntervals();
-        guiFrame.setShowZeroToInfinityIntervalsSelected(showZeroToInfinityIntervals);
 
         guiFrame.setWindowSize(prefs.getWindowSize());
 
@@ -586,19 +582,6 @@ public class GuiFrameController implements GuiFrameControllerActions{
         //currentTab.ifPresent(o->o.showConstantsPanel(showConstants));
         CreateGui.getTabs().forEach(o->o.showConstantsPanel(showConstants));
 
-    }
-
-    @Override
-    public void toggleZeroToInfinityIntervals() {
-        setZeroToInfinityIntervals(!showZeroToInfinityIntervals);
-    }
-    public void setZeroToInfinityIntervals(boolean b) {
-        showZeroToInfinityIntervals = b;
-
-        guiFrame.setShowZeroToInfinityIntervalsSelected(showZeroToInfinityIntervals);
-
-        Preferences.getInstance().setShowZeroInfIntervals(showZeroToInfinityIntervals);
-        activeTab.ifPresent(TabContentActions::repaintAll);
     }
 
     @Override

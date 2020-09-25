@@ -286,11 +286,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
             guiFrameController.ifPresent(GuiFrameControllerActions::toggleConstants);
         }
     };
-    private final GuiAction showZeroToInfinityIntervalsAction = new GuiAction("Display intervals [0,inf)", "Show/hide intervals [0,inf) that do not restrict transition firing in any way.", KeyStroke.getKeyStroke('7', shortcutkey), true) {
-        public void actionPerformed(ActionEvent e) {
-            guiFrameController.ifPresent(GuiFrameControllerActions::toggleZeroToInfinityIntervals);
-        }
-    };
     private final GuiAction showEnabledTransitionsAction = new GuiAction("Display enabled transitions", "Show/hide the list of enabled transitions", KeyStroke.getKeyStroke('5', shortcutkey), true) {
         public void actionPerformed(ActionEvent e) {
             guiFrameController.ifPresent(GuiFrameControllerActions::toggleEnabledTransitionsList);
@@ -951,7 +946,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         showSharedPTAction.setEnabled(enable);
         showConstantsAction.setEnabled(enable);
         showQueriesAction.setEnabled(enable);
-        showZeroToInfinityIntervalsAction.setEnabled(enable);
         showEnabledTransitionsAction.setEnabled(enable);
         showDelayEnabledTransitionsAction.setEnabled(enable);
         showToolTipsAction.setEnabled(enable);
@@ -1171,11 +1165,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     @Override
     public void setShowToolTipsSelected(boolean b) {
         showToolTipsAction.setSelected(b);
-    }
-
-    @Override
-    public void setShowZeroToInfinityIntervalsSelected(boolean b) {
-        showZeroToInfinityIntervalsAction.setSelected(b);
     }
 
     public void setTitle(String title) {

@@ -105,6 +105,11 @@ public class CreateGui {
 		return getTab(appGui.getSelectedTabIndex());
 	}
 
+	@Deprecated
+    public static void repaintAll() {
+	    getCurrentTab().repaintAll();
+    }
+
 	/**
 	 * @deprecated Use method getAnimator in GuiFrame
 	 */
