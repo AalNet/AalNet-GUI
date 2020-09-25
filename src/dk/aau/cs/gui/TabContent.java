@@ -1506,16 +1506,9 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		drawingSurface.setModel(tapn.guiModel(), tapn.zoomer());
 		nameGenerator.add(tapn.model());
 
-		//If the template is currently selected
-		//XXX: kyrke - 2019-07-06, templ solution while refactoring, there is properly a better way
-		if (CreateGui.getCurrentTab() == this) {
+		app.ifPresent(GuiFrameActions::updateZoomCombo);
+		drawingSurface.getSelectionObject().clearSelection();
 
-			app.ifPresent(GuiFrameActions::updateZoomCombo);
-
-			//XXX: moved from drawingsurface, temp while refactoring, there is a better way
-			drawingSurface.getSelectionObject().clearSelection();
-
-		}
     }
 
 
