@@ -193,7 +193,8 @@ public class SmartDrawDialog extends JDialog {
                     distanceWeight,
                     overlappingArcWeight,
                     startingObject,
-                    minimumIterations
+                    minimumIterations,
+                    CreateGui.getCurrentTab().getModel()
                 );
 
 				worker.addSmartDrawListener(new SmartDrawListener() {
