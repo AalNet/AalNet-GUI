@@ -1311,7 +1311,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         return appTab.getSelectedIndex();
     }
 
-    public TabContent getCurrentTab() {
+    private TabContent getCurrentTab() {
         return CreateGui.getCurrentTab();
     }
 
