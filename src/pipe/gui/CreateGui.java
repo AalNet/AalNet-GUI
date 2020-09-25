@@ -7,6 +7,7 @@ import java.util.List;
 
 import dk.aau.cs.debug.Logger;
 import net.tapaal.AalNet;
+import net.tapaal.Preferences;
 import net.tapaal.resourcemanager.ResourceManager;
 import pipe.dataLayer.DataLayer;
 import pipe.gui.canvas.DrawingSurfaceImpl;
@@ -60,7 +61,7 @@ public class CreateGui {
 	}
 
 	@Deprecated
-	public static DrawingSurfaceImpl getDrawingSurface(int index) {
+	private static DrawingSurfaceImpl getDrawingSurface(int index) {
 
 		if (index < 0) {
 			return null;
@@ -87,7 +88,7 @@ public class CreateGui {
 	}
 
 	@Deprecated
-	public static TabContent getTab(int index) {
+	private static TabContent getTab(int index) {
 		if (index < 0) {
 			return null;
 		}
@@ -135,5 +136,9 @@ public class CreateGui {
 	@Deprecated
     public static UndoManager getUndoManager() {
         return getCurrentTab().getUndoManager();
+    }
+
+    public static boolean showTokenAge() {
+        return Preferences.getInstance().getShowTokenAge();
     }
 }

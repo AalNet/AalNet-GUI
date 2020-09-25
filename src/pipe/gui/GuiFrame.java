@@ -966,7 +966,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
     // set tabbed pane properties and add change listener that updates tab with
     // linked model and view
-    public void setChangeListenerOnTab() {
+    private void setChangeListenerOnTab() {
         appTab.addChangeListener(e -> {
                 //This event will only fire if the tab index is changed, so it won't trigger if once
                 // also if code calls setSelectedIndex(index), thereby avoiding a loop.
@@ -1301,10 +1301,6 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     @Deprecated
     public boolean isShowingDelayEnabledTransitions() {
         return showDelayEnabledTransitionsAction.isSelected();
-    }
-
-    public boolean showTokenAge() {
-        return Preferences.getInstance().getShowTokenAge();
     }
 
     public int getSelectedTabIndex() {

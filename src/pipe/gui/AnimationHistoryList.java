@@ -147,7 +147,7 @@ public class AnimationHistoryList extends JList<String> {
 	
 	private void updateAccordingToDeadlock() {
 		
-		if(CreateGui.getApp().getSelectedTabIndex() == -1 || lastShown == TraceType.EG_DELAY_FOREVER){
+		if(lastShown == TraceType.EG_DELAY_FOREVER){
 			return;
 		}
 		for (Template t : CreateGui.getCurrentTab().activeTemplates()){
