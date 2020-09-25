@@ -140,38 +140,19 @@ public class Export {
 		}
 	}
 
-	public static void exportGuiView(DrawingSurfaceImpl g, int format,
-			DataLayer model) {
+	public static void exportGuiView(DrawingSurfaceImpl g, int format, DataLayer model, String tabName, File file) {
 		if (g.getComponentCount() == 0) {
 			return;
 		}
 
-		String filename = null;
-		if (CreateGui.getCurrentTab().getFile() != null) {
-			filename = CreateGui.getCurrentTab().getFile().getAbsolutePath();
-			// change file extension
-			int dotpos = filename.lastIndexOf('.');
-			if (dotpos > filename.lastIndexOf(System.getProperty("file.separator"))) {
-				// dot is for extension
-				filename = filename.substring(0, dotpos + 1);
-				switch (format) {
-				case PNG:
-					filename += "png";
-					break;
-				case POSTSCRIPT:
-					filename += "ps";
-					break;
-				case TIKZ:
-					filename += "tex";
-					break;
-				case QUERY:
-					filename = filename.substring(0, dotpos);
-					filename += "-queries.xml";
-					break;
-				}
-				
-			}
-		}
+		//Remove ext from tab name
+        tabName = tabName.substring(0, tabName.lastIndexOf('.'));
+
+		String path = null;
+		if (file != null) {
+			path = file.getAbsolutePath();
+            path = path.substring(0, path.lastIndexOf(System.getProperty("file.separator")));
+        }
 
 		boolean gridEnabled = Grid.isEnabled();
 		setupViewForExport(g, gridEnabled);
@@ -179,16 +160,15 @@ public class Export {
 		try {
 			switch (format) {
 			case PNG:
-				filename = FileBrowser.constructor("PNG image", "png", filename).saveFile();
-				if (filename != null) {
-					toPNG(g, filename);
+				path = FileBrowser.constructor("PNG image", "png", path).saveFile(tabName);
+				if (path != null) {
+					toPNG(g, path);
 				}
 				break;
 			case POSTSCRIPT:
-				filename = FileBrowser.constructor("PostScript file", "ps", filename)
-				.saveFile();
-				if (filename != null) {
-					toPostScript(g, filename);
+				path = FileBrowser.constructor("PostScript file", "ps", path).saveFile(tabName);
+				if (path != null) {
+					toPostScript(g, path);
 				}
 				break;
 			case PRINTER:
@@ -207,21 +187,22 @@ public class Export {
 				if (figureOptions == null)
 					break;
 
-				if (figureOptions == possibilities[0])
-					tikZOption = TikZExporter.TikZOutputOption.FIGURE_ONLY;
-				if (figureOptions == possibilities[1])
-					tikZOption = TikZExporter.TikZOutputOption.FULL_LATEX;
+				if (figureOptions == possibilities[0]) {
+                    tikZOption = TikZExporter.TikZOutputOption.FIGURE_ONLY;
+                } else if (figureOptions == possibilities[1]) {
+                    tikZOption = TikZExporter.TikZOutputOption.FULL_LATEX;
+                }
 
-				filename = FileBrowser.constructor("TikZ figure", "tex", filename).saveFile();
-				if (filename != null) {
-					TikZExporter output = new TikZExporter(model, filename, tikZOption, true);
+				path = FileBrowser.constructor("TikZ figure", "tex", path).saveFile(tabName);
+				if (path != null) {
+					TikZExporter output = new TikZExporter(model, path, tikZOption, true);
 					output.ExportToTikZ();
 				}
 				break;
 			case QUERY:
-				filename = FileBrowser.constructor("Query XML file", "xml", filename).saveFile(CreateGui.getAppGui().getCurrentTabName().replaceAll(".tapn", "-queries"));
-				if (filename != null) {
-					toQueryXML(filename);
+				path = FileBrowser.constructor("Query XML file", "xml", path).saveFile(tabName+"-queries");
+				if (path != null) {
+					toQueryXML(path);
 				}
 				break;
 			}

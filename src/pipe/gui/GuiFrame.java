@@ -111,7 +111,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     };
     private final GuiAction printAction = new GuiAction("Print", "Print", KeyStroke.getKeyStroke('P', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-            Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PRINTER, null);
+            Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PRINTER, null, getCurrentTabName(), getCurrentTab().getFile());
         }
     };
     /*private final GuiAction importPNMLAction = new GuiAction("PNML untimed net", "Import an untimed net in the PNML format", KeyStroke.getKeyStroke('X', shortcutkey)) {
@@ -131,22 +131,22 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     };
     private final GuiAction exportPNGAction = new GuiAction("PNG", "Export the net to PNG format", KeyStroke.getKeyStroke('G', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PNG, null);
+                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.PNG, null, getCurrentTabName(), getCurrentTab().getFile());
         }
     };
     private final GuiAction exportPSAction = new GuiAction("PostScript", "Export the net to PostScript format", KeyStroke.getKeyStroke('T', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.POSTSCRIPT, null);
+                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.POSTSCRIPT, null, getCurrentTabName(), getCurrentTab().getFile());
         }
     };
     private final GuiAction exportToTikZAction = new GuiAction("TikZ", "Export the net to LaTex (TikZ) format", KeyStroke.getKeyStroke('L', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.TIKZ, getCurrentTab().getModel());
+                Export.exportGuiView(getCurrentTab().drawingSurface(), Export.TIKZ, getCurrentTab().getModel(), getCurrentTabName(), getCurrentTab().getFile());
         }
     };
     private final GuiAction exportToXMLAction = new GuiAction("XML Queries", "Export the queries to XML format", KeyStroke.getKeyStroke('H', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-            Export.exportGuiView(getCurrentTab().drawingSurface(), Export.QUERY, null);
+            Export.exportGuiView(getCurrentTab().drawingSurface(), Export.QUERY, null, getCurrentTabName(), getCurrentTab().getFile());
         }
     };
     private final GuiAction exportTraceAction = new GuiAction("Export trace", "Export the current trace", "") {
