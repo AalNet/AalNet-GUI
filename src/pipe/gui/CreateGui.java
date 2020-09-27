@@ -21,7 +21,6 @@ public class CreateGui {
 	private final static GuiFrame appGui = new GuiFrame(AalNet.getProgramName());
     private final static GuiFrameController appGuiController = new GuiFrameController(appGui);
 
-	private static final ArrayList<TabContent> tabs = new ArrayList<TabContent>();
 
 	public static void init() {
 
@@ -57,52 +56,12 @@ public class CreateGui {
 
 	@Deprecated
 	public static DrawingSurfaceImpl getDrawingSurface() {
-		return getDrawingSurface(appGui.getSelectedTabIndex());
-	}
-
-	@Deprecated
-	private static DrawingSurfaceImpl getDrawingSurface(int index) {
-
-		if (index < 0) {
-			return null;
-		}
-
-		TabContent tab = (tabs.get(index));
-
-		return tab.drawingSurface();
-	}
-
-	@Deprecated
-	public static void addTab (TabContent tab ) {
-		tabs.add(tab);
-	}
-
-	@Deprecated
-	public static void removeTab(int index) {
-		tabs.remove(index);
-	}
-
-	@Deprecated
-	public static void removeTab(TabContent tab) {
-		tabs.remove(tab);
-	}
-
-	@Deprecated
-	private static TabContent getTab(int index) {
-		if (index < 0) {
-			return null;
-		}
-		return tabs.get(index);
-	}
-
-	@Deprecated
-	public static List<TabContent> getTabs() {
-		return tabs;
+		return getCurrentTab().drawingSurface();
 	}
 
 	@Deprecated
 	public static TabContent getCurrentTab() {
-		return getTab(appGui.getSelectedTabIndex());
+		return appGuiController.getTab(appGui.getSelectedTabIndex());
 	}
 
 	@Deprecated

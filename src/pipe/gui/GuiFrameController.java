@@ -202,7 +202,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
     @Override
     public void openTab(TabContent tab) {
-        CreateGui.addTab(tab);
+        addTab(tab);
         tab.setSafeGuiFrameActions(guiFrameDirectAccess);
         tab.setGuiFrameControllerActions(this);
 
@@ -228,7 +228,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
                 tab.setGuiFrameControllerActions(null);
                 //Close the gui part first, else we get an error bug #826578
                 guiFrame.detachTabFromGuiFrame(tab);
-                CreateGui.removeTab(tab);
+                removeTab(tab);
             }
         }
 
@@ -547,7 +547,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
      */
     private boolean showSavePendingChangesDialogForAllTabs() {
         // Loop through all tabs and check if they have been saved
-        for (TabContent tab : CreateGui.getTabs()) {
+        for (TabContent tab : getTabs()) {
             if (tab.getNetChanged()) {
                 if (!(showSavePendingChangesDialog(tab))) {
                     return false;
@@ -566,7 +566,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
         guiFrame.setShowQueriesSelected(showQueries);
         //currentTab.ifPresent(o->o.showQueries(showQueries));
-        CreateGui.getTabs().forEach(o->o.showQueries(showQueries));
+        getTabs().forEach(o->o.showQueries(showQueries));
 
     }
 
@@ -580,7 +580,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
         guiFrame.setShowConstantsSelected(showConstants);
         //currentTab.ifPresent(o->o.showConstantsPanel(showConstants));
-        CreateGui.getTabs().forEach(o->o.showConstantsPanel(showConstants));
+        getTabs().forEach(o->o.showConstantsPanel(showConstants));
 
     }
 
@@ -594,7 +594,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
 
         guiFrame.setShowComponentsSelected(showComponents);
         //currentTab.ifPresent(o->o.showComponents(showComponents));
-        CreateGui.getTabs().forEach(o->o.showComponents(showComponents));
+        getTabs().forEach(o->o.showComponents(showComponents));
     }
 
     @Override
@@ -606,7 +606,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
         showSharedPT = b;
 
         guiFrame.setShowSharedPTSelected(showSharedPT);
-        CreateGui.getTabs().forEach(o->o.showSharedPT(showSharedPT));
+        getTabs().forEach(o->o.showSharedPT(showSharedPT));
     }
 
     @Override
@@ -761,5 +761,40 @@ public class GuiFrameController implements GuiFrameControllerActions{
         }
 
         TabContent.incrementNameCounter();
+    }
+
+    private final ArrayList<TabContent> tabs = new ArrayList<TabContent>();
+    @Deprecated
+    private void addTab (TabContent tab ) {
+        tabs.add(tab);
+    }
+
+    @Deprecated
+    private void removeTab(int index) {
+        tabs.remove(index);
+    }
+
+    @Deprecated
+    private void removeTab(TabContent tab) {
+        tabs.remove(tab);
+    }
+
+    @Deprecated
+    // kyrke - is public to allow access from CreateGui while refactoring
+    /*private*/ public TabContent getTab(int index) {
+        if (index < 0) {
+            return null;
+        }
+        return tabs.get(index);
+    }
+
+    @Deprecated
+    private List<TabContent> getTabs() {
+        return tabs;
+    }
+
+    @Deprecated
+    public TabContent getCurrentTab() {
+        return getTab(guiFrameDirectAccess.getSelectedTabIndex());
     }
 }
