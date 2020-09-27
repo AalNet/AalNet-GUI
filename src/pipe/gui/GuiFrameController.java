@@ -2,6 +2,7 @@ package pipe.gui;
 
 import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.BatchProcessingDialog;
+import dk.aau.cs.gui.Tab;
 import dk.aau.cs.gui.TabContent;
 import dk.aau.cs.gui.TabContentActions;
 import dk.aau.cs.io.LoadedModel;
@@ -547,7 +548,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
      */
     private boolean showSavePendingChangesDialogForAllTabs() {
         // Loop through all tabs and check if they have been saved
-        for (TabContent tab : getTabs()) {
+        for (Tab tab : getTabs()) {
             if (tab.getNetChanged()) {
                 if (!(showSavePendingChangesDialog(tab))) {
                     return false;
@@ -763,25 +764,20 @@ public class GuiFrameController implements GuiFrameControllerActions{
         TabContent.incrementNameCounter();
     }
 
-    private final ArrayList<TabContent> tabs = new ArrayList<TabContent>();
+    private final ArrayList<Tab> tabs = new ArrayList<>();
     @Deprecated
-    private void addTab (TabContent tab ) {
+    private void addTab (Tab tab ) {
         tabs.add(tab);
     }
 
     @Deprecated
-    private void removeTab(int index) {
-        tabs.remove(index);
-    }
-
-    @Deprecated
-    private void removeTab(TabContent tab) {
+    private void removeTab(Tab tab) {
         tabs.remove(tab);
     }
 
     @Deprecated
     // kyrke - is public to allow access from CreateGui while refactoring
-    /*private*/ public TabContent getTab(int index) {
+    /*private*/ public Tab getTab(int index) {
         if (index < 0) {
             return null;
         }
@@ -789,12 +785,12 @@ public class GuiFrameController implements GuiFrameControllerActions{
     }
 
     @Deprecated
-    private List<TabContent> getTabs() {
+    private List<Tab> getTabs() {
         return tabs;
     }
 
     @Deprecated
-    public TabContent getCurrentTab() {
+    public Tab getCurrentTab() {
         return getTab(guiFrameDirectAccess.getSelectedTabIndex());
     }
 }

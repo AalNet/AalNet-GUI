@@ -61,7 +61,11 @@ public class CreateGui {
 
 	@Deprecated
 	public static TabContent getCurrentTab() {
-		return appGuiController.getTab(appGui.getSelectedTabIndex());
+	    if (appGuiController.getTab(appGui.getSelectedTabIndex()) instanceof TabContent) {
+            return (TabContent)appGuiController.getTab(appGui.getSelectedTabIndex());
+        } else {
+	        return null;
+        }
 	}
 
 	@Deprecated

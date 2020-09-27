@@ -1,5 +1,6 @@
 package pipe.gui;
 
+import dk.aau.cs.gui.Tab;
 import dk.aau.cs.gui.TabContent;
 import dk.aau.cs.gui.TabContentActions;
 import net.tapaal.helpers.Reference.Reference;
@@ -22,9 +23,9 @@ public interface GuiFrameActions {
 
     void setWindowSize(Dimension dimension);
 
-    void attachTabToGuiFrame(TabContent tab);
+    void attachTabToGuiFrame(Tab tab);
 
-    void detachTabFromGuiFrame(TabContent tab);
+    void detachTabFromGuiFrame(Tab tab);
 
     void setGUIMode(GuiFrame.GUIMode animation);
 

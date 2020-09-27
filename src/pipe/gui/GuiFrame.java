@@ -988,13 +988,13 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     @Override
-    public void attachTabToGuiFrame(TabContent tab) {
-        appTab.addTab(tab.getTabTitle(), tab);
+    public void attachTabToGuiFrame(Tab tab) {
+        appTab.addTab(tab.getTabTitle(), tab.getTabComponent());
     }
 
     @Override
-    public void detachTabFromGuiFrame(TabContent tab) {
-        appTab.remove(tab);
+    public void detachTabFromGuiFrame(Tab tab) {
+        appTab.remove(tab.getTabComponent());
 
         if (appTab.getTabCount() == 0) {
             setGUIMode(GUIMode.noNet);
@@ -1307,5 +1307,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
             gameFeatureOptions.setSelectedIndex(features[1] ? 1 : 0);
         }
     }
+
+
 
 }

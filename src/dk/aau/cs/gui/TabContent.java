@@ -54,7 +54,7 @@ import java.awt.event.MouseWheelEvent;
 
 import static net.tapaal.swinghelpers.GridBagHelper.*;
 
-public class TabContent extends JSplitPane implements TabContentActions{
+public class TabContent extends JSplitPane implements Tab, TabContentActions{
 
     private final MutableReference<GuiFrameControllerActions> guiFrameControllerActions = new MutableReference<>();
 
@@ -964,7 +964,12 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		}
 	}
 
-	@Override
+    @Override
+    public Component getTabComponent() {
+        return this;
+    }
+
+    @Override
 	public File getFile() {
 		return appFile;
 	}
