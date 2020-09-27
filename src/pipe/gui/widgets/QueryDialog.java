@@ -320,8 +320,14 @@ public class QueryDialog extends JPanel {
 	private final static String TOOL_TIP_APPROXIMATION_METHOD_UNDER = "Approximate by dividing all intervals with the approximation constant and shrinking the intervals.";
 	private final static String TOOL_TIP_APPROXIMATION_CONSTANT = "Choose approximation constant";
 
-	public QueryDialog(EscapableDialog me, QueryDialogueOption option,
-                       TAPNQuery queryToCreateFrom, TimedArcPetriNetNetwork tapnNetwork, HashMap<TimedArcPetriNet, DataLayer> guiModels, TabContent.TAPNLens lens) {
+	public QueryDialog(
+	    EscapableDialog me,
+        QueryDialogueOption option,
+        TAPNQuery queryToCreateFrom,
+        TimedArcPetriNetNetwork tapnNetwork,
+        HashMap<TimedArcPetriNet, DataLayer> guiModels,
+        TabContent.TAPNLens lens
+    ) {
 		this.tapnNetwork = tapnNetwork;
 		this.guiModels = guiModels;
 		this.lens = lens;
@@ -342,7 +348,8 @@ public class QueryDialog extends JPanel {
 		if (reductionOption.getSelectedItem() == null){
 			JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
 					"No verification engine supports the combination of this query and the current model",
-					"No verification engine", JOptionPane.ERROR_MESSAGE);
+					"No verification engine", JOptionPane.ERROR_MESSAGE
+            );
 			return false;
 		}
 		return true;
@@ -456,12 +463,13 @@ public class QueryDialog extends JPanel {
 	}
 
 	private TraceOption getTraceOption() {
-		if(someTraceRadioButton.isSelected())
-			return TraceOption.SOME;
-		if(fastestTraceRadioButton.isSelected())
-			return TraceOption.FASTEST;
-		else
-			return TraceOption.NONE;
+		if(someTraceRadioButton.isSelected()) {
+            return TraceOption.SOME;
+        } else if(fastestTraceRadioButton.isSelected()) {
+            return TraceOption.FASTEST;
+        } else {
+            return TraceOption.NONE;
+        }
 	}
 
 	private SearchOption getSearchOption() {
@@ -469,38 +477,40 @@ public class QueryDialog extends JPanel {
 			return SearchOption.DEFAULT;
 		}
 
-		if(depthFirstSearch.isSelected())
-			return SearchOption.DFS;
-		else if(randomSearch.isSelected())
-			return SearchOption.RANDOM;
-		else if(heuristicSearch.isSelected())
-			return SearchOption.HEURISTIC;
-		else if(breadthFirstSearch.isSelected())
-			return SearchOption.BFS;
-		else
-			return SearchOption.DEFAULT;
+		if(depthFirstSearch.isSelected()) {
+            return SearchOption.DFS;
+        } else if(randomSearch.isSelected()) {
+            return SearchOption.RANDOM;
+        } else if(heuristicSearch.isSelected()) {
+            return SearchOption.HEURISTIC;
+        } else if(breadthFirstSearch.isSelected()) {
+            return SearchOption.BFS;
+        } else {
+            return SearchOption.DEFAULT;
+        }
 	}
 
 	private ReductionOption getReductionOption() {
 		String reductionOptionString = (String)reductionOption.getSelectedItem();
-		if (reductionOptionString == null)
-			return null;
-		else if (reductionOptionString.equals(name_STANDARD))
-			return ReductionOption.STANDARD;
-		else if (reductionOptionString.equals(name_COMBI))
-			return ReductionOption.COMBI;
-		else if (reductionOptionString.equals(name_OPTIMIZEDSTANDARD))
-			return ReductionOption.OPTIMIZEDSTANDARD;
-		else if (reductionOptionString.equals(name_BROADCASTDEG2))
-			return ReductionOption.DEGREE2BROADCAST;
-		else if (reductionOptionString.equals(name_verifyTAPN))
-			return ReductionOption.VerifyTAPN;
-		else if (reductionOptionString.equals(name_DISCRETE))
-			return ReductionOption.VerifyTAPNdiscreteVerification;
-		else if (reductionOptionString.equals(name_UNTIMED))
-			return ReductionOption.VerifyPN;
-		else
-			return ReductionOption.BROADCAST;
+		if (reductionOptionString == null) {
+            return null;
+        } else if (reductionOptionString.equals(name_STANDARD)) {
+            return ReductionOption.STANDARD;
+        } else if (reductionOptionString.equals(name_COMBI)) {
+            return ReductionOption.COMBI;
+        } else if (reductionOptionString.equals(name_OPTIMIZEDSTANDARD)) {
+            return ReductionOption.OPTIMIZEDSTANDARD;
+        } else if (reductionOptionString.equals(name_BROADCASTDEG2)) {
+            return ReductionOption.DEGREE2BROADCAST;
+        } else if (reductionOptionString.equals(name_verifyTAPN)) {
+            return ReductionOption.VerifyTAPN;
+        } else if (reductionOptionString.equals(name_DISCRETE)) {
+            return ReductionOption.VerifyTAPNdiscreteVerification;
+        } else if (reductionOptionString.equals(name_UNTIMED)) {
+            return ReductionOption.VerifyPN;
+        } else {
+            return ReductionOption.BROADCAST;
+        }
 	}
 
 	private String getReductionOptionAsString() {
@@ -517,8 +527,9 @@ public class QueryDialog extends JPanel {
 		    someTraceRadioButton.setEnabled(false);
 		    noTraceRadioButton.setEnabled(true);
         } else if (lens.isTimed()) {
-            fastestTraceRadioButton.setEnabled(tapnNetwork.isNonStrict() && !queryHasDeadlock() &&
-                !(newProperty instanceof TCTLEGNode || newProperty instanceof TCTLAFNode));
+            fastestTraceRadioButton.setEnabled(
+                tapnNetwork.isNonStrict() && !queryHasDeadlock() && !(newProperty instanceof TCTLEGNode || newProperty instanceof TCTLAFNode)
+            );
             someTraceRadioButton.setEnabled(true);
             noTraceRadioButton.setEnabled(true);
         } else if (queryIsReachability()) {
@@ -561,7 +572,8 @@ public class QueryDialog extends JPanel {
 
 	public static TAPNQuery showQueryDialogue(QueryDialogueOption option, TAPNQuery queryToRepresent, TimedArcPetriNetNetwork tapnNetwork,
                                            HashMap<TimedArcPetriNet, DataLayer> guiModels, TabContent.TAPNLens lens) {
-		if(CreateGui.getCurrentTab().network().hasWeights() && !CreateGui.getCurrentTab().network().isNonStrict()){
+
+	    if(CreateGui.getCurrentTab().network().hasWeights() && !CreateGui.getCurrentTab().network().isNonStrict()){
 			JOptionPane.showMessageDialog(CreateGui.getRootFrame(),
 					"No reduction option supports both strict intervals and weigthed arcs",
 					"No reduction option", JOptionPane.ERROR_MESSAGE);
@@ -628,8 +640,9 @@ public class QueryDialog extends JPanel {
 		int index = queryField.getCaretPosition();
 		StringPosition position = newProperty.objectAt(index);
 
-		if (position == null)
-			return;
+		if (position == null) {
+            return;
+        }
 
 		queryField.select(position.getStart(), position.getEnd());
 		currentSelection = position;
@@ -784,8 +797,9 @@ public class QueryDialog extends JPanel {
 
 				newProperty = newProperty.replace(currentSelection.getObject(),	replacement);
 
-				if (currentSelection.getObject() instanceof TCTLAbstractPathProperty)
-					resetQuantifierSelectionButtons();
+				if (currentSelection.getObject() instanceof TCTLAbstractPathProperty) {
+                    resetQuantifierSelectionButtons();
+                }
 
 				updateSelection(replacement);
 
@@ -803,8 +817,7 @@ public class QueryDialog extends JPanel {
 
 	private void setSaveButtonsEnabled() {
 		if (!queryField.isEditable()) {
-			boolean isQueryOk = getQueryComment().length() > 0
-					&& !newProperty.containsPlaceHolder();
+			boolean isQueryOk = getQueryComment().length() > 0 && !newProperty.containsPlaceHolder();
 			saveButton.setEnabled(isQueryOk);
 			saveAndVerifyButton.setEnabled(isQueryOk);
 			saveUppaalXMLButton.setEnabled(isQueryOk);
