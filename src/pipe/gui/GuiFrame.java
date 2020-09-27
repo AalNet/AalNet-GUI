@@ -50,7 +50,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         public Component generator() {
             return new TabComponent(this) {
                 @Override
-                protected void closeTab(TabContent tab) {
+                protected void closeTab(int tab) {
                     GuiFrame.this.guiFrameController.ifPresent(o -> o.closeTab(tab));
                 }
             };
@@ -95,7 +95,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     };
     private final GuiAction closeAction = new GuiAction("Close", "Close the current tab", KeyStroke.getKeyStroke('W', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
-            TabContent index = (TabContent) appTab.getSelectedComponent();
+            int index = appTab.getSelectedIndex();
             guiFrameController.ifPresent(o -> o.closeTab(index));
         }
     };

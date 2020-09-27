@@ -218,7 +218,12 @@ public class GuiFrameController implements GuiFrameControllerActions{
     //If needed, add boolean forceClose, where net is not checkedForSave and just closed
     //XXX 2018-05-23 kyrke, implementation close to undoAddTab, needs refactoring
     @Override
-    public void closeTab(Tab tab) {
+    public void closeTab(int index) {
+        var tab = getTab(index);
+        closeTab(tab);
+    }
+
+    private void closeTab(Tab tab) {
         if(tab != null) {
             boolean closeNet = true;
             if (tab.getNetChanged()) {

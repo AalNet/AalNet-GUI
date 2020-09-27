@@ -89,7 +89,7 @@ public abstract class TabComponent extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isMiddleMouseButton(e)) {
                     int index = pane.indexOfTabComponent(TabComponent.this);
-                    closeTab((TabContent) pane.getComponentAt(index));
+                    closeTab(index);
                 }
             }
         });
@@ -110,7 +110,7 @@ public abstract class TabComponent extends JPanel {
 			setRolloverEnabled(true);
 			addActionListener(arg0 -> {
 				int index = pane.indexOfTabComponent(TabComponent.this);
-				closeTab((TabContent) pane.getComponentAt(index));
+				closeTab(index);
 			});
 		}
 
@@ -136,7 +136,7 @@ public abstract class TabComponent extends JPanel {
 
 	}
 
-	protected abstract void closeTab(TabContent tab);
+	protected abstract void closeTab(int tab);
 
 	private final MouseListener buttonMouseListener = new MouseAdapter() {
         @Override
