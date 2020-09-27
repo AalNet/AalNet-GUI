@@ -897,27 +897,27 @@ public class TabContent extends JSplitPane implements TabContentActions{
 		return scroller;
 	}
 
-	public void selectFirstActiveTemplate() {
+	private void selectFirstActiveTemplate() {
 		templateExplorer.selectFirst();
 	}
 
-	public Boolean templateWasActiveBeforeSimulationMode() {
+	private Boolean templateWasActiveBeforeSimulationMode() {
 		return selectedTemplateWasActive;
 	}
 
-	public void resetSelectedTemplateWasActive() {
+	private void resetSelectedTemplateWasActive() {
 		selectedTemplateWasActive = false;
 	}
 
-	public void setSelectedTemplateWasActive() {
+	private void setSelectedTemplateWasActive() {
 		selectedTemplateWasActive = true;
 	}
 
-	public void rememberSelectedTemplate() {
+	private void rememberSelectedTemplate() {
 		selectedTemplate = templateExplorer.indexOfSelectedTemplate();
 	}
 
-	public void restoreSelectedTemplate() {
+	private void restoreSelectedTemplate() {
 		templateExplorer.restoreSelectedTemplate(selectedTemplate);
 	}
 
