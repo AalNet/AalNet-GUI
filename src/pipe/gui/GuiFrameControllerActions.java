@@ -1,5 +1,6 @@
 package pipe.gui;
 
+import dk.aau.cs.gui.Tab;
 import dk.aau.cs.gui.TabContent;
 
 import java.io.InputStream;
@@ -12,11 +13,11 @@ public interface GuiFrameControllerActions {
 
     //If needed, add boolean forceClose, where net is not checkedForSave and just closed
     //XXX 2018-05-23 kyrke, implementation close to undoAddTab, needs refactoring
-    void closeTab(TabContent tab);
+    void closeTab(Tab tab);
 
     //TODO: 2018-05-07 //kyrke Create CloseTab function, used to close a tab
     //XXX: Temp solution to call getCurrentTab to get new new selected tab (should use index) --kyrke 2019-07-08
-    void changeToTab(TabContent tab);
+    void changeToTab(int tab);
 
     void clearPreferences();
 
@@ -25,6 +26,8 @@ public interface GuiFrameControllerActions {
     void openURL(String s);
 
     void showNewPNDialog();
+
+    void newNTA();
 
     void checkForUpdate();
 

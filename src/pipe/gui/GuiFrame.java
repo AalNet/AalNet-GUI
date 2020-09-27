@@ -83,6 +83,11 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
             guiFrameController.ifPresent(GuiFrameControllerActions::showNewPNDialog);
         }
     };
+    private final GuiAction createNewNTAAction = new GuiAction("New NTA", "Create a new NTA") {
+        public void actionPerformed(ActionEvent arg0) {
+            guiFrameController.ifPresent(GuiFrameControllerActions::newNTA);
+        }
+    };
     private final GuiAction openAction = new GuiAction("Open", "Open", KeyStroke.getKeyStroke('O', shortcutkey)) {
         public void actionPerformed(ActionEvent arg0) {
             guiFrameController.ifPresent(GuiFrameControllerActions::openTAPNFile);
@@ -671,6 +676,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
 
         // Basis file operations
         toolBar.add(createAction).setRequestFocusEnabled(false);
+        toolBar.add(createNewNTAAction).setRequestFocusEnabled(false);
         toolBar.add(openAction).setRequestFocusEnabled(false);
         toolBar.add(saveAction).setRequestFocusEnabled(false);
         toolBar.add(saveAsAction).setRequestFocusEnabled(false);
@@ -964,10 +970,10 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         appTab.addChangeListener(e -> {
                 //This event will only fire if the tab index is changed, so it won't trigger if once
                 // also if code calls setSelectedIndex(index), thereby avoiding a loop.
-                TabContent tab = (TabContent) appTab.getSelectedComponent();
+                int selectedIndex = appTab.getSelectedIndex();
 
-                if (tab != null) {
-                    guiFrameController.ifPresent(o -> o.changeToTab(tab));
+                if (selectedIndex > 0) {
+                    guiFrameController.ifPresent(o -> o.changeToTab(selectedIndex));
                 }
             }
         );
@@ -1123,12 +1129,12 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
     }
 
     @Override
-    public void changeToTab(TabContent tab) {
+    public void changeToTab(Tab tab) {
         if (tab != null) {
             //Change tab event will only fire if index != currentIndex, to changing it via setSelectIndex will not
             // create a tabChanged event loop.
             // Throw exception if tab is not found
-            appTab.setSelectedComponent(tab);
+            appTab.setSelectedComponent(tab.getTabComponent());
         }
     }
 
@@ -1202,6 +1208,7 @@ public class GuiFrame extends JFrame implements GuiFrameActions, SafeGuiFrameAct
         fileMenu.setMnemonic('F');
 
         fileMenu.add(createAction);
+        fileMenu.add(createNewNTAAction);
 
         fileMenu.add(openAction);
 

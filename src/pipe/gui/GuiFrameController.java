@@ -1,5 +1,6 @@
 package pipe.gui;
 
+import aalnet.gui.nta.NTATab;
 import dk.aau.cs.debug.Logger;
 import dk.aau.cs.gui.BatchProcessingDialog;
 import dk.aau.cs.gui.Tab;
@@ -217,7 +218,7 @@ public class GuiFrameController implements GuiFrameControllerActions{
     //If needed, add boolean forceClose, where net is not checkedForSave and just closed
     //XXX 2018-05-23 kyrke, implementation close to undoAddTab, needs refactoring
     @Override
-    public void closeTab(TabContent tab) {
+    public void closeTab(Tab tab) {
         if(tab != null) {
             boolean closeNet = true;
             if (tab.getNetChanged()) {
@@ -238,7 +239,12 @@ public class GuiFrameController implements GuiFrameControllerActions{
     //TODO: 2018-05-07 //kyrke Create CloseTab function, used to close a tab
     //XXX: Temp solution to call getCurrentTab to get new new selected tab (should use index) --kyrke 2019-07-08
     @Override
-    public void changeToTab(TabContent tab) {
+    public void changeToTab(int index) {
+        var tab = tabs.get(index);
+        changeToTab(tab);
+    }
+
+    private void changeToTab(Tab tab) {
 
         //De-register old model
         activeTab.ifPresent(t -> t.setApp(null));
@@ -298,6 +304,19 @@ public class GuiFrameController implements GuiFrameControllerActions{
         guiDialog.setVisible(true);
 
 
+    }
+
+    @Override
+    public void newNTA() {
+        var tab = new NTATab();
+        addTab(tab);
+        //tab.setSafeGuiFrameActions(guiFrameDirectAccess);
+        //tab.setGuiFrameControllerActions(this);
+
+        guiFrame.attachTabToGuiFrame(tab);
+        guiFrame.changeToTab(tab);
+        //XXX fixes an issue where on first open of a net the time intervals are not shown
+        tab.repaintAll();
     }
 
     @Override

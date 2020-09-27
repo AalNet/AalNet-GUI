@@ -39,7 +39,7 @@ public interface GuiFrameActions {
 
     void registerController(GuiFrameControllerActions guiFrameController, Reference<TabContentActions> currentTab);
 
-    void changeToTab(TabContent tab);
+    void changeToTab(Tab tab);
 
     //Actions for controller
     void setShowComponentsSelected(boolean b);
